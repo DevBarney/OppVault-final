@@ -112,8 +112,8 @@ export default function Nav() {
               className="nav__logo"
               src="/logo-horizontal.png"
               alt="OppVault"
-              width={1400}
-              height={418}
+              width={1459}
+              height={427}
               sizes="160px"
               priority
             />

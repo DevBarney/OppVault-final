@@ -3,7 +3,7 @@ import HeroArt from '../components/HeroArt';
 import Reveal from '../components/Reveal';
 import SubscribeForm from '../components/SubscribeForm';
 import WhatsAppButton from '../components/WhatsAppButton';
-import { StarIcon } from '../components/Icons';
+import { ArrowIcon, ArrowUpIcon, StarIcon } from '../components/Icons';
 import { CONTACT, TAGLINE, WHATSAPP_URL } from '../lib/config';
 
 // ---- Page copy lives here so it is easy to edit ----------------------------------------
@@ -67,6 +67,7 @@ export default function Page() {
       {/* Hero */}
       <section className="hero">
         <div className="container hero__grid">
+          <HeroArt />
           <div className="hero__copy">
             <p className="pill">
               <StarIcon className="pill__star" />
@@ -88,8 +89,6 @@ export default function Page() {
               </div>
             </div>
           </div>
-
-          <HeroArt />
         </div>
       </section>
 
@@ -167,39 +166,68 @@ export default function Page() {
       </main>
 
       <footer className="footer">
-        <div className="container footer__grid">
-          <div className="footer__brand">
-            <Image
-              className="footer__logo"
-              src="/logo-horizontal.png"
-              alt="OppVault"
-              width={1400}
-              height={418}
-              sizes="180px"
-            />
-            <p className="footer__tagline">{TAGLINE}</p>
+        <div className="container">
+          <div className="footer__top">
+            <div className="footer__brand">
+              <Image
+                className="footer__logo"
+                src="/logo-horizontal.png"
+                alt="OppVault"
+                width={1459}
+                height={427}
+                sizes="220px"
+              />
+              <p className="footer__tagline">{TAGLINE}</p>
+              <a className="footer__join" href="/#subscribe">
+                <span>Join the list</span>
+                <ArrowIcon className="footer__join-arrow" />
+              </a>
+            </div>
+
+            <nav className="footer__cols" aria-label="Footer">
+              <div className="footer__col">
+                <h2 className="footer__heading">Explore</h2>
+                <ul>
+                  <li><a href="/#areas">What we cover</a></li>
+                  <li><a href="/#how">How it helps</a></li>
+                  <li><a href="/#join">Community</a></li>
+                </ul>
+              </div>
+              <div className="footer__col">
+                <h2 className="footer__heading">Connect</h2>
+                <ul>
+                  <li><a href={`mailto:${CONTACT.email}`}>Email us</a></li>
+                  <li>
+                    <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram</a>
+                  </li>
+                  <li>
+                    <a href={CONTACT.xUrl} target="_blank" rel="noopener noreferrer">X</a>
+                  </li>
+                  {WHATSAPP_URL ? (
+                    <li>
+                      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp community</a>
+                    </li>
+                  ) : null}
+                </ul>
+              </div>
+              <div className="footer__col">
+                <h2 className="footer__heading">Legal</h2>
+                <ul>
+                  <li><a href="/privacy">Privacy notice</a></li>
+                </ul>
+              </div>
+            </nav>
           </div>
-          <ul className="footer__links">
-            <li>
-              <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-            </li>
-            <li>
-              <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer">
-                Instagram: {CONTACT.instagramHandle}
-              </a>
-            </li>
-            <li>
-              <a href={CONTACT.xUrl} target="_blank" rel="noopener noreferrer">
-                X: @{CONTACT.xHandle}
-              </a>
-            </li>
-            <li>
-              <a href="/privacy">Privacy notice</a>
-            </li>
-          </ul>
-        </div>
-        <div className="container footer__fine">
-          <p>&copy; {year} OppVault. This is a preview page, and details may change before launch.</p>
+
+          <div className="footer__bar">
+            <p>
+              &copy; {year} OppVault. A preview page; details may change before launch.
+            </p>
+            <a className="footer__top-link" href="#main" aria-label="Back to top">
+              <span>Back to top</span>
+              <ArrowUpIcon className="footer__top-icon" />
+            </a>
+          </div>
         </div>
       </footer>
     </>

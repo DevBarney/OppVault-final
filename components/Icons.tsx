@@ -60,3 +60,11 @@ export function ArrowIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function ArrowUpIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" d="M12 19V5M5.5 11.5 12 5l6.5 6.5" />
+    </svg>
+  );
+}

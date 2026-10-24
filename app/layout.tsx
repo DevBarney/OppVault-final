@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import localFont from 'next/font/local';
 import './globals.css';
 import Nav from '../components/Nav';
+import Interactions from '../components/Interactions';
 import { SITE_URL, TAGLINE } from '../lib/config';
 
 // Poppins is bundled locally (app/fonts), so the site makes no calls to Google Fonts.
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en-GB" className={poppins.variable}>
       <body>
         <Nav />
+        <Interactions />
         {children}
       </body>
     </html>
