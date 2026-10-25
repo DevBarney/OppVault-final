@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main id="main">
+    <div className="privacy">
       <div className="container prose">
         <a className="prose__back" href="/">
           Back to OppVault
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <p className="prose__meta">Last updated 24 October 2026</p>
 
         <p>
-          This page explains what happens to your details when you subscribe to updates on the OppVault preview page.
+          This page explains what happens to your details when you subscribe to updates on OppVault.
           It is written to be read, so we have kept it short.
         </p>
 
@@ -70,6 +70,6 @@ export default function PrivacyPage() {
           OppVault is still being built, so this notice may change. We will update the date above when it does.
         </p>
       </div>
-    </main>
+    </div>
   );
 }

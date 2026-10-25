@@ -1,15 +1,22 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { ArrowIcon } from './Icons';
 
-// The sections the links jump to. Each id exists on the home page (see app/page.tsx).
+// Main navigation. Each link is a page of the platform.
 const LINKS = [
-  { id: 'areas', label: 'What we cover' },
-  { id: 'how', label: 'How it helps' },
-  { id: 'join', label: 'Community' },
+  { href: '/scholarships', label: 'Scholarships' },
+  { href: '/fellowships', label: 'Fellowships' },
+  { href: '/grants', label: 'Grants' },
+  { href: '/courses', label: 'Courses' },
+  { href: '/events', label: 'Events' },
+  { href: '/student-offers', label: 'Student Offers' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/about', label: 'About' },
 ];
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,7 +28,7 @@ const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)'
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState('');
+  const pathname = usePathname() ?? '/';
   const headerRef = useRef<HTMLElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -37,13 +44,6 @@ export default function Nav() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const progress = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress.toFixed(4)})`;
-
-      let current = '';
-      for (const link of LINKS) {
-        const el = document.getElementById(link.id);
-        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) current = link.id;
-      }
-      setActive(current);
     };
     const onScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -72,7 +72,7 @@ export default function Nav() {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) setOpen(false);
     };
     const onResize = () => {
-      if (window.innerWidth >= 900) setOpen(false);
+      if (window.innerWidth >= 1180) setOpen(false);
     };
     document.addEventListener('keydown', onKey);
     document.addEventListener('pointerdown', onPointer);
@@ -85,7 +85,7 @@ export default function Nav() {
   }, [open]);
 
   // "Join the list": glide to the sign-up form and put the cursor in it.
-  // On any page without the form (like /privacy) the link simply opens /#subscribe.
+  // Every page has the sign-up band above the footer, so this works everywhere.
   function goToSignup(event: MouseEvent<HTMLAnchorElement>) {
     setOpen(false);
     const target = document.getElementById('subscribe');
@@ -96,6 +96,12 @@ export default function Nav() {
     const input = target.querySelector<HTMLInputElement>('input[type="email"]');
     window.setTimeout(() => input?.focus({ preventScroll: true }), calm ? 0 : 600);
   }
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const className = `nav${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`;
 
@@ -108,7 +114,7 @@ export default function Nav() {
       <header ref={headerRef} className={className}>
         <div className="container nav__wrap">
           <div className="nav__inner">
-          <a className="nav__brand" href="/" aria-label="OppVault home">
+          <Link className="nav__brand" href="/" aria-label="OppVault home">
             <Image
               className="nav__logo"
               src="/logo-horizontal.png"
@@ -118,27 +124,23 @@ export default function Nav() {
               sizes="160px"
               priority
             />
-          </a>
+          </Link>
 
           <nav className="nav__links" aria-label="Primary">
             <ul>
               {LINKS.map((link) => (
-                <li key={link.id}>
-                  <a
-                    className="nav__link"
-                    href={`/#${link.id}`}
-                    aria-current={active === link.id ? 'location' : undefined}
-                  >
+                <li key={link.href}>
+                  <Link className="nav__link" href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
           <div className="nav__actions">
-            <a className="btn btn--primary btn--sm nav__cta" href="/#subscribe" onClick={goToSignup}>
-              <span>Join the list</span>
+            <a className="btn btn--primary btn--sm nav__cta" href="#subscribe" onClick={goToSignup}>
+              <span>Get updates</span>
               <ArrowIcon className="btn__arrow" />
             </a>
             <button
@@ -166,22 +168,22 @@ export default function Nav() {
           <nav aria-label="Mobile">
             <ul>
               {LINKS.map((link) => (
-                <li key={link.id}>
-                  <a
+                <li key={link.href}>
+                  <Link
                     className="nav__mlink"
-                    href={`/#${link.id}`}
-                    aria-current={active === link.id ? 'location' : undefined}
+                    href={link.href}
+                    aria-current={isActive(link.href) ? 'page' : undefined}
                     onClick={() => setOpen(false)}
                   >
                     <span>{link.label}</span>
                     <ArrowIcon className="nav__marrow" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
-          <a className="btn btn--primary nav__mcta" href="/#subscribe" onClick={goToSignup}>
-            <span>Join the list</span>
+          <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
+            <span>Get updates</span>
             <ArrowIcon className="btn__arrow" />
           </a>
         </div>

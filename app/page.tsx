@@ -1,71 +1,27 @@
-import Image from 'next/image';
-import HeroArt from '../components/HeroArt';
+import Link from 'next/link';
+import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
-import SubscribeForm from '../components/SubscribeForm';
-import WhatsAppButton from '../components/WhatsAppButton';
-import { ArrowIcon, ArrowUpIcon, StarIcon } from '../components/Icons';
-import { CONTACT, TAGLINE, WHATSAPP_URL } from '../lib/config';
-
-// ---- Page copy lives here so it is easy to edit ----------------------------------------
-
-const AREAS = [
-  {
-    name: 'Scholarships',
-    text: 'Funding for study, with eligibility criteria and deadlines in one place.',
-  },
-  {
-    name: 'Internships',
-    text: 'Ways for students and early-career people to gain practical experience.',
-  },
-  {
-    name: 'Fellowships',
-    text: 'Programmes for professional growth, research, leadership and specialised training.',
-  },
-  {
-    name: 'Grants',
-    text: 'Financial support for individuals, researchers, entrepreneurs and project teams.',
-  },
-  {
-    name: 'Conferences and events',
-    text: 'Events where you can learn, present ideas and meet people in your field.',
-  },
-  {
-    name: 'Free courses',
-    text: 'Free or accessible learning, including online courses and skills programmes.',
-  },
-  {
-    name: 'Student offers',
-    text: 'Discounts, tools and software that can help students and learners.',
-  },
-];
+import { ArrowIcon, CategoryIcon, SearchIcon, StarIcon } from '../components/Icons';
+import { CATEGORIES } from '../lib/categories';
+import { getCounts, getOpportunities, getPosts } from '../lib/data';
+import { formatDate } from '../lib/dates';
 
 const STEPS = [
-  {
-    title: 'We collect',
-    text: 'Opportunities are gathered from selected sources, so you do not have to search them all yourself.',
-  },
-  {
-    title: 'We organise',
-    text: 'Listings are sorted into clear categories, each showing the essentials: provider, summary, eligibility and deadline.',
-  },
-  {
-    title: 'You check and apply',
-    text: 'Every listing links to the original announcement, so you can confirm the requirements before you apply.',
-  },
+  { title: 'We collect', text: 'Opportunities are gathered from selected sources, so you do not have to search them all yourself.' },
+  { title: 'We organise', text: 'Each listing shows the essentials: provider, summary, eligibility and deadline, sorted into clear categories.' },
+  { title: 'You check and apply', text: 'Every listing links to the official announcement, so you can confirm the requirements before you apply.' },
 ];
 
-// ----------------------------------------------------------------------------------------
-
-// The header (logo, links, "Join the list") is in components/Nav.tsx and is added by app/layout.tsx.
-
-export default function Page() {
-  const year = new Date().getFullYear();
+export default async function HomePage() {
+  const [counts, closing, posts] = await Promise.all([
+    getCounts(),
+    getOpportunities({ limit: 6 }),
+    getPosts(3),
+  ]);
 
   return (
     <>
-      <main id="main">
-      {/* Hero */}
-      <section className="hero">
+      <section className="hero hero--home">
         <div className="hero__aurora" aria-hidden="true">
           <span />
           <span />
@@ -75,61 +31,95 @@ export default function Page() {
           <div className="hero__head">
             <p className="pill">
               <StarIcon className="pill__star" />
-              Preview. The full platform is on its way.
+              Scholarships, grants and more
             </p>
             <h1 className="hero__title">
               <span>Unlocking Opportunities,</span> <span className="hero__accent">Empowering Potential.</span>
             </h1>
           </div>
 
-          <HeroArt />
-
           <div className="hero__copy">
             <p className="hero__lead">
-              OppVault is being built to bring scholarships, internships, fellowships, grants and more into one
-              organised place. Join the list to hear first when it opens.
+              Find opportunities in one organised place, each with its deadline and a link to the official source.
             </p>
-
-            <div className="hero__actions" id="subscribe">
-              <SubscribeForm variant="dark" whatsappUrl={WHATSAPP_URL} />
-              <div className="hero__or">
-                <span>Prefer to follow along on WhatsApp?</span>
-                <WhatsAppButton url={WHATSAPP_URL} variant="dark" />
-              </div>
-            </div>
+            <form className="hsearch" action="/search" method="get" role="search" aria-label="Search all opportunities">
+              <label className="hsearch__field">
+                <span className="visually-hidden">Search opportunities</span>
+                <SearchIcon className="hsearch__icon" />
+                <input type="search" name="q" placeholder="Search scholarships, grants, courses..." maxLength={60} />
+              </label>
+              <button className="btn btn--primary hsearch__btn" type="submit">
+                <span>Search</span>
+                <ArrowIcon className="btn__arrow" />
+              </button>
+            </form>
+            <ul className="chips" aria-label="Browse by type">
+              {CATEGORIES.map((c) => (
+                <li key={c.slug}>
+                  <Link className="chip" href={`/${c.slug}`}>
+                    <CategoryIcon name={c.icon} className="chip__icon" />
+                    {c.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* What OppVault will cover */}
-      <section className="section" id="areas" aria-labelledby="areas-title">
-        <div className="container areas">
-          <Reveal className="areas__intro">
-            <h2 id="areas-title" className="h2">
-              What we plan to bring together
+      <section className="section" aria-labelledby="browse-title">
+        <div className="container">
+          <Reveal>
+            <h2 id="browse-title" className="h2">
+              Browse by type
             </h2>
-            <p className="body">
-              These are the areas we are building towards. What is available on day one may change as we test and
-              improve.
-            </p>
           </Reveal>
-          <ul className="areas__list">
-            {AREAS.map((area, i) => (
-              <Reveal as="li" className="areas__item" key={area.name} delay={Math.min(i, 4) * 70}>
-                <h3 className="areas__name">{area.name}</h3>
-                <p className="areas__text">{area.text}</p>
+          <ul className="tiles">
+            {CATEGORIES.map((c, i) => (
+              <Reveal as="li" key={c.slug} delay={Math.min(i, 5) * 60}>
+                <Link className="tile" href={`/${c.slug}`}>
+                  <span className="tile__icon">
+                    <CategoryIcon name={c.icon} className="tile__svg" />
+                  </span>
+                  <span className="tile__body">
+                    <span className="tile__name">{c.label}</span>
+                    <span className="tile__text">{c.intro}</span>
+                  </span>
+                  <span className="tile__count">{counts[c.slug]} listed</span>
+                </Link>
               </Reveal>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="section section--tint" id="how" aria-labelledby="how-title">
+      {closing.items.length > 0 ? (
+        <section className="section section--tint" aria-labelledby="soon-title">
+          <div className="container">
+            <div className="section__head">
+              <h2 id="soon-title" className="h2">
+                Closing soon
+              </h2>
+              <Link className="more" href="/search">
+                Search everything <ArrowIcon className="more__icon" />
+              </Link>
+            </div>
+            <ul className="grid">
+              {closing.items.map((item, i) => (
+                <Reveal as="li" key={item.id} delay={Math.min(i, 5) * 60}>
+                  <OpportunityCard item={item} showCategory />
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="section" aria-labelledby="how-title">
         <div className="container">
           <Reveal>
             <h2 id="how-title" className="h2">
-              How OppVault will help
+              How OppVault helps
             </h2>
           </Reveal>
           <ol className="steps">
@@ -152,93 +142,43 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Join */}
-      <section className="band" id="join" aria-labelledby="join-title">
-        <div className="container band__grid">
-          <Reveal className="band__copy">
-            <h2 id="join-title" className="band__quote">
-              &ldquo;Involve me, involve me!&rdquo;
-            </h2>
-            <p className="band__text">
-              That is the voice behind OppVault: people who want to be included. Join early, and you will be among the
-              first to know when we open.
-            </p>
-          </Reveal>
-          <Reveal className="band__card" delay={140}>
-            <SubscribeForm variant="dark" whatsappUrl={WHATSAPP_URL} />
-            <div className="band__or">
-              <WhatsAppButton url={WHATSAPP_URL} variant="dark" />
+      {posts.length > 0 ? (
+        <section className="section section--tint" aria-labelledby="blog-title">
+          <div className="container">
+            <div className="section__head">
+              <h2 id="blog-title" className="h2">
+                From the blog
+              </h2>
+              <Link className="more" href="/blog">
+                All articles <ArrowIcon className="more__icon" />
+              </Link>
             </div>
-          </Reveal>
-        </div>
-      </section>
-      </main>
-
-      <footer className="footer">
-        <div className="container">
-          <div className="footer__top">
-            <div className="footer__brand">
-              <Image
-                className="footer__logo"
-                src="/logo-horizontal.png"
-                alt="OppVault"
-                width={1459}
-                height={427}
-                sizes="220px"
-              />
-              <p className="footer__tagline">{TAGLINE}</p>
-              <a className="footer__join" href="/#subscribe">
-                <span>Join the list</span>
-                <ArrowIcon className="footer__join-arrow" />
-              </a>
-            </div>
-
-            <nav className="footer__cols" aria-label="Footer">
-              <div className="footer__col">
-                <h2 className="footer__heading">Explore</h2>
-                <ul>
-                  <li><a href="/#areas">What we cover</a></li>
-                  <li><a href="/#how">How it helps</a></li>
-                  <li><a href="/#join">Community</a></li>
-                </ul>
-              </div>
-              <div className="footer__col">
-                <h2 className="footer__heading">Connect</h2>
-                <ul>
-                  <li><a href={`mailto:${CONTACT.email}`}>Email us</a></li>
-                  <li>
-                    <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram</a>
-                  </li>
-                  <li>
-                    <a href={CONTACT.xUrl} target="_blank" rel="noopener noreferrer">X</a>
-                  </li>
-                  {WHATSAPP_URL ? (
-                    <li>
-                      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp community</a>
-                    </li>
-                  ) : null}
-                </ul>
-              </div>
-              <div className="footer__col">
-                <h2 className="footer__heading">Legal</h2>
-                <ul>
-                  <li><a href="/privacy">Privacy notice</a></li>
-                </ul>
-              </div>
-            </nav>
+            <ul className="grid">
+              {posts.map((p) => (
+                <li key={p.slug}>
+                  <article className="card card--post">
+                    <Link className="card__link" href={`/blog/${p.slug}`}>
+                      <div className="card__top">
+                        <span className="tag tag--plain">{p.tags[0] ?? 'Guide'}</span>
+                      </div>
+                      <h3 className="card__title">{p.title}</h3>
+                      <p className="card__summary">{p.excerpt}</p>
+                      <div className="card__foot">
+                        <span className="urgency urgency--open">
+                          {formatDate(p.published_at)} · {p.read_minutes} min read
+                        </span>
+                        <span className="card__go" aria-hidden="true">
+                          <ArrowIcon className="card__go-icon" />
+                        </span>
+                      </div>
+                    </Link>
+                  </article>
+                </li>
+              ))}
+            </ul>
           </div>
-
-          <div className="footer__bar">
-            <p>
-              &copy; {year} OppVault. A preview page; details may change before launch.
-            </p>
-            <a className="footer__top-link" href="#main" aria-label="Back to top">
-              <span>Back to top</span>
-              <ArrowUpIcon className="footer__top-icon" />
-            </a>
-          </div>
-        </div>
-      </footer>
+        </section>
+      ) : null}
     </>
   );
 }

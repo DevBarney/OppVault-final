@@ -3,10 +3,11 @@ import type { ReactNode } from 'react';
 import localFont from 'next/font/local';
 import './globals.css';
 import Nav from '../components/Nav';
+import Footer from '../components/Footer';
+import NewsletterBand from '../components/NewsletterBand';
 import Interactions from '../components/Interactions';
 import { SITE_URL, TAGLINE } from '../lib/config';
 
-// Poppins is bundled locally (app/fonts), so the site makes no calls to Google Fonts.
 const poppins = localFont({
   src: [
     { path: './fonts/Poppins-Light.ttf', weight: '300', style: 'normal' },
@@ -18,36 +19,26 @@ const poppins = localFont({
   display: 'swap',
 });
 
-const TITLE = `OppVault | ${TAGLINE}`;
 const DESCRIPTION =
-  'OppVault is being built to bring scholarships, internships, fellowships, grants and more into one organised place. Subscribe for updates and join the WhatsApp community.';
+  'OppVault brings scholarships, fellowships, grants, free courses, events and student offers into one organised place, each linked to its official source.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: TITLE,
+  title: { default: `OppVault | ${TAGLINE}`, template: '%s | OppVault' },
   description: DESCRIPTION,
   applicationName: 'OppVault',
-  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     siteName: 'OppVault',
-    title: TITLE,
+    title: `OppVault | ${TAGLINE}`,
     description: DESCRIPTION,
     url: '/',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` }],
   },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@oppvault',
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ['/og.png'],
-  },
+  twitter: { card: 'summary_large_image', site: '@oppvault', images: ['/og.png'] },
 };
 
-export const viewport: Viewport = {
-  themeColor: '#04106B',
-};
+export const viewport: Viewport = { themeColor: '#04106B' };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -55,7 +46,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Nav />
         <Interactions />
-        {children}
+        <main id="main">{children}</main>
+        <NewsletterBand />
+        <Footer />
       </body>
     </html>
   );
