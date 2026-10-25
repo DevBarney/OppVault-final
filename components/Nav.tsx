@@ -106,7 +106,8 @@ export default function Nav() {
       </a>
 
       <header ref={headerRef} className={className}>
-        <div className="container nav__inner">
+        <div className="container nav__wrap">
+          <div className="nav__inner">
           <a className="nav__brand" href="/" aria-label="OppVault home">
             <Image
               className="nav__logo"
@@ -156,11 +157,10 @@ export default function Nav() {
               </span>
             </button>
           </div>
-        </div>
-
-        <span className="nav__progress" aria-hidden="true">
-          <span ref={barRef} />
-        </span>
+          <span className="nav__progress" aria-hidden="true">
+            <span ref={barRef} />
+          </span>
+          </div>
 
         <div id="mobile-menu" className="nav__menu">
           <nav aria-label="Mobile">
@@ -184,6 +184,7 @@ export default function Nav() {
             <span>Join the list</span>
             <ArrowIcon className="btn__arrow" />
           </a>
+        </div>
         </div>
       </header>
     </>

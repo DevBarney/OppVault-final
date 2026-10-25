@@ -67,8 +67,7 @@ export default function Page() {
       {/* Hero */}
       <section className="hero">
         <div className="container hero__grid">
-          <HeroArt />
-          <div className="hero__copy">
+          <div className="hero__head">
             <p className="pill">
               <StarIcon className="pill__star" />
               Preview. The full platform is on its way.
@@ -76,6 +75,11 @@ export default function Page() {
             <h1 className="hero__title">
               <span>Unlocking Opportunities,</span> <span>Empowering Potential.</span>
             </h1>
+          </div>
+
+          <HeroArt />
+
+          <div className="hero__copy">
             <p className="hero__lead">
               OppVault is being built to bring scholarships, internships, fellowships, grants and more into one
               organised place. Join the list to hear first when it opens.
