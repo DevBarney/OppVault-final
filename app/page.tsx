@@ -66,6 +66,11 @@ export default function Page() {
       <main id="main">
       {/* Hero */}
       <section className="hero">
+        <div className="hero__aurora" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="container hero__grid">
           <div className="hero__head">
             <p className="pill">

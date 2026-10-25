@@ -1937,17 +1937,109 @@ html {
     padding-top: calc(104px + 56px);
   }
 }
-/* A faint grid that fades out towards the edges. */
+/* Stardust: tiny points of light, echoing the star in the logo. */
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
+  background-image:
+    radial-gradient(1.9px 1.9px at 43% 22%, rgba(255,255,255,.6), transparent),
+    radial-gradient(2.8px 2.8px at 11% 71%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 76% 10%, rgba(143,227,255,.8), transparent),
+    radial-gradient(3.8px 3.8px at 6% 14%, rgba(255,255,255,.6), transparent),
+    radial-gradient(3.8px 3.8px at 10% 33%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 9% 75%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 82% 83%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 75% 77%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 30% 8%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 39% 56%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 75% 42%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 15% 77%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 49% 15%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 74% 10%, rgba(143,227,255,.8), transparent),
+    radial-gradient(3.8px 3.8px at 65% 90%, rgba(143,227,255,.8), transparent),
+    radial-gradient(3.8px 3.8px at 42% 62%, rgba(143,227,255,.8), transparent),
+    radial-gradient(1.9px 1.9px at 48% 41%, rgba(255,255,255,.85), transparent),
+    radial-gradient(2.8px 2.8px at 91% 34%, rgba(255,255,255,.85), transparent),
+    radial-gradient(3.8px 3.8px at 69% 66%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 38% 80%, rgba(255,255,255,.85), transparent),
+    radial-gradient(2.8px 2.8px at 67% 56%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 21% 65%, rgba(255,255,255,.6), transparent),
+    radial-gradient(2.8px 2.8px at 87% 12%, rgba(143,227,255,.8), transparent),
+    radial-gradient(3.8px 3.8px at 45% 91%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 76% 61%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 36% 63%, rgba(143,227,255,.8), transparent),
+    radial-gradient(2.8px 2.8px at 9% 96%, rgba(143,227,255,.8), transparent),
+    radial-gradient(3.8px 3.8px at 84% 76%, rgba(143,227,255,.8), transparent),
+    radial-gradient(2.8px 2.8px at 38% 94%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 4% 62%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 80% 17%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.9px 1.9px at 29% 39%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.9px 1.9px at 52% 53%, rgba(255,255,255,.6), transparent),
+    radial-gradient(2.8px 2.8px at 23% 60%, rgba(255,255,255,.6), transparent);
+  -webkit-mask-image: radial-gradient(85% 75% at 50% 45%, #000 30%, transparent 95%);
+  mask-image: radial-gradient(85% 75% at 50% 45%, #000 30%, transparent 95%);
+  animation: twinkle 7s ease-in-out infinite alternate;
+}
+/* A handful of gold sparks, for the "opportunity" moment. */
+.hero__aurora::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(3.8px 3.8px at 19% 58%, rgba(251,184,0,.9), transparent),
+    radial-gradient(2.8px 2.8px at 47% 90%, rgba(251,184,0,.9), transparent),
+    radial-gradient(2.8px 2.8px at 21% 13%, rgba(251,184,0,.9), transparent),
+    radial-gradient(2.8px 2.8px at 31% 87%, rgba(251,184,0,.9), transparent),
+    radial-gradient(3.8px 3.8px at 64% 78%, rgba(251,184,0,.9), transparent);
+  animation: twinkle 5s 1.5s ease-in-out infinite alternate;
+}
+/* Slow aurora light drifting behind everything. */
+.hero__aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__aurora span {
+  position: absolute;
+  width: 46vw;
+  max-width: 640px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.5;
+  will-change: transform;
+}
+.hero__aurora span:nth-child(1) {
+  top: -12%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(27, 219, 227, 0.55), transparent 65%);
+  animation: drift-a 22s ease-in-out infinite alternate;
+}
+.hero__aurora span:nth-child(2) {
+  top: 8%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(13, 180, 248, 0.6), transparent 65%);
+  animation: drift-b 26s ease-in-out infinite alternate;
+}
+.hero__aurora span:nth-child(3) {
+  bottom: -20%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(3, 50, 179, 0.9), transparent 65%);
+  animation: drift-a 30s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift-a {
+  to { transform: translate3d(8vw, 6vh, 0) scale(1.15); }
+}
+@keyframes drift-b {
+  to { transform: translate3d(-9vw, 8vh, 0) scale(0.9); }
+}
+@keyframes twinkle {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
 }
 /* A thin line of light where the hero ends. */
 .hero::after {
