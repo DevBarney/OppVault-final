@@ -73,7 +73,7 @@ export default function Page() {
               Preview. The full platform is on its way.
             </p>
             <h1 className="hero__title">
-              <span>Unlocking Opportunities,</span> <span>Empowering Potential.</span>
+              <span>Unlocking Opportunities,</span> <span className="hero__accent">Empowering Potential.</span>
             </h1>
           </div>
 
@@ -86,10 +86,10 @@ export default function Page() {
             </p>
 
             <div className="hero__actions" id="subscribe">
-              <SubscribeForm whatsappUrl={WHATSAPP_URL} />
+              <SubscribeForm variant="dark" whatsappUrl={WHATSAPP_URL} />
               <div className="hero__or">
                 <span>Prefer to follow along on WhatsApp?</span>
-                <WhatsAppButton url={WHATSAPP_URL} />
+                <WhatsAppButton url={WHATSAPP_URL} variant="dark" />
               </div>
             </div>
           </div>

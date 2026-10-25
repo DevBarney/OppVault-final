@@ -1814,6 +1814,9 @@ ol {
     background: rgba(255, 255, 255, 0.96);
   }
 }
+html:not([data-solid]) .nav:not(.is-scrolled) .nav__inner {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.8));
+}
 .nav__logo {
   height: 42px;
 }
@@ -1911,7 +1914,129 @@ html {
   }
 }
 .hero__copy {
-  margin-top: 4px;
+  margin-top: clamp(-36px, -4vw, -12px);
+}
+
+
+/* ---- Premium dark hero ---- */
+
+.hero {
+  color: #fff;
+  background:
+    radial-gradient(60% 50% at 50% 38%, rgba(13, 180, 248, 0.28), transparent 70%),
+    radial-gradient(45% 40% at 12% 8%, rgba(27, 219, 227, 0.14), transparent 70%),
+    radial-gradient(50% 45% at 92% 20%, rgba(3, 50, 179, 0.7), transparent 70%),
+    linear-gradient(180deg, #04106b 0%, #030d56 55%, #04106b 100%);
+  margin-top: -86px; /* the glass nav floats over the top of the hero */
+  padding-top: calc(clamp(36px, 6vw, 72px) + 86px);
+  isolation: isolate;
+}
+@media (min-width: 900px) {
+  .hero {
+    margin-top: -104px;
+    padding-top: calc(104px + 56px);
+  }
+}
+/* A faint grid that fades out towards the edges. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
+}
+/* A thin line of light where the hero ends. */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(13, 180, 248, 0.7), rgba(251, 184, 0, 0.6), transparent);
+}
+.hero .pill {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #dff3ff;
+}
+.hero__title {
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(4, 16, 107, 0.5);
+}
+.hero__accent {
+  background: linear-gradient(90deg, #ffffff 0%, #8fe3ff 55%, #1bdbe3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  padding-bottom: 0.12em;
+}
+.hero__lead {
+  color: rgba(255, 255, 255, 0.78);
+}
+.hero__or {
+  border-top-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.72);
+}
+.hero__actions .signup__hint,
+.hero__actions .signup__hint a {
+  color: rgba(255, 255, 255, 0.7);
+}
+.hero__actions .signup__hint--error {
+  color: #ffb4a9;
+}
+/* Rings, glow and the logo medallion */
+.hero .ring {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.hero .ring--3 {
+  background: radial-gradient(circle, rgba(13, 180, 248, 0.18), rgba(13, 180, 248, 0) 70%);
+}
+.hero__disc {
+  position: absolute;
+  inset: 17%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ffffff, #e9f3ff 70%);
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.08), 0 0 0 11px rgba(255, 255, 255, 0.18),
+    0 30px 70px -10px rgba(0, 0, 0, 0.5), 0 0 90px rgba(13, 180, 248, 0.45);
+}
+.hero__art .hero__logo {
+  position: relative;
+  z-index: 1;
+  width: 46%;
+  filter: none;
+}
+/* A slowly turning arc of light around the medallion. */
+.orbit {
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 62%, rgba(13, 180, 248, 0.9) 82%, rgba(27, 219, 227, 0.9) 94%, transparent 100%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  animation: spin 14s linear infinite;
+}
+.orbit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 14px 3px rgba(251, 184, 0, 0.8);
+  display: none;
+}
+/* Keyboard focus on dark */
+.hero .btn:focus-visible {
+  outline-color: var(--teal);
 }
 
 /* ---- Reduced motion: no movement at all, everything simply appears ---- */

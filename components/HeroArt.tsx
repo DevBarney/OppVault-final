@@ -61,6 +61,8 @@ export default function HeroArt() {
         <span className="ring ring--3" />
       </div>
       <span className="hero__glow" />
+      <span className="orbit" />
+      <span className="hero__disc" />
       <Image className="hero__logo" src="/logo-stacked.png" alt="" width={1100} height={1031} sizes="320px" />
     </div>
   );
