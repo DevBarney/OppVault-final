@@ -83,3 +83,7 @@ before deploying.
 - Logos are your supplied artwork, trimmed and resized only: `public/logo-horizontal.png` (nav, footer), `public/logo-stacked.png` (hero), `public/mark.png`, `app/icon.png`, `app/apple-icon.png`, `public/og.png`.
 - The header is `components/Nav.tsx`: sticky, shrinks on scroll, scroll-progress line, active-section highlight, mobile menu.
 - Animations are triggered by the visitor (scrolling, hovering, pressing, submitting). They use only transform and opacity, and all switch off when the device asks for reduced motion. Edit them in the "Motion and interaction" section of `app/globals.css`.
+
+## Newsletter with Resend
+
+Set `RESEND_API_KEY` (full access) and `RESEND_SEGMENT_ID` in Vercel. New sign-ups become Resend contacts in that segment, ready for broadcasts. Repeat sign-ups show the same success message and are not emailed twice. To send a welcome email as well, verify your domain in Resend, then set `RESEND_FROM` (for example `OppVault <hello@oppvault.app>`). Until then, leave `RESEND_FROM` unset: sign-ups still work, just without the welcome email.
