@@ -9,7 +9,7 @@
 
 import type { Opportunity, Post } from './types';
 import type { CategorySlug } from './categories';
-import { SEED_OPPORTUNITIES, SEED_POSTS } from './seed';
+import { SEED_OPPORTUNITIES, SEED_POSTS } from './seed/index';
 import { daysUntil } from './dates';
 
 const URL_BASE = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, '');
