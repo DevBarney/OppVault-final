@@ -254,7 +254,7 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
     if (!summary) {
       // Nothing invented: a plain pointer to the official page until a real summary is added.
       const singular = CATEGORIES.find((c) => c.slug === category)?.singular ?? 'Listing';
-      summary = `${singular} from ${provider}. See the official page for full details.`;
+      summary = `${singular.charAt(0).toUpperCase()}${singular.slice(1)} from ${provider}. See the official page for full details.`;
     }
 
     out.rows.push({

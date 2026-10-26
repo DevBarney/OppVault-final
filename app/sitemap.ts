@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`, lastModified: now },
     { url: `${SITE_URL}/blog`, lastModified: now },
     { url: `${SITE_URL}/privacy`, lastModified: now },
+    { url: `${SITE_URL}/submit`, lastModified: now },
     ...CATEGORIES.map((c) => ({ url: `${SITE_URL}/${c.slug}`, lastModified: now })),
   ];
   // Sample listings are never put in the sitemap.

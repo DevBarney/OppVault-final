@@ -87,3 +87,28 @@ begin if new.external_id is null or new.external_id = '' then new.external_id :=
 drop trigger if exists opportunities_default_external_id on public.opportunities;
 create trigger opportunities_default_external_id before insert on public.opportunities
   for each row execute function public.default_external_id();
+
+-- ---------------------------------------------------------------------------------------------
+-- Opportunities submitted by visitors (reviewed on /admin). Private: RLS on, no policies, so only
+-- the server with the service role key can read or write it.
+-- ---------------------------------------------------------------------------------------------
+create table if not exists public.submissions (
+  id uuid primary key default gen_random_uuid(),
+  category text not null check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  title text not null,
+  provider text not null default '',
+  link text not null,
+  summary text not null default '',
+  deadline date,
+  location text not null default '',
+  level text not null default '',
+  funding text not null default '',
+  submitter_name text not null default '',
+  submitter_email text not null,
+  status text not null default 'pending' check (status in ('pending','approved','rejected')),
+  review_note text not null default '',
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+create index if not exists submissions_status_idx on public.submissions (status, created_at desc);
+alter table public.submissions enable row level security;

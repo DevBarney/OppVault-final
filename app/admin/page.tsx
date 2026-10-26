@@ -1,5 +1,6 @@
 import Importer from '../../components/admin/Importer';
 import Manager from '../../components/admin/Manager';
+import Submissions from '../../components/admin/Submissions';
 import SignOutButton from '../../components/admin/SignOutButton';
 import { dbConfigured } from '../../lib/admin/db';
 import { KINDS } from '../../lib/admin/kinds';
@@ -41,6 +42,15 @@ export default async function AdminPage() {
         <h2 className="adm__h2">2. Manage what is live</h2>
         <p className="adm__muted">Hide a listing without deleting it, show it again, or remove it for good.</p>
         <Manager kinds={KINDS} />
+      </div>
+
+      <div className="adm__panel">
+        <h2 className="adm__h2">3. Suggestions from visitors</h2>
+        <p className="adm__muted">
+          People can suggest opportunities at <code>/submit</code>. Open the official link and check it is genuine before you approve.
+          Approving creates the listing (published or as a hidden draft); rejecting keeps a record; nothing goes live by itself.
+        </p>
+        <Submissions />
       </div>
 
       <div className="adm__panel">

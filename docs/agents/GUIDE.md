@@ -70,10 +70,14 @@ How to paste a prompt: open the prompt file on GitHub (branch `platform`), copy 
 
 The site has an admin page at `/admin` where you upload CSV files, one type at a time (courses, scholarships, fellowships, grants, events, student offers, a mixed "all opportunities" file, and blog posts).
 
-One-time setup, in Vercel (Settings, Environment Variables, tick Production and Preview):
-- `ADMIN_PASSWORD`: choose a long password (12+ characters). Only you know it.
-- `SUPABASE_SERVICE_ROLE_KEY`: in Supabase, Project settings, API keys, copy the **secret** key. It is only ever used on the server. Never paste it into chat or code.
-Then redeploy.
+One-time setup, in Vercel. **This does not touch `main` or your live landing page.** Variables set for the Preview environment on branch `platform` only affect the platform preview.
+1. Vercel, project `oppvault_final`, Settings, Environment Variables, Add New.
+2. `ADMIN_PASSWORD`: pick a long password (12+ characters). Environment: **Preview**, and under it choose Git branch `platform`. Mark it Sensitive.
+3. `SUPABASE_SERVICE_ROLE_KEY`: in Supabase, Project settings, API keys, copy the **secret** key. Same settings: Preview, branch `platform`, Sensitive. Never paste it into chat or code.
+4. Redeploy only the preview: Deployments, find the latest one whose branch is `platform`, three-dot menu, Redeploy. (Any new push to `platform` also redeploys it.) The production deployment of `main` is left alone.
+5. Open the platform preview URL plus `/admin` and sign in.
+
+When you later launch for real, add the same two variables for Production as well.
 
 Daily use:
 1. Open `/admin` on the preview (or live) site and sign in.
@@ -81,6 +85,7 @@ Daily use:
 3. Upload, press **Check file** (nothing is saved yet; you see every problem by row number), then **Import**.
 4. Uploading the same `opportunity_id` again updates that listing. Use `published = no` for drafts.
 5. The "Manage what is live" section lets you hide, show or delete listings.
+6. **Visitor suggestions:** anyone can suggest an opportunity at `/submit`. They appear in section 3 of the admin page. Open the official link, check it is genuine, then Approve and publish, Approve as draft, or Reject. Nothing goes live by itself.
 
 Columns include opportunity_id, title (or course_name), link (or course_link), image_url (thumbnail), coupon_code, summary, description, provider, location, level, funding (or cost), deadline, eligibility, benefits, how_to_apply, featured, published. Several eligibility or benefit items are separated by a `|` character.
 

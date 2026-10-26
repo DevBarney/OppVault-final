@@ -18,3 +18,6 @@ Decided by: Agent 0 (setup). `app/scholarships/page.tsx` takes priority over `ap
 
 ### D-005 Content goes in through the admin page (CSV), not SQL
 Decided by: Barnabas. `/admin` accepts CSV per type. Agents prepare CSVs in `content/csv/`; they never write to the database. Listings may have `image_url` and `coupon_code`. `opportunity_id` (stored as `external_id`) lets a re-upload update a listing.
+
+### D-006 Visitor suggestions are reviewed by hand
+Decided by: Barnabas. `/submit` stores suggestions in a private table. Only the admin page can read them. Approving creates a listing (published or draft) with the visitor's official link. Nothing is published automatically.

@@ -122,3 +122,61 @@ export async function changeItems(kind: Kind, ids: string[], action: 'publish' |
         });
   return { ok: r.ok, count: clean.length };
 }
+
+// ---- Opportunities submitted by visitors ----
+
+export type SubmissionRow = {
+  id: string;
+  category: string;
+  title: string;
+  provider: string;
+  link: string;
+  summary: string;
+  deadline: string | null;
+  location: string;
+  level: string;
+  funding: string;
+  submitter_name: string;
+  submitter_email: string;
+  status: 'pending' | 'approved' | 'rejected';
+  review_note: string;
+  created_at: string;
+};
+
+export async function createSubmission(data: object): Promise<boolean> {
+  if (!dbConfigured()) return false;
+  const r = await call('submissions', { method: 'POST', headers: headers({ prefer: 'return=minimal' }), body: JSON.stringify(data) });
+  return r.ok;
+}
+
+export async function pendingLinkExists(link: string): Promise<boolean> {
+  const r = await call(`submissions?select=id&status=eq.pending&link=eq.${encodeURIComponent(link)}&limit=1`, { headers: headers() });
+  return r.ok && Array.isArray(r.body) && r.body.length > 0;
+}
+
+export async function listSubmissions(status: 'pending' | 'approved' | 'rejected'): Promise<SubmissionRow[]> {
+  const r = await call(`submissions?select=*&status=eq.${status}&order=created_at.desc&limit=100`, { headers: headers() });
+  return r.ok && Array.isArray(r.body) ? (r.body as SubmissionRow[]) : [];
+}
+
+export async function getSubmission(id: string): Promise<SubmissionRow | null> {
+  if (!UUID.test(id)) return null;
+  const r = await call(`submissions?select=*&id=eq.${id}&limit=1`, { headers: headers() });
+  return r.ok && Array.isArray(r.body) && r.body[0] ? (r.body[0] as SubmissionRow) : null;
+}
+
+export async function setSubmissionStatus(id: string, status: 'approved' | 'rejected', note = ''): Promise<boolean> {
+  if (!UUID.test(id)) return false;
+  const r = await call(`submissions?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: headers({ prefer: 'return=minimal' }),
+    body: JSON.stringify({ status, review_note: note.slice(0, 500), reviewed_at: new Date().toISOString() }),
+  });
+  return r.ok;
+}
+
+export async function deleteSubmission(id: string): Promise<boolean> {
+  if (!UUID.test(id)) return false;
+  const r = await call(`submissions?id=eq.${id}`, { method: 'DELETE', headers: headers({ prefer: 'return=minimal' }) });
+  return r.ok;
+}

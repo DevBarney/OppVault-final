@@ -32,3 +32,7 @@
 .adm__rows label { display: flex; align-items: center; gap: 8px; padding: 10px 12px; min-height: 44px; cursor: pointer; flex-wrap: wrap; }
 .adm__rowtitle { flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; }
 .adm code { background: var(--pale); padding: 1px 6px; border-radius: 6px; font-size: 0.85em; }
+.adm__ghost--on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.adm__sub { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; overflow-wrap: anywhere; }
+.adm__sub p { margin: 0; }
+.adm__subtitle { margin: 0; font-size: 1.02rem; color: var(--navy); }
