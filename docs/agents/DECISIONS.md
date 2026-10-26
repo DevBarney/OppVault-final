@@ -21,3 +21,6 @@ Decided by: Barnabas. `/admin` accepts CSV per type. Agents prepare CSVs in `con
 
 ### D-006 Visitor suggestions are reviewed by hand
 Decided by: Barnabas. `/submit` stores suggestions in a private table. Only the admin page can read them. Approving creates a listing (published or draft) with the visitor's official link. Nothing is published automatically.
+
+### D-007 Newsletters are sent from the admin page as Resend Broadcasts in batches of 1,000
+Decided by: Barnabas. Subscribers are batched by sign-up date. A batch can be sent once per email (table `mail_sends`). Free Resend plan caps marketing contacts at 1,000, so more than one batch needs a paid plan.

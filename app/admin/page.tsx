@@ -1,4 +1,5 @@
 import Importer from '../../components/admin/Importer';
+import Mailing from '../../components/admin/Mailing';
 import Manager from '../../components/admin/Manager';
 import Submissions from '../../components/admin/Submissions';
 import SignOutButton from '../../components/admin/SignOutButton';
@@ -51,6 +52,15 @@ export default async function AdminPage() {
           Approving creates the listing (published or as a hidden draft); rejecting keeps a record; nothing goes live by itself.
         </p>
         <Submissions />
+      </div>
+
+      <div className="adm__panel">
+        <h2 className="adm__h2">4. Email your subscribers</h2>
+        <p className="adm__muted">
+          Write an email, preview it, send yourself a test, then send it to one batch of up to 1,000 subscribers at a time. People who unsubscribe are skipped
+          automatically and every email carries an unsubscribe link.
+        </p>
+        <Mailing />
       </div>
 
       <div className="adm__panel">

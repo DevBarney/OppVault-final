@@ -112,3 +112,16 @@ create table if not exists public.submissions (
 );
 create index if not exists submissions_status_idx on public.submissions (status, created_at desc);
 alter table public.submissions enable row level security;
+
+-- Record of newsletter batches sent from /admin (one row per campaign and batch, so a batch cannot go out twice).
+create table if not exists public.mail_sends (
+  id uuid primary key default gen_random_uuid(),
+  campaign text not null,
+  subject text not null,
+  batch int not null,
+  recipients int not null default 0,
+  broadcast_id text,
+  created_at timestamptz not null default now(),
+  unique (campaign, batch)
+);
+alter table public.mail_sends enable row level security;

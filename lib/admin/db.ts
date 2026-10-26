@@ -181,3 +181,34 @@ export async function deleteSubmission(id: string): Promise<boolean> {
   const r = await call(`submissions?id=eq.${id}`, { method: 'DELETE', headers: headers({ prefer: 'return=minimal' }) });
   return r.ok;
 }
+
+// ---- Newsletter batches sent (one row per campaign and batch) ----
+
+export type MailSend = { campaign: string; subject: string; batch: number; recipients: number; broadcast_id: string | null; created_at: string };
+
+export async function listMailSends(): Promise<MailSend[]> {
+  const r = await call('mail_sends?select=campaign,subject,batch,recipients,broadcast_id,created_at&order=created_at.desc&limit=100', { headers: headers() });
+  return r.ok && Array.isArray(r.body) ? (r.body as MailSend[]) : [];
+}
+
+/** Claims a batch for a campaign. Returns false if it was already claimed (so it can never be sent twice). */
+export async function claimBatch(campaign: string, subject: string, batch: number, recipients: number): Promise<boolean> {
+  const r = await call('mail_sends', {
+    method: 'POST',
+    headers: headers({ prefer: 'return=minimal' }),
+    body: JSON.stringify({ campaign, subject, batch, recipients }),
+  });
+  return r.ok;
+}
+
+export async function finishBatch(campaign: string, batch: number, broadcastId: string): Promise<void> {
+  await call(`mail_sends?campaign=eq.${encodeURIComponent(campaign)}&batch=eq.${batch}`, {
+    method: 'PATCH',
+    headers: headers({ prefer: 'return=minimal' }),
+    body: JSON.stringify({ broadcast_id: broadcastId }),
+  });
+}
+
+export async function releaseBatch(campaign: string, batch: number): Promise<void> {
+  await call(`mail_sends?campaign=eq.${encodeURIComponent(campaign)}&batch=eq.${batch}&broadcast_id=is.null`, { method: 'DELETE', headers: headers() });
+}

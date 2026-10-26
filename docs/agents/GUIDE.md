@@ -91,6 +91,16 @@ Columns include opportunity_id, title (or course_name), link (or course_link), i
 
 The agents prepare ready-to-upload CSV files in `content/csv/` from verified official sources only. You review them, then upload them here. Nothing is shown to the public until `published` is yes.
 
+### Emailing subscribers (admin section 4)
+
+Needs in Vercel (Preview, branch `platform`, same way as above): `RESEND_API_KEY` (your Resend key; the one on Production is not shared with Preview), `RESEND_SEGMENT_ID` (already there) and `RESEND_FROM` (for example `OppVault <hello@oppvault.app>`, only after the domain shows Verified in Resend).
+
+How it works: write the email, press Preview, send yourself a test, then press **Send to batch 1**. Subscribers are split by sign-up date into batches of 1,000. Each batch can be sent once per email (the page records it), people who unsubscribed are skipped, and every email has an unsubscribe link. Above 1,000 subscribers each batch is "Prepared" once first.
+
+Resend free plan, as published on their pricing page when I checked: 3,000 transactional emails a month with a 100 a day cap, and up to 1,000 marketing contacts. Broadcasts to your list use the marketing side, so a list of up to 1,000 subscribers can be emailed without that daily cap. Over 1,000 contacts you need a paid Resend plan, so the batches only come into play after you upgrade. Check your own Resend dashboard for current limits.
+
+Add a postal or contact address to your email footer if the law where you send from requires it (the footer currently carries hello@oppvault.app).
+
 ## 8. Finishing and merging into `main`
 
 Do this only when you are happy with the `platform` preview.
