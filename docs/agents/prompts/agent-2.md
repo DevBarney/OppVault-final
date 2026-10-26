@@ -28,6 +28,11 @@ YOUR TASKS, IN ORDER
 5. Improve sample rows in `lib/seed/scholarships.ts` (keep every row marked sample). Draft verified real rows as SQL in `content/csv/scholarships.csv` only when you have an official source URL for each.
 6. Add JSON-LD where it is honest (for example `BreadcrumbList`). Do not add structured data that claims things the page does not show.
 
+ATTACHED CSV FILE(S)
+Barnabas attaches the raw CSV data for your area to this session (with this prompt or in his next message). If nothing is attached when you reach this step, ask him for it and carry on with the rest of your tasks meanwhile. The attached file can use ANY column names and order; it does not match the admin format and you must convert it. Read docs/agents/CSV-GUIDE.md fully and follow it exactly.
+- Area `scholarships`: output `content/csv/scholarships.csv`, check with `npm run check:csv -- content/csv/scholarships.csv scholarships`. Typical extra columns: award amount, number of awards, age limit, gender, field of study, nationality, application fee. Map amount/duration to `benefits`; map nationality/country restrictions to `eligibility` and `location`.
+Never invent or guess data. Rows you cannot make valid go in the notes file, not into the final CSV. Add content/csv/** files for your area to the list of files you own.
+
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.
 - Work in small steps. After each meaningful step: run `npm run typecheck` (and `npm run build` if dependencies install), commit with the message format `[agent-2] scholarships: what changed`, run git pull --rebase origin platform, then git push origin HEAD:platform. If the push is rejected, pull --rebase again and retry. Never force-push.

@@ -16,6 +16,10 @@ One owner per file. **You may only edit files your agent owns.** If you need a c
 
 `docs/agents/BOARD.md` and `docs/agents/DECISIONS.md` belong to Agent 1, but every agent may edit **its own section** of the board and **append** to the decisions log. Nothing else in `docs/agents/` may be edited by a non-owner, except the owner's own status file and inbox messages (new files only).
 
+## CSV data
+
+Each agent owns the files for its own area under `content/csv/` (the prepared CSV, its `-notes.md`, and `source/<area>-original.csv`). Agent 1 owns `scripts/` and `docs/agents/CSV-GUIDE.md`.
+
 ## Shared files that nobody edits directly except the owner
 
 `app/globals.css` is owned by Agent 1. Everyone else puts styles in their own CSS file and imports it from their own page or component. In the Next.js App Router a CSS file can be imported from any component, for example `import './scholarships.css';` at the top of `app/scholarships/page.tsx`.

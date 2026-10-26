@@ -27,6 +27,12 @@ YOUR TASKS, IN ORDER
 4. Styles in `app/events/events.css` (prefix `.evt-`) and `app/student-offers/offers.css` (prefix `.off-`).
 5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as a CSV in `content/csv/` that matches the admin template (Barnabas uploads it on the admin page).
 
+ATTACHED CSV FILE(S)
+Barnabas attaches the raw CSV data for your area to this session (with this prompt or in his next message). If nothing is attached when you reach this step, ask him for it and carry on with the rest of your tasks meanwhile. The attached file can use ANY column names and order; it does not match the admin format and you must convert it. Read docs/agents/CSV-GUIDE.md fully and follow it exactly.
+- Area `events`: output `content/csv/events.csv`, check with `npm run check:csv -- content/csv/events.csv events`. Typical extra columns: event date, end date, venue, city, online link, ticket price. For events `deadline` is the event date or registration closing date: use the date the page should count down to and say which in the notes. Venue and city go in `location`.
+- Area `student-offers`: output `content/csv/student-offers.csv`, check with `npm run check:csv -- content/csv/student-offers.csv student-offers`. Typical extra columns: offer name, brand, discount, coupon code, how to verify student status, expiry. `coupon_code` is a first-class column; verification steps go in `how_to_apply`; expiry is `deadline`.
+Never invent or guess data. Rows you cannot make valid go in the notes file, not into the final CSV. Add content/csv/** files for your area to the list of files you own.
+
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.
 - Work in small steps. After each meaningful step: run `npm run typecheck` (and `npm run build` if dependencies install), commit with the message format `[agent-5] events-offers: what changed`, run git pull --rebase origin platform, then git push origin HEAD:platform. If the push is rejected, pull --rebase again and retry. Never force-push.

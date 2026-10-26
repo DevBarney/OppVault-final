@@ -101,6 +101,20 @@ Resend free plan, as published on their pricing page when I checked: 3,000 trans
 
 Add a postal or contact address to your email footer if the law where you send from requires it (the footer currently carries hello@oppvault.app).
 
+## 7b. Giving each agent its CSV
+
+You do not need to reformat your files. Attach each raw CSV to the agent who owns that area, in the same message as its prompt (or straight after):
+
+| Attach this CSV | To |
+|---|---|
+| Scholarships | Agent 2 |
+| Fellowships and Grants (two files) | Agent 3 |
+| Courses | Agent 4 |
+| Events and Student offers (two files) | Agent 5 |
+| Blog posts | Agent 6 |
+
+Each agent reads `docs/agents/CSV-GUIDE.md`, maps your columns to the admin format, checks the result with the same rules the admin page uses (`npm run check:csv`), and commits `content/csv/<area>.csv` plus a notes file listing anything it could not use. You then download that file from the repo, open the admin page and upload it. Read the notes file first: it lists rows without an official link, duplicate rows and any questions.
+
 ## 8. Finishing and merging into `main`
 
 Do this only when you are happy with the `platform` preview.

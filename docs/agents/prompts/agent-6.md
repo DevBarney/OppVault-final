@@ -30,6 +30,11 @@ YOUR TASKS, IN ORDER
 5. If `components/Prose.tsx` needs new formatting (numbered lists, links, blockquotes), you own it. Keep it safe: no raw HTML injection.
 6. Styles in `app/blog/blog.css` (prefix `.blg-`).
 
+ATTACHED CSV FILE(S)
+Barnabas attaches the raw CSV data for your area to this session (with this prompt or in his next message). If nothing is attached when you reach this step, ask him for it and carry on with the rest of your tasks meanwhile. The attached file can use ANY column names and order; it does not match the admin format and you must convert it. Read docs/agents/CSV-GUIDE.md fully and follow it exactly.
+- Area `blog`: output `content/csv/posts.csv`, check with `npm run check:csv -- content/csv/posts.csv blog`. Blog posts use a different template: slug, title, excerpt, body, author, tags (separated by |), read_minutes, published_at, image_url, published. Keep the author's text exactly; do not rewrite articles. A `body` may use `## Heading` and `- bullet` lines; line breaks inside a CSV cell are allowed, or write `\n`.
+Never invent or guess data. Rows you cannot make valid go in the notes file, not into the final CSV. Add content/csv/** files for your area to the list of files you own.
+
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.
 - Work in small steps. After each meaningful step: run `npm run typecheck` (and `npm run build` if dependencies install), commit with the message format `[agent-6] blog: what changed`, run git pull --rebase origin platform, then git push origin HEAD:platform. If the push is rejected, pull --rebase again and retry. Never force-push.

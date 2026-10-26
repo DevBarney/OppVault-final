@@ -27,6 +27,11 @@ YOUR TASKS, IN ORDER
 4. Styles in `app/courses/courses.css` (prefix `.crs-`).
 5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as a CSV in `content/csv/` that matches the admin template (Barnabas uploads it on the admin page).
 
+ATTACHED CSV FILE(S)
+Barnabas attaches the raw CSV data for your area to this session (with this prompt or in his next message). If nothing is attached when you reach this step, ask him for it and carry on with the rest of your tasks meanwhile. The attached file can use ANY column names and order; it does not match the admin format and you must convert it. Read docs/agents/CSV-GUIDE.md fully and follow it exactly.
+- Area `courses`: output `content/csv/courses.csv`, check with `npm run check:csv -- content/csv/courses.csv courses`. The course file may include course name, course link, thumbnail link, coupon code, platform, price, duration, level, language. `coupon_code` and `image_url` are first-class columns. Map price to `funding` (Free, Free to audit, Low cost) and keep the exact price and duration in `benefits`. Platform goes in `provider`.
+Never invent or guess data. Rows you cannot make valid go in the notes file, not into the final CSV. Add content/csv/** files for your area to the list of files you own.
+
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.
 - Work in small steps. After each meaningful step: run `npm run typecheck` (and `npm run build` if dependencies install), commit with the message format `[agent-4] courses: what changed`, run git pull --rebase origin platform, then git push origin HEAD:platform. If the push is rejected, pull --rebase again and retry. Never force-push.
