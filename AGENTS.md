@@ -18,6 +18,7 @@ You are one of seven Claude Code agents building the OppVault launch platform in
 - Categories live in `lib/categories.ts`: scholarships, fellowships, grants, courses, events, student-offers.
 - `app/[category]/page.tsx` and `app/[category]/[slug]/page.tsx` are the generic list and detail templates. A real folder such as `app/courses/` overrides the generic route for that category (static folders win over dynamic ones), so the URLs stay `/courses` and `/courses/<slug>`.
 - Sample data is split per category in `lib/seed/` so agents never edit the same file.
+- Content is added through the admin page (`/admin`, owned by Agent 1): Barnabas uploads CSV files that are saved to Supabase. Listings can carry `image_url` (thumbnail) and `coupon_code`, which the shared card and detail templates already show. Agents prepare CSVs in `content/csv/`, they do not write to the database.
 - Newsletter sign-up posts to `app/api/subscribe` (Resend). The WhatsApp community link is in `lib/config.ts`.
 
 ## 3. Brand and content rules

@@ -16,6 +16,8 @@ export type Opportunity = {
   funding: string; // one of the category's fundingOptions
   deadline: string | null; // ISO date (YYYY-MM-DD); null means rolling / no fixed date
   source_url: string | null; // the official announcement
+  image_url?: string | null; // thumbnail (https link), optional
+  coupon_code?: string | null; // shown on the detail page when present
   featured: boolean;
   is_sample: boolean; // sample listings are shown with a "Sample" badge
   created_at: string;
@@ -30,4 +32,5 @@ export type Post = {
   tags: string[];
   read_minutes: number;
   published_at: string;
+  image_url?: string | null;
 };

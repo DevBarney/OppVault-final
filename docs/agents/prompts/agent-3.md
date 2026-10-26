@@ -17,7 +17,7 @@ FILES YOU OWN (edit nothing else)
 - app/fellowships/** and app/grants/** (create them)
 - `components/fellowships/**, components/grants/**`
 - `lib/seed/fellowships.ts, lib/seed/grants.ts`
-- `supabase/content/fellowships.sql, supabase/content/grants.sql`
+- `content/csv/fellowships.csv, content/csv/grants.csv`
 - `docs/agents/status/agent-3.md`
 
 YOUR TASKS, IN ORDER
@@ -25,7 +25,7 @@ YOUR TASKS, IN ORDER
 2. Fellowships: emphasise duration, stipend, cohort and mentorship; add a "Is a fellowship right for me?" explainer.
 3. Grants: emphasise amount band, who can apply (individuals, groups, organisations) and reporting duties; add a "Grant application basics" explainer. Never promise or imply a guaranteed award.
 4. Styles in `app/fellowships/fellowships.css` (prefix `.fel-`) and `app/grants/grants.css` (prefix `.gr-`).
-5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as SQL under `supabase/content/`.
+5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as a CSV in `content/csv/` that matches the admin template (Barnabas uploads it on the admin page).
 
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.

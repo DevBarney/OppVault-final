@@ -65,3 +65,25 @@ create policy "Public can read published opportunities" on public.opportunities
 drop policy if exists "Public can read published posts" on public.posts;
 create policy "Public can read published posts" on public.posts
   for select to anon, authenticated using (published = true);
+
+-- ---------------------------------------------------------------------------------------------
+-- Admin CSV import support (applied after the tables above)
+-- external_id is the "opportunity ID" column of the CSV files; importing the same ID again updates
+-- the row instead of creating a duplicate. image_url and coupon_code are shown on the site.
+-- ---------------------------------------------------------------------------------------------
+alter table public.opportunities
+  add column if not exists external_id text,
+  add column if not exists image_url text,
+  add column if not exists coupon_code text;
+update public.opportunities set external_id = slug where external_id is null;
+alter table public.opportunities alter column external_id set not null;
+alter table public.opportunities drop constraint if exists opportunities_category_external_id_key;
+alter table public.opportunities add constraint opportunities_category_external_id_key unique (category, external_id);
+alter table public.posts add column if not exists image_url text;
+
+create or replace function public.default_external_id() returns trigger
+language plpgsql set search_path = '' as $$
+begin if new.external_id is null or new.external_id = '' then new.external_id := new.slug; end if; return new; end $$;
+drop trigger if exists opportunities_default_external_id on public.opportunities;
+create trigger opportunities_default_external_id before insert on public.opportunities
+  for each row execute function public.default_external_id();

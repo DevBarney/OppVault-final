@@ -17,7 +17,7 @@ FILES YOU OWN (edit nothing else)
 - app/scholarships/** (create it)
 - `components/scholarships/**`
 - `lib/seed/scholarships.ts`
-- `supabase/content/scholarships.sql`
+- `content/csv/scholarships.csv`
 - `docs/agents/status/agent-2.md`
 
 YOUR TASKS, IN ORDER
@@ -25,7 +25,7 @@ YOUR TASKS, IN ORDER
 2. Add scholarship-specific content to the list page: a short "how to choose a scholarship" panel, filters that make sense (level, funding, location), clear closing-soon states.
 3. On the detail page add a plain-English "Before you apply" checklist, a "Documents you will probably need" block and a clearly visible official source button.
 4. Write the scholarships styles in `app/scholarships/scholarships.css` using the `--navy/--royal/--sky/--teal/--gold` tokens and a `.sch-` class prefix.
-5. Improve sample rows in `lib/seed/scholarships.ts` (keep every row marked sample). Draft verified real rows as SQL in `supabase/content/scholarships.sql` only when you have an official source URL for each.
+5. Improve sample rows in `lib/seed/scholarships.ts` (keep every row marked sample). Draft verified real rows as SQL in `content/csv/scholarships.csv` only when you have an official source URL for each.
 6. Add JSON-LD where it is honest (for example `BreadcrumbList`). Do not add structured data that claims things the page does not show.
 
 HOW TO WORK

@@ -25,6 +25,7 @@ FILES YOU OWN (edit nothing else)
 - `docs/agents/BOARD.md, DECISIONS.md and everything in docs/agents/ not listed for another agent`
 
 YOUR TASKS, IN ORDER
+0. The admin area (`/admin`, CSV upload and management) is already built by the setup agent. Review it first: read lib/admin/*, app/api/admin/*, components/admin/*, confirm it builds, and polish. Never log or print ADMIN_PASSWORD or SUPABASE_SERVICE_ROLE_KEY.
 1. Run `npm install`, `npm run typecheck` and `npm run build` on the current branch and record the result in your status file. If the build fails, fix it first.
 2. Confirm the Vercel preview of the `platform` branch builds and loads (ask Barnabas for the preview link if you cannot see it).
 3. Process the inbox (`docs/agents/inbox/to-agent-1/`) at the start of every work block: approve, do, or decline each request and reply in the sender's inbox.

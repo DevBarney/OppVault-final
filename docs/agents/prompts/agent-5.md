@@ -17,7 +17,7 @@ FILES YOU OWN (edit nothing else)
 - app/events/** and app/student-offers/** (create them)
 - `components/events/**, components/student-offers/**`
 - `lib/seed/events.ts, lib/seed/student-offers.ts`
-- `supabase/content/events.sql, supabase/content/student-offers.sql`
+- `content/csv/events.csv, content/csv/student-offers.csv`
 - `docs/agents/status/agent-5.md`
 
 YOUR TASKS, IN ORDER
@@ -25,7 +25,7 @@ YOUR TASKS, IN ORDER
 2. Events: date, location or online, cost, funded places, and a "Plan your attendance" block (travel, visa, funding tips). Upcoming first, past events clearly labelled.
 3. Student offers: what the offer is, how to verify student status, when it expires, and a short "Check before you buy" note. Never present a discount as endorsed unless it is.
 4. Styles in `app/events/events.css` (prefix `.evt-`) and `app/student-offers/offers.css` (prefix `.off-`).
-5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as SQL under `supabase/content/`.
+5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as a CSV in `content/csv/` that matches the admin template (Barnabas uploads it on the admin page).
 
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.

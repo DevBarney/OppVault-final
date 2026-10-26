@@ -40,3 +40,7 @@ Visitors can only read published rows; they can never write.
 
 Every listing links to its official source, shows its deadline, and carries the "we cannot guarantee any outcome"
 note. Sample listings are marked, excluded from the sitemap and set to `noindex`.
+
+## Admin area (CSV uploads)
+
+`/admin` lets you upload CSV files for courses, scholarships, fellowships, grants, events, student offers, mixed opportunities and blog posts, check them before saving, and hide or delete listings later. Set `ADMIN_PASSWORD` (12+ characters) and `SUPABASE_SERVICE_ROLE_KEY` (server only) in Vercel. Templates can be downloaded from the page itself.

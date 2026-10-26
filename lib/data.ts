@@ -127,6 +127,8 @@ function normaliseOpportunity(o: Opportunity): Opportunity {
     benefits: Array.isArray(o.benefits) ? o.benefits : [],
     description: o.description ?? '',
     how_to_apply: o.how_to_apply ?? '',
+    image_url: o.image_url ?? null,
+    coupon_code: o.coupon_code ?? null,
     is_sample: false,
   };
 }

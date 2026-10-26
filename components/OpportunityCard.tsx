@@ -10,6 +10,12 @@ export default function OpportunityCard({ item, showCategory = false }: { item: 
   return (
     <article className="card">
       <Link className="card__link" href={`/${item.category}/${item.slug}`}>
+        {item.image_url ? (
+          <span className="card__thumb">
+            {/* Plain img: thumbnails come from many sites, so next/image domain settings are not used. */}
+            <img src={item.image_url} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+          </span>
+        ) : null}
         <div className="card__top">
           {showCategory && cat ? (
             <span className="tag">

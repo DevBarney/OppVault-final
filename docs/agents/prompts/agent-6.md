@@ -19,14 +19,14 @@ FILES YOU OWN (edit nothing else)
 - `components/blog/**`
 - `components/Prose.tsx`
 - `lib/seed/posts.ts`
-- `supabase/content/posts.sql`
+- `content/csv/posts.csv`
 - `docs/agents/status/agent-6.md`
 
 YOUR TASKS, IN ORDER
 1. Upgrade the blog list: featured post, tag filter (query string), pagination, reading time.
 2. Upgrade the article page: table of contents from `##` headings, related posts, share links, "Related opportunities" linking to category pages, sensible `Article` JSON-LD.
 3. Add an RSS feed at `/feed.xml`.
-4. Write at least eight useful, accurate guides (CV and personal statement basics, how to ask for references, reading eligibility, deadlines planning, avoiding scholarship scams, and so on) in `lib/seed/posts.ts` and mirror them as SQL in `supabase/content/posts.sql`. Plain, honest advice only; no invented statistics, no promises of outcomes.
+4. Write at least eight useful, accurate guides (CV and personal statement basics, how to ask for references, reading eligibility, deadlines planning, avoiding scholarship scams, and so on) in `lib/seed/posts.ts` and mirror them as a CSV in `content/csv/posts.csv` (blog template columns). Plain, honest advice only; no invented statistics, no promises of outcomes.
 5. If `components/Prose.tsx` needs new formatting (numbered lists, links, blockquotes), you own it. Keep it safe: no raw HTML injection.
 6. Styles in `app/blog/blog.css` (prefix `.blg-`).
 

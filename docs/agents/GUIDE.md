@@ -66,9 +66,25 @@ How to paste a prompt: open the prompt file on GitHub (branch `platform`), copy 
 - One `h1` per page, titles and descriptions present.
 - Copy review: British spelling, no guarantees, no invented facts.
 
-## 7. Adding real opportunities
+## 7. Adding real opportunities (the admin page)
 
-Agents cannot verify listings for you. Real content goes into Supabase (project already created, tables `opportunities` and `posts` exist and are protected so the public can only read published rows). Agents prepare SQL files under `supabase/content/` with verified entries and official links. You (or Claude in a session where Supabase is connected) review and run them. Nothing becomes public until `published = true`.
+The site has an admin page at `/admin` where you upload CSV files, one type at a time (courses, scholarships, fellowships, grants, events, student offers, a mixed "all opportunities" file, and blog posts).
+
+One-time setup, in Vercel (Settings, Environment Variables, tick Production and Preview):
+- `ADMIN_PASSWORD`: choose a long password (12+ characters). Only you know it.
+- `SUPABASE_SERVICE_ROLE_KEY`: in Supabase, Project settings, API keys, copy the **secret** key. It is only ever used on the server. Never paste it into chat or code.
+Then redeploy.
+
+Daily use:
+1. Open `/admin` on the preview (or live) site and sign in.
+2. Pick the type, download the template, fill it in with Excel or Google Sheets, save as CSV.
+3. Upload, press **Check file** (nothing is saved yet; you see every problem by row number), then **Import**.
+4. Uploading the same `opportunity_id` again updates that listing. Use `published = no` for drafts.
+5. The "Manage what is live" section lets you hide, show or delete listings.
+
+Columns include opportunity_id, title (or course_name), link (or course_link), image_url (thumbnail), coupon_code, summary, description, provider, location, level, funding (or cost), deadline, eligibility, benefits, how_to_apply, featured, published. Several eligibility or benefit items are separated by a `|` character.
+
+The agents prepare ready-to-upload CSV files in `content/csv/` from verified official sources only. You review them, then upload them here. Nothing is shown to the public until `published` is yes.
 
 ## 8. Finishing and merging into `main`
 

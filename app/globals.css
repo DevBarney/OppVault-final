@@ -2347,3 +2347,11 @@ body > main { min-height: 50vh; }
 .hero--home .hero__grid { gap: 22px; }
 .hero .hsearch__btn { background: var(--gold); color: var(--navy); }
 @media (hover: hover) { .hero .hsearch__btn:hover { background: #ffc933; } }
+
+/* ---- Thumbnails and coupon codes (listings uploaded from CSV) ---- */
+.card__thumb { display: block; margin: -4px -4px 12px; border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; background: var(--pale); }
+.card__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.facts__coupon { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 0; padding: 10px 12px; border: 1px dashed var(--gold); border-radius: 10px; background: #fffaf0; font-size: 0.85rem; color: var(--muted); }
+.facts__coupon code { font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--navy); overflow-wrap: anywhere; user-select: all; }
+.detail__image { margin: 0 0 20px; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16 / 9; background: var(--pale); }
+.detail__image img { width: 100%; height: 100%; object-fit: cover; display: block; }

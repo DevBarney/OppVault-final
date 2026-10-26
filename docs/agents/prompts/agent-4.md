@@ -17,7 +17,7 @@ FILES YOU OWN (edit nothing else)
 - app/courses/** (create it)
 - `components/courses/**`
 - `lib/seed/courses.ts`
-- `supabase/content/courses.sql`
+- `content/csv/courses.csv`
 - `docs/agents/status/agent-4.md`
 
 YOUR TASKS, IN ORDER
@@ -25,7 +25,7 @@ YOUR TASKS, IN ORDER
 2. Add course-specific facts on the cards and detail page: cost (free, free to audit, low cost), format (self-paced or scheduled), level, duration where known.
 3. Add a "Pick a learning path" strip on the list page (for example data skills, writing, project management, web) that links to filtered views using query strings the existing Filters support. If a path needs a new filter, send a request to Agent 1.
 4. Styles in `app/courses/courses.css` (prefix `.crs-`).
-5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as SQL under `supabase/content/`.
+5. Improve sample rows (keep them marked sample); real rows only with an official source URL, drafted as a CSV in `content/csv/` that matches the admin template (Barnabas uploads it on the admin page).
 
 HOW TO WORK
 - Before every work block: git pull --rebase origin platform, then read your inbox.

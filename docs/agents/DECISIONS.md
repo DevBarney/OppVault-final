@@ -15,3 +15,6 @@ Decided by: Barnabas. Invented listings must show the "Sample" badge and stay ou
 
 ### D-004 Static folders override the generic category route
 Decided by: Agent 0 (setup). `app/scholarships/page.tsx` takes priority over `app/[category]/page.tsx`. Agents copy the generic template as a starting point and make it their own.
+
+### D-005 Content goes in through the admin page (CSV), not SQL
+Decided by: Barnabas. `/admin` accepts CSV per type. Agents prepare CSVs in `content/csv/`; they never write to the database. Listings may have `image_url` and `coupon_code`. `opportunity_id` (stored as `external_id`) lets a re-upload update a listing.

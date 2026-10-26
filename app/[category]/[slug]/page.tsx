@@ -63,6 +63,11 @@ export default async function OpportunityPage({ params }: Props) {
       <section className="section section--list">
         <div className="container detail">
           <article className="detail__main">
+            {item.image_url ? (
+              <div className="detail__image">
+                <img src={item.image_url} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+              </div>
+            ) : null}
             <p className="detail__lead">{item.summary}</p>
             {item.description ? <Prose text={item.description} /> : null}
 
@@ -124,6 +129,12 @@ export default async function OpportunityPage({ params }: Props) {
                   </dd>
                 </div>
               </dl>
+              {item.coupon_code ? (
+                <p className="facts__coupon">
+                  <span>Coupon code</span>
+                  <code>{item.coupon_code}</code>
+                </p>
+              ) : null}
               {item.source_url ? (
                 <a className="btn btn--primary facts__cta" href={item.source_url} target="_blank" rel="noopener noreferrer nofollow">
                   <span>Visit the official source</span>
