@@ -3,7 +3,7 @@
 import { useState, type ChangeEvent } from 'react';
 
 type Kind = { kind: string; label: string };
-type Item = { id: string; title: string; slug: string; category?: string; published: boolean; deadline?: string | null; published_at?: string };
+type Item = { id: string; title: string; slug: string; category?: string; published: boolean; deadline?: string | null; published_at?: string; source_url?: string | null };
 
 export default function Manager({ kinds }: { kinds: Kind[] }) {
   const [kind, setKind] = useState(kinds[0]?.kind ?? 'courses');
@@ -30,15 +30,17 @@ export default function Manager({ kinds }: { kinds: Kind[] }) {
     setBusy(false);
   }
 
-  async function act(action: 'publish' | 'unpublish' | 'delete') {
-    if (picked.size === 0) return;
-    if (action === 'delete' && !window.confirm(`Delete ${picked.size} item(s) for good? This cannot be undone.`)) return;
+  async function act(action: 'publish' | 'unpublish' | 'delete', only?: Item) {
+    const ids = only ? [only.id] : [...picked];
+    if (ids.length === 0) return;
+    const what = only ? `"${only.title}"` : `${ids.length} item(s)`;
+    if (action === 'delete' && !window.confirm(`Delete ${what} for good? This cannot be undone.`)) return;
     setBusy(true);
     try {
       const res = await fetch('/api/admin/items', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ kind, ids: [...picked], action }),
+        body: JSON.stringify({ kind, ids, action }),
       });
       const data = (await res.json()) as { ok: boolean; error?: string; count?: number };
       setMsg(data.ok ? `Done (${data.count}).` : data.error ?? 'Nothing was changed.');
@@ -87,10 +89,21 @@ export default function Manager({ kinds }: { kinds: Kind[] }) {
                     {kind === 'opportunities' && it.category ? <span className="adm__chip">{it.category}</span> : null}
                     <span className={`adm__chip ${it.published ? '' : 'adm__chip--draft'}`}>{it.published ? 'live' : 'hidden'}</span>
                   </label>
+                  <div className="adm__rowtools">
+                    {it.source_url ? (
+                      <a className="adm__link" href={it.source_url} target="_blank" rel="noopener noreferrer nofollow">Check link</a>
+                    ) : null}
+                    <button type="button" className="adm__ghost" disabled={busy} onClick={() => act(it.published ? 'unpublish' : 'publish', it)}>
+                      {it.published ? 'Hide' : 'Show'}
+                    </button>
+                    <button type="button" className="adm__ghost adm__ghost--danger" disabled={busy} onClick={() => act('delete', it)}>
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
-            <p className="adm__muted">Showing the newest {items.length}.</p>
+            <p className="adm__muted">Tip: use Delete on a single row for a fake or wrong listing. Showing the newest {items.length}.</p>
           </>
         )
       ) : null}

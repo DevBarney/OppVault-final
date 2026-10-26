@@ -95,11 +95,12 @@ export type ListedItem = {
   published: boolean;
   deadline?: string | null;
   published_at?: string;
+  source_url?: string | null;
 };
 
 export async function listItems(kind: Kind): Promise<ListedItem[]> {
   const table = kindTable(kind);
-  const select = table === 'posts' ? 'id,title,slug,published,published_at' : 'id,title,slug,category,published,deadline';
+  const select = table === 'posts' ? 'id,title,slug,published,published_at' : 'id,title,slug,category,published,deadline,source_url';
   const filter = table === 'opportunities' && kind !== 'opportunities' ? `&category=eq.${kind}` : '';
   const r = await call(`${table}?select=${select}${filter}&order=created_at.desc&limit=200`, { headers: headers() });
   return r.ok && Array.isArray(r.body) ? (r.body as ListedItem[]) : [];
