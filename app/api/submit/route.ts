@@ -1,6 +1,7 @@
 import { dbConfigured, createSubmission, pendingLinkExists } from '../../../lib/admin/db';
 import { json } from '../../../lib/admin/http';
 import { sameOrigin } from '../../../lib/admin/auth';
+import { notifyAddress, originOf, sendNotification } from '../../../lib/admin/mail';
 import { clientKey, rateLimited } from '../../../lib/rateLimit';
 import { validateSubmission } from '../../../lib/submissions';
 
@@ -34,5 +35,11 @@ export async function POST(request: Request): Promise<Response> {
 
   const saved = await createSubmission(checked.data);
   if (!saved) return json({ ok: false, error: 'We could not save that right now. Please try again in a moment.' }, 502);
+  await sendNotification({
+    to: notifyAddress(),
+    subject: `New opportunity suggested: ${checked.data.title}`.slice(0, 150),
+    lines: [`A visitor suggested a ${checked.data.category} listing.`, `Title: ${checked.data.title}`, `Official link: ${checked.data.link}`, 'Open the admin page, section 3, to check the link and approve or reject it.'],
+    link: { url: `${originOf(request)}/admin`, label: 'Review suggestions' },
+  });
   return json({ ok: true });
 }

@@ -160,3 +160,36 @@ export async function sendTest(to: string, subject: string, html: string, text: 
   });
   if (!r.ok) throw new Error(r.error || 'Resend could not send the test email.');
 }
+
+/** Where "something needs your attention" emails go. Set ADMIN_NOTIFY_EMAIL to your own inbox. */
+export const notifyAddress = () => process.env.ADMIN_NOTIFY_EMAIL?.trim() || 'hello@oppvault.app';
+
+/**
+ * Short plain notification (to the owner, or to a writer). Never throws: a failed notification must not break
+ * the action that triggered it. Needs RESEND_API_KEY and RESEND_FROM; without them it quietly does nothing.
+ */
+export async function sendNotification(input: { to: string; subject: string; lines: string[]; link?: { url: string; label: string } }): Promise<boolean> {
+  try {
+    const from = fromAddress();
+    if (!apiKey() || !from) return false;
+    const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const paras = input.lines.map((l) => `<p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#1e2350;margin-top:0;margin-bottom:12px;">${esc(l)}</p>`).join('');
+    const button = input.link
+      ? `<p style="margin-top:16px;margin-bottom:0;"><a href="${esc(input.link.url)}" style="display:inline-block;padding-top:11px;padding-bottom:11px;padding-left:22px;padding-right:22px;background-color:#0332b3;border-radius:999px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">${esc(input.link.label)}</a></p>`
+      : '';
+    const html = `<!DOCTYPE html><html><body style="margin:0;padding:20px;background-color:#f5f9ff;"><div style="max-width:560px;background-color:#ffffff;border-radius:12px;padding:24px;"><p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0332b3;font-weight:bold;margin-top:0;margin-bottom:12px;">OppVault</p>${paras}${button}</div></body></html>`;
+    const text = [...input.lines, input.link ? `${input.link.label}: ${input.link.url}` : ''].filter(Boolean).join('\n\n');
+    const r = await rs('/emails', { method: 'POST', body: JSON.stringify({ from, to: [input.to], subject: input.subject, html, text, reply_to: ['hello@oppvault.app'] }) });
+    if (!r.ok) console.error(`[notify] could not send "${input.subject}": ${r.error}`);
+    return r.ok;
+  } catch (err) {
+    console.error('[notify] error:', err instanceof Error ? err.message : err);
+    return false;
+  }
+}
+
+/** The address this admin is being used from, so links in emails open the right site (preview or live). */
+export function originOf(request: Request): string {
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+  return host ? `https://${host}` : 'https://oppvault.app';
+}

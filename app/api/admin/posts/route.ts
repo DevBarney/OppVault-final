@@ -3,10 +3,37 @@ import { sameOrigin, sessionFromRequest, type Session } from '../../../../lib/ad
 import { dbConfigured } from '../../../../lib/admin/db';
 import { json } from '../../../../lib/admin/http';
 import { createPost, deletePost, getPostById, listPosts, updatePost, validatePost, readMinutes, uniqueSlug } from '../../../../lib/admin/posts';
-import { activeWriter } from '../../../../lib/admin/users';
+import { notifyAddress, originOf, sendNotification } from '../../../../lib/admin/mail';
+import { activeWriter, findById } from '../../../../lib/admin/users';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+async function tellOwner(request: Request, writer: string, title: string): Promise<void> {
+  await sendNotification({
+    to: notifyAddress(),
+    subject: `Blog post waiting for review: ${title}`.slice(0, 150),
+    lines: [`${writer} has sent a blog post for review.`, `Title: ${title}`, 'Open the blog editor, filter by "Waiting for review", then publish it or send it back with a note.'],
+    link: { url: `${originOf(request)}/admin/blog`, label: 'Review the post' },
+  });
+}
+
+async function tellWriter(request: Request, authorId: string | null, title: string, kind: 'published' | 'sent_back', note: string): Promise<void> {
+  if (!authorId) return;
+  const user = await findById(authorId);
+  if (!user || !user.active) return;
+  const base = originOf(request);
+  await sendNotification(
+    kind === 'published'
+      ? { to: user.email, subject: `Your post is live: ${title}`.slice(0, 150), lines: [`Hi ${user.name},`, `Your blog post "${title}" has been published on OppVault. Thank you for writing it.`], link: { url: `${base}/blog`, label: 'See the blog' } }
+      : {
+          to: user.email,
+          subject: `Your post needs a few changes: ${title}`.slice(0, 150),
+          lines: [`Hi ${user.name},`, `Your blog post "${title}" was sent back to your drafts.`, note ? `Note from the editor: ${note}` : 'Open it, make any changes, and send it for review again.'],
+          link: { url: `${base}/admin/blog`, label: 'Open your drafts' },
+        },
+  );
+}
 
 type Who = { session: Session; name: string; avatar: string | null };
 
@@ -62,6 +89,7 @@ export async function POST(request: Request): Promise<Response> {
       const created = await createPost(v.data, w.name, owner ? null : w.session.uid, status, w.avatar);
       if (!created.ok) return json({ ok: false, error: created.error ?? 'Could not save.' }, 502);
       if (status === 'published') revalidatePath('/', 'layout');
+      if (status === 'review' && !owner) await tellOwner(request, w.name, v.data.title);
       return json({ ok: true, id: created.id, status });
     }
 
@@ -90,14 +118,18 @@ export async function POST(request: Request): Promise<Response> {
     const ok = await updatePost(id, patch, mine);
     if (!ok) return json({ ok: false, error: 'The post could not be saved. The web address may already be used.' }, 409);
     if (existing.published || status === 'published') revalidatePath('/', 'layout');
+    if (status === 'review' && !owner) await tellOwner(request, w.name, v.data.title);
+    if (owner && action === 'publish' && existing.status !== 'published') await tellWriter(request, existing.author_id, v.data.title, 'published', '');
     return json({ ok: true, id, status: patch.status });
   }
 
   if (action === 'unpublish' || action === 'to_draft' || action === 'reject') {
     if (!owner) return json({ ok: false, error: 'Only the owner can do that.' }, 403);
     const note = typeof b.note === 'string' ? b.note.slice(0, 500) : '';
+    const before = action === 'reject' ? await getPostById(id) : null;
     const ok = await updatePost(id, { status: 'draft', published: false, ...(action === 'reject' ? { review_note: note } : {}) });
     if (!ok) return json({ ok: false, error: 'Nothing was changed.' }, 400);
+    if (before) await tellWriter(request, before.author_id, before.title, 'sent_back', note);
     revalidatePath('/', 'layout');
     return json({ ok: true });
   }
