@@ -7,7 +7,7 @@
 export const BATCH_SIZE = 1000;
 
 const API = 'https://api.resend.com';
-const apiKey = () => process.env.RESEND_API_KEY?.trim();
+const apiKey = () => process.env.RESEND_API_KEY?.trim().replace(/^["']+|["']+$/g, '').trim();
 export const mainSegment = () => process.env.RESEND_SEGMENT_ID?.trim();
 export const fromAddress = () => process.env.RESEND_FROM?.trim();
 
@@ -37,7 +37,15 @@ async function rs<T = unknown>(path: string, init: RequestInit = {}, retry = tru
   } catch {
     /* empty body */
   }
-  const error = !res.ok && data && typeof data === 'object' && 'message' in data ? String((data as { message: unknown }).message) : res.ok ? '' : `Resend returned ${res.status}`;
+  let error = !res.ok && data && typeof data === 'object' && 'message' in data ? String((data as { message: unknown }).message) : res.ok ? '' : `Resend returned ${res.status}`;
+  if (res.status === 401 || res.status === 403) {
+    const key = apiKey() ?? '';
+    error = !key.startsWith('re_')
+      ? 'RESEND_API_KEY in Vercel does not look like a Resend key (it should start with re_). Copy the key itself, not its name or ID.'
+      : res.status === 401
+        ? 'Resend rejected the API key. Create a new key in Resend with Full access, replace RESEND_API_KEY on the preview, and redeploy.'
+        : 'This Resend key is not allowed to do that. Use a key with Full access (a "Sending access" key cannot read subscribers).';
+  }
   return { ok: res.ok, status: res.status, data: data as T, error };
 }
 
