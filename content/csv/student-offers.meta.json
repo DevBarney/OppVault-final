@@ -1,0 +1,10 @@
+{
+  "snapshot_at": "2026-10-27T02:10:28Z",
+  "source_file": "student-offers-original.csv",
+  "rows_in_snapshot": 596,
+  "rows_in_upload": 540,
+  "published": 506,
+  "drafts": 34,
+  "left_out": 56,
+  "missing_links": 43
+}

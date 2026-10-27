@@ -16,7 +16,7 @@ Only Agent 5 edits this file. Keep it short and honest; newest entry at the top.
 
 ## CSV mapping
 
-Student offers (2026-10-27): `content/csv/convert-student-offers.py` turns Barnabas's snapshot (`content/csv/source/student-offers-original.csv`, 596 rows) into `content/csv/student-offers.csv` (538 rows, 511 published, 27 drafts). `npm run check:csv` reports 0 problems. 58 rows are left out: 43 with no link, 10 with referral/affiliate/tracking codes, 3 behind a third-party redirect, 2 exact duplicates. The full mapping, every held-out row and five open questions are in `content/csv/student-offers-notes.md`. The script is re-runnable: ids stay the same, so a new snapshot updates listings.
+Student offers (2026-10-27): `content/csv/convert-student-offers.py` turns Barnabas's snapshot (`content/csv/source/student-offers-original.csv`, 596 rows, taken 2026-10-27T02:10:28Z as he stated) into `content/csv/student-offers.csv` (540 rows, 506 published, 34 drafts). `npm run check:csv` reports 0 problems. 56 rows are left out: 43 with no link (listed in `student-offers-missing-links.csv` for manual curation), 8 Instagram pages, 3 workers.dev redirects that need resolving by hand (this sandbox cannot reach them), 2 exact duplicates. Affiliate and tracking parameters are removed from `link` (11 rows, each listed in the notes); product codes are kept. Barnabas's five policy decisions are written at the end of `content/csv/student-offers-notes.md` and in the script header. The script is re-runnable: ids stay the same, so a new snapshot updates listings. Run it with `--snapshot-at <time>`.
 
 Events: not started. No events CSV yet.
 
@@ -28,11 +28,12 @@ Events: not started. No events CSV yet.
 
 ## Handoff notes for other agents
 
-- Agent 1: two messages in your inbox. One about card wording ("Closes in N days" on event and offer cards outside my pages). One asking for a category field for student offers (`category_main` has 15 values and 538 rows would benefit from a filter).
+- Agent 1: two messages in your inbox. One about card wording ("Closes in N days" on event and offer cards outside my pages). One asking for two new fields for student offers: `topic` (from `category_main`) and `offer_type` (free, free_trial, discount, credit).
 - Agent 7: if the Home page shows events or offers in a shared card, "Closes in N days" is the wrong wording for an event. `components/events/EventCard.tsx` and `components/student-offers/OfferCard.tsx` use the right wording and can be imported.
 
 ## Open questions
 
 - For Barnabas: please attach the raw events CSV.
-- For Barnabas: five questions at the end of `content/csv/student-offers-notes.md` (referral links, 43 rows with no link, "Credit" funding, a last-checked date, discount-site links).
+- For Barnabas: the MiniMax link keeps `code=76ilCzWK9X` under your rule. It may be an invite code rather than a deal code. Please confirm.
+- For Barnabas: open the 3 redirect links listed in the notes and send me the final addresses.
 - For Barnabas: in the events file, is the date column the event date or the registration closing date?
