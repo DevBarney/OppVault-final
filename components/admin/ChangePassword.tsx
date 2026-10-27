@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import PasswordField from './PasswordField';
 
 export default function ChangePassword() {
   const [msg, setMsg] = useState('');
@@ -27,9 +28,9 @@ export default function ChangePassword() {
   return (
     <form onSubmit={onSubmit} className="adm__form">
       <label className="adm__label" htmlFor="pw-current">Current password</label>
-      <input id="pw-current" name="current" type="password" autoComplete="current-password" required className="adm__input" />
+      <PasswordField id="pw-current" name="current" autoComplete="current-password" />
       <label className="adm__label" htmlFor="pw-next">New password (at least 10 characters)</label>
-      <input id="pw-next" name="next" type="password" autoComplete="new-password" minLength={10} required className="adm__input" />
+      <PasswordField id="pw-next" name="next" autoComplete="new-password" minLength={10} />
       {err ? <p className="adm__notice adm__notice--error" role="alert">{err}</p> : null}
       {msg ? <p className="adm__notice adm__notice--ok">{msg}</p> : null}
       <div className="adm__actions"><button type="submit" className="adm__ghost">Change password</button></div>

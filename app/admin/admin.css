@@ -55,3 +55,7 @@
 .adm__filebtn { position: relative; display: inline-flex; align-items: center; cursor: pointer; overflow: hidden; }
 .adm__fileinput { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
 .adm__filebtn:focus-within { outline: 3px solid var(--sky); outline-offset: 2px; }
+.adm__pw { position: relative; display: flex; }
+.adm__pwinput { padding-right: 76px; }
+.adm__pwtoggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); min-height: 36px; min-width: 56px; padding: 0 12px; border: 0; border-radius: 8px; background: var(--pale); color: var(--royal); font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+.adm__pwtoggle:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }

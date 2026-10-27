@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import PasswordField from './PasswordField';
 
 export default function LoginForm() {
   const [error, setError] = useState('');
@@ -36,7 +37,7 @@ export default function LoginForm() {
       <label className="adm__label" htmlFor="adm-email">Email</label>
       <input id="adm-email" name="email" type="email" autoComplete="username" className="adm__input" />
       <label className="adm__label" htmlFor="adm-password">Password</label>
-      <input id="adm-password" name="password" type="password" autoComplete="current-password" required className="adm__input" />
+      <PasswordField id="adm-password" name="password" autoComplete="current-password" />
       {error ? <p className="adm__notice adm__notice--error" role="alert">{error}</p> : null}
       <button type="submit" className="btn btn--primary" disabled={busy}>
         <span>{busy ? 'Signing in...' : 'Sign in'}</span>
