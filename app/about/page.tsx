@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from '../../components/Reveal';
-import WhatsAppButton from '../../components/WhatsAppButton';
-import { ArrowIcon, CategoryIcon } from '../../components/Icons';
+import { ArrowIcon, CategoryIcon, ChatIcon, CheckIcon, ExternalIcon, StarIcon } from '../../components/Icons';
 import { CATEGORIES } from '../../lib/categories';
 import { CONTACT, WHATSAPP_URL } from '../../lib/config';
 import './about.css';
@@ -63,6 +62,16 @@ const WONT = [
   'Hide where an opportunity really comes from',
   'Let a suggestion go live before it has been reviewed',
 ];
+
+const BEATS = [
+  { title: 'Know it exists', text: 'You cannot apply for something you never heard about.' },
+  { title: 'Understand it', text: 'Eligibility and deadlines in plain language, not small print.' },
+  { title: 'Go to the source', text: 'Straight to the official page, so the decision is yours.' },
+];
+
+/** Which boxes in the "vault" light up, and the one that is waiting for your suggestion. */
+const LIT_BOXES = [1, 4, 6, 9, 10, 13, 16, 19, 21];
+const NEXT_BOX = 14;
 
 /** The ring of tick marks around the vault door. Computed once, so server and browser always agree. */
 const TICKS = Array.from({ length: 36 }, (_, i) => {
@@ -184,16 +193,36 @@ export default function AboutPage() {
           <span />
           <span />
         </div>
+        <div className="abt-quote__rings" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="container abt-quote__inner">
           <Reveal>
+            <p className="abt-quote__eyebrow">The voice behind OppVault</p>
             <blockquote className="abt-quote__text">
-              <p>
-                <span className="abt-quote__mark">Involve me, involve me.</span>
-              </p>
-              <footer>
-                The voice behind OppVault. People want to be included, and finding out what exists is the first step.
-              </footer>
+              <p className="abt-quote__call">Involve me,</p>
+              <p className="abt-quote__echo">involve me.</p>
             </blockquote>
+            <p className="abt-quote__lead">
+              Nobody says it out loud, but everyone means it. People want to be included, and finding out what exists
+              is the first step.
+            </p>
+          </Reveal>
+          <ol className="abt-beats">
+            {BEATS.map((b, i) => (
+              <Reveal as="li" className="abt-beat" key={b.title} delay={i * 110}>
+                <span className="abt-beat__num" aria-hidden="true">
+                  0{i + 1}
+                </span>
+                <h3 className="abt-beat__title">{b.title}</h3>
+                <p>{b.text}</p>
+              </Reveal>
+            ))}
+          </ol>
+          <Reveal>
+            <p className="abt-quote__close">That first step is the part OppVault does for you.</p>
           </Reveal>
         </div>
       </section>
@@ -284,29 +313,70 @@ export default function AboutPage() {
         </div>
         <div className="container abt-join__inner">
           <Reveal>
+            <div className="abt-boxes" aria-hidden="true">
+              {Array.from({ length: 24 }, (_, i) => (
+                <span
+                  key={i}
+                  className={`abt-box${LIT_BOXES.includes(i) ? ' abt-box--lit' : ''}${i === NEXT_BOX ? ' abt-box--next' : ''}`}
+                />
+              ))}
+            </div>
             <h2 className="abt-join__title">Help us fill the vault.</h2>
             <p className="abt-join__text">
-              Spotted an opportunity we should list, or a mistake we should fix? Tell us. Every suggestion is checked by
-              a person before anything is published.
-            </p>
-            <div className="abt-join__actions">
-              <Link href="/submit" className="btn btn--primary">
-                Suggest an opportunity
-              </Link>
-              <WhatsAppButton url={WHATSAPP_URL} variant="dark" />
-            </div>
-            <p className="abt-join__small">
-              Or write to <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>, or find us on{' '}
-              <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer">
-                Instagram
-              </a>{' '}
-              and{' '}
-              <a href={CONTACT.xUrl} target="_blank" rel="noopener noreferrer">
-                X
-              </a>
-              .
+              Every box is an opportunity someone is looking for. Spotted one we have missed, or a mistake we should
+              fix? Tell us. A person checks every suggestion before anything is published.
             </p>
           </Reveal>
+          <ul className="abt-ways">
+            <Reveal as="li" className="abt-way">
+              <Link href="/submit" className="abt-way__link">
+                <StarIcon className="abt-way__icon" />
+                <span className="abt-way__title">Suggest an opportunity</span>
+                <span className="abt-way__text">Share the link and a few details. We check it before it goes live.</span>
+                <span className="abt-way__go" aria-hidden="true">
+                  Open the form <ArrowIcon />
+                </span>
+              </Link>
+            </Reveal>
+            <Reveal as="li" className="abt-way" delay={80}>
+              <a
+                className="abt-way__link"
+                href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('A correction for OppVault')}`}
+              >
+                <CheckIcon className="abt-way__icon" />
+                <span className="abt-way__title">Report a mistake</span>
+                <span className="abt-way__text">A wrong date or a broken link? Email us and we will fix it.</span>
+                <span className="abt-way__go" aria-hidden="true">
+                  {CONTACT.email} <ArrowIcon />
+                </span>
+              </a>
+            </Reveal>
+            <Reveal as="li" className="abt-way" delay={160}>
+              <a className="abt-way__link" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                <ChatIcon className="abt-way__icon" />
+                <span className="abt-way__title">Join the community</span>
+                <span className="abt-way__text">Chat with others who are looking, and hear about new listings.</span>
+                <span className="abt-way__go" aria-hidden="true">
+                  Open WhatsApp <ExternalIcon />
+                </span>
+              </a>
+            </Reveal>
+            <Reveal as="li" className="abt-way" delay={240}>
+              <div className="abt-way__link abt-way__link--static">
+                <ExternalIcon className="abt-way__icon" />
+                <span className="abt-way__title">Follow along</span>
+                <span className="abt-way__text">New listings and reminders, where you already scroll.</span>
+                <span className="abt-way__social">
+                  <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer">
+                    Instagram
+                  </a>
+                  <a href={CONTACT.xUrl} target="_blank" rel="noopener noreferrer">
+                    X
+                  </a>
+                </span>
+              </div>
+            </Reveal>
+          </ul>
         </div>
       </section>
     </>
