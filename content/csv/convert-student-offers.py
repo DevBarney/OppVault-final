@@ -10,21 +10,21 @@ Writes:         content/csv/student-offers.csv                (upload this on /a
                 content/csv/student-offers.meta.json          (snapshot_at and counts)
 
 Policy (decided by Barnabas, 2026-10-27):
-1. The original snapshot is kept untouched in content/csv/source/. In the upload, `link` has affiliate and
-   tracking parameters removed (ref, aff, affiliate, referral, partner, utm_*, and similar). Product codes
-   such as code= stay. No link is ever invented: a cleaned link is the same address minus those parameters.
+1. URLs are never changed. `link` is copied exactly as it appears in the snapshot: no parameters removed,
+   no redirects resolved, nothing added. Links that carry referral or tracking codes are only listed in the
+   notes so they are visible.
 2. A row with no link stays out of the upload and goes to student-offers-missing-links.csv. To add one, put an
    official link in content/csv/source/student-offers-curated-links.csv (columns: opportunity_id, link) and
-   re-run. Those links go through the same checks.
+   re-run. Those links are also used exactly as given.
 3. "Credit" is not forced into Free. For rows tagged Credit, `funding` comes from the offer text: "trial" ->
    Free trial; "free" or credit given "on signup" -> Free; anything else stays empty.
 4. snapshot_at is recorded in the notes and the meta file.
 5. Student Beans and UNiDAYS pages are kept. Instagram pages are not claim links and are left out.
-   Redirects through workers.dev are left out until someone resolves them to the final address.
+   Redirects through workers.dev stay exactly as given, but the row is a draft until someone checks it.
 
 Other rules: nothing is invented, a missing value stays empty. A row is a draft (published = no) when the snapshot
-does not mark it "verified", when its end date cannot be worked out, or when removing an affiliate code may change
-what the visitor gets. Ids stay the same, so a re-upload updates listings.
+does not mark it "verified", when its end date cannot be worked out, or when the link is a third-party redirect.
+Ids stay the same, so a re-upload updates listings.
 
 Owner: Agent 5. Standard library only.
 """
@@ -55,9 +55,9 @@ META = HERE / 'student-offers.meta.json'
 HEADERS = ['opportunity_id', 'title', 'provider', 'summary', 'description', 'link', 'image_url', 'coupon_code',
            'location', 'level', 'funding', 'deadline', 'eligibility', 'benefits', 'how_to_apply', 'featured', 'published']
 
-# Parameters that identify who gets paid or what campaign sent you. Removed from `link`.
-AFFILIATE_KEY = re.compile(r'^(aff|affiliate|ref|referral|referrer|partner|pid|c|is_retargeting|deep_link_value|af_.*)$', re.I)
-TRACKER_KEY = re.compile(r'^(utm_.*|source)$', re.I)
+# Parameters that identify a referral, an affiliate or a campaign. Used only to FLAG rows in the notes.
+# Links are never changed.
+CODE_KEY = re.compile(r'^(aff|affiliate|ref|referral|referrer|partner|pid|c|is_retargeting|deep_link_value|af_.*|utm_.*|source)$', re.I)
 REDIRECT_HOSTS = ('workers.dev',)
 SOCIAL_HOSTS = ('instagram.com',)
 KEPT_DISCOUNT_SITES = ('studentbeans.com', 'myunidays.com', 'unidays.com')
@@ -94,20 +94,10 @@ def explicit_date(text: str):
     return None
 
 
-def strip_params(url: str):
-    """Return (cleaned_url, affiliate_keys_removed, tracker_keys_removed). Keeps every other parameter as written."""
-    p = urlparse(url)
-    kept, aff, trk = [], [], []
-    for part in p.query.split('&') if p.query else []:
-        key = part.split('=', 1)[0]
-        if AFFILIATE_KEY.match(key):
-            aff.append(key)
-        elif TRACKER_KEY.match(key):
-            trk.append(key)
-        else:
-            kept.append(part)
-    cleaned = urlunparse(p._replace(query='&'.join(kept)))
-    return cleaned, aff, trk
+def code_params(url: str):
+    """Names of referral, affiliate or tracking parameters in the link. Read only; the link is not changed."""
+    q = urlparse(url).query
+    return sorted({part.split('=', 1)[0] for part in q.split('&') if part and CODE_KEY.match(part.split('=', 1)[0])})
 
 
 def funding_from_tags(tags: set, offer: str):
@@ -147,8 +137,8 @@ missing_rows = []
 candidates = []
 for r in rows:
     rid, name = clean(r['id']), clean(r['name'])
-    link = clean(r['claim_url']) or curated.get(rid, '')
-    from_curated = bool(not clean(r['claim_url']) and link)
+    link = (r['claim_url'] or '').strip() or curated.get(rid, '')
+    from_curated = bool(not (r['claim_url'] or '').strip() and link)
     if not link:
         held['No link in the snapshot (link_status = missing)'].append((rid, name, clean(r['offer'])))
         missing_rows.append({'opportunity_id': rid, 'provider': name, 'offer': clean(r['offer']), 'tags': clean(r['tags']),
@@ -162,12 +152,9 @@ for r in rows:
     if any(host.endswith(h) for h in SOCIAL_HOSTS):
         held['Instagram page, not a claim link (link_type = social)'].append((rid, name, link))
         continue
-    if any(host.endswith(h) for h in REDIRECT_HOSTS):
-        held['Third-party redirect: needs resolving to the final address'].append((rid, name, link))
-        continue
-    cleaned, aff, trk = strip_params(link)
     r = dict(r)
-    r['_link'], r['_aff'], r['_trk'], r['_orig'], r['_curated'] = cleaned, aff, trk, link, from_curated
+    r['_link'], r['_curated'] = link, from_curated
+    r['_redirect'] = any(host.endswith(h) for h in REDIRECT_HOSTS)
     candidates.append(r)
 
 # Pass 2: exact duplicates (same name and same cleaned link). Keep the lowest id.
@@ -214,10 +201,11 @@ for r in kept:
             draft_reasons.append((f'Snapshot says "{u}"', u))
         elif re.search(r'\b(ends|expires)\b', u, re.I):
             draft_reasons.append((f'End date "{u}" has no full date (day, month and year)', u))
-    if r['_link'] != r['_orig']:
-        cleaned_links.append((rid, name, r['_orig'], r['_link'], r['_aff'], r['_trk']))
-        if r['_aff']:
-            draft_reasons.append(('Affiliate or referral code removed from the link: check the offer still works without it', ', '.join(sorted(set(r['_aff'])))))
+    if r['_redirect']:
+        draft_reasons.append(('Link is a third-party redirect (kept exactly as given): check where it goes before publishing', host))
+    codes = code_params(link)
+    if codes:
+        cleaned_links.append((rid, name, link, ', '.join(codes)))
     if r['_curated']:
         flags['Link came from your curated list'].append((rid, name, host))
     for why_, detail in draft_reasons:
@@ -230,9 +218,6 @@ for r in kept:
         flags['Link is on another third-party student site (not decided yet)'].append((rid, name, host))
     if link_use[norm_url(link)] > 1:
         flags['Link is shared with other rows (not specific to this offer)'].append((rid, name, host))
-    path = urlparse(link).path.strip('/')
-    if r['_link'] != r['_orig'] and not path:
-        flags['Cleaned link is now just a homepage'].append((rid, name, link))
 
     out_rows.append({
         'opportunity_id': rid,
@@ -292,11 +277,11 @@ for reason, items in held.items():
             md.append('This sandbox cannot reach these addresses, so I could not resolve them. Open each in a browser and send me the final address.\n')
         md.append(table(items) + '\n')
 
-md.append('## Links cleaned\n')
-md.append('`link` has these parameters removed. The original is in `source/student-offers-original.csv`. A `code=` parameter was kept.\n')
-md.append('| id | name | original | in the upload | removed |\n|---|---|---|---|---|')
-for i, n, o, c, aff, trk in cleaned_links:
-    md.append(f'| {i} | {n} | `{o}` | `{c}` | {", ".join(sorted(set(aff + trk)))} |')
+md.append('## Links with referral, affiliate or tracking parameters\n')
+md.append('Every link is in the upload exactly as it appears in the snapshot. These carry parameters that name a referral, an affiliate or a campaign. They are listed so you can see them. Nothing was removed.\n')
+md.append('| id | name | link | parameters |\n|---|---|---|---|')
+for i, n, l, ks in cleaned_links:
+    md.append(f'| {i} | {n} | `{l}` | {ks} |')
 md.append('')
 
 md.append('## Rows in the upload as drafts (published = no)\n')
@@ -323,7 +308,7 @@ md.append('''| Snapshot column | Upload column | What was done |
 | `name` | `provider`, and start of `title` | Title is `name: offer`, because the offer text alone does not say who it is from. |
 | `offer` | `benefits`, and end of `title` | Wording untouched. |
 | `description` | `summary` | Wording untouched. |
-| `claim_url` | `link` | Affiliate and tracking parameters removed (see "Links cleaned"). Nothing else changed. |
+| `claim_url` | `link` | Copied exactly. Never changed. |
 | `location` | `location` | Kept exactly. "Limited Countries" and "Limited Universities" also add one eligibility line. |
 | `tags`, `offer` | `funding` | Free -> Free, Discount -> Discount, Trial -> Free trial. Credit rows use the offer text (see above). |
 | `github_offer` | `description` | True adds "Also listed in the GitHub Student Developer Pack." The snapshot says so; it was not checked. |
@@ -334,13 +319,11 @@ md.append('''| Snapshot column | Upload column | What was done |
 | (none) | `image_url`, `coupon_code`, `level`, `how_to_apply`, `featured` | Empty or "no": the snapshot has no such data. |
 ''')
 md.append('## Decisions recorded (Barnabas, 2026-10-27)\n')
-md.append('''1. Strip affiliate and tracking parameters, keep product codes (for example MiniMax `code=`). Do not invent links.
+md.append('''1. Always leave the URL the way it is. No parameter is removed and no redirect is resolved.
 2. Rows with no link stay empty until someone verifies a link from a second source.
 3. "Credit" is not forced into Free. Funding comes from the offer text; `offer_type` is the proper fix.
 4. Every export carries the snapshot time (this file and `student-offers.meta.json`).
-5. Keep Student Beans and UNiDAYS pages. Instagram pages are not claim links. Redirects should be resolved to the final address.
-
-Still open: the MiniMax `code=` value looks like it could be an invite code rather than a deal code. It was kept under rule 1. Please confirm.
+5. Keep Student Beans and UNiDAYS pages. Instagram pages are not claim links.
 ''')
 NOTES.write_text('\n'.join(md), encoding='utf-8')
 

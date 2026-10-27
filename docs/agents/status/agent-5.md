@@ -16,7 +16,7 @@ Only Agent 5 edits this file. Keep it short and honest; newest entry at the top.
 
 ## CSV mapping
 
-Student offers (2026-10-27): `content/csv/convert-student-offers.py` turns Barnabas's snapshot (`content/csv/source/student-offers-original.csv`, 596 rows, taken 2026-10-27T02:10:28Z as he stated) into `content/csv/student-offers.csv` (540 rows, 506 published, 34 drafts). `npm run check:csv` reports 0 problems. 56 rows are left out: 43 with no link (listed in `student-offers-missing-links.csv` for manual curation), 8 Instagram pages, 3 workers.dev redirects that need resolving by hand (this sandbox cannot reach them), 2 exact duplicates. Affiliate and tracking parameters are removed from `link` (11 rows, each listed in the notes); product codes are kept. Barnabas's five policy decisions are written at the end of `content/csv/student-offers-notes.md` and in the script header. The script is re-runnable: ids stay the same, so a new snapshot updates listings. Run it with `--snapshot-at <time>`.
+Student offers (2026-10-27): `content/csv/convert-student-offers.py` turns Barnabas's snapshot (`content/csv/source/student-offers-original.csv`, 596 rows, taken 2026-10-27T02:10:28Z as he stated) into `content/csv/student-offers.csv` (543 rows, 513 published, 30 drafts). `npm run check:csv` reports 0 problems. **Rule from Barnabas: always leave URLs exactly as they are.** Every `link` equals the snapshot's `claim_url` byte for byte (checked). 53 rows are left out: 43 with no link (listed in `student-offers-missing-links.csv` for manual curation), 8 Instagram pages, 2 exact duplicates. 3 workers.dev redirect rows are in as drafts with the link untouched. Links with referral or tracking parameters are listed in the notes, not changed. His other decisions are at the end of `content/csv/student-offers-notes.md` and in the script header. The script is re-runnable: ids stay the same, so a new snapshot updates listings. Run it with `--snapshot-at <time>`.
 
 Events: not started. No events CSV yet.
 
@@ -34,6 +34,5 @@ Events: not started. No events CSV yet.
 ## Open questions
 
 - For Barnabas: please attach the raw events CSV.
-- For Barnabas: the MiniMax link keeps `code=76ilCzWK9X` under your rule. It may be an invite code rather than a deal code. Please confirm.
-- For Barnabas: open the 3 redirect links listed in the notes and send me the final addresses.
+- For Barnabas: 3 redirect rows (Apple Education, scite, Taskade) are drafts. Open them to see where they go, then publish them or tell me to drop them.
 - For Barnabas: in the events file, is the date column the event date or the registration closing date?
