@@ -24,3 +24,6 @@ Decided by: Barnabas. `/submit` stores suggestions in a private table. Only the 
 
 ### D-007 Newsletters are sent from the admin page as Resend Broadcasts in batches of 1,000
 Decided by: Barnabas. Subscribers are batched by sign-up date. A batch can be sent once per email (table `mail_sends`). Free Resend plan caps marketing contacts at 1,000, so more than one batch needs a paid plan.
+
+### D-008 Blog posts can be written in the admin, by the owner or by writer accounts
+Decided by: Barnabas. Writers sign in with their own email and password, can only write drafts and send them for review, and cannot publish. The owner publishes. Public blog pages must keep reading only rows with `published = true` (unchanged); `posts` now also has `status`, `author_id` and `review_note`.

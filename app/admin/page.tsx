@@ -5,12 +5,16 @@ import Submissions from '../../components/admin/Submissions';
 import SignOutButton from '../../components/admin/SignOutButton';
 import { dbConfigured } from '../../lib/admin/db';
 import { KINDS } from '../../lib/admin/kinds';
-import { requireAdmin } from '../../lib/admin/session';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import Team from '../../components/admin/Team';
+import { requireSession } from '../../lib/admin/session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-  await requireAdmin();
+  const session = await requireSession();
+  if (session.role !== 'owner') redirect('/admin/blog');
   const connected = dbConfigured();
   return (
     <section className="adm__wrap">
@@ -61,6 +65,16 @@ export default async function AdminPage() {
           automatically and every email carries an unsubscribe link.
         </p>
         <Mailing />
+      </div>
+
+      <div className="adm__panel">
+        <h2 className="adm__h2">5. Blog posts and writers</h2>
+        <p className="adm__muted">
+          Write a single post here, or give a team member a writer account. Writers can only write drafts and send them to you for review. You publish.
+          (To upload many posts at once, use section 1 with the Blog posts type.)
+        </p>
+        <p><Link className="adm__link" href="/admin/blog">Open the blog editor</Link></p>
+        <Team />
       </div>
 
       <div className="adm__panel">

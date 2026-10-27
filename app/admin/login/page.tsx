@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation';
 import LoginForm from '../../../components/admin/LoginForm';
 import { adminConfigured } from '../../../lib/admin/auth';
-import { isSignedIn } from '../../../lib/admin/session';
+import { currentSession } from '../../../lib/admin/session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLoginPage() {
-  if (await isSignedIn()) redirect('/admin');
+  const s = await currentSession();
+  if (s) redirect(s.role === 'owner' ? '/admin' : '/admin/blog');
   return (
     <section className="adm__login">
       <div className="adm__panel adm__panel--narrow">

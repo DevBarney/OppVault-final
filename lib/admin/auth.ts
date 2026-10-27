@@ -20,8 +20,8 @@ function key(pw: string): Buffer {
   return createHash('sha256').update(`oppvault-admin-v1|${pw}`).digest();
 }
 
-function sign(pw: string, expires: string): string {
-  return createHmac('sha256', key(pw)).update(`admin|${expires}`).digest('hex');
+function sign(pw: string, payload: string): string {
+  return createHmac('sha256', key(pw)).update(`admin|${payload}`).digest('hex');
 }
 
 function safeEqual(a: string, b: string): boolean {
@@ -35,20 +35,34 @@ export function checkPassword(input: unknown): boolean {
   return pw !== null && typeof input === 'string' && safeEqual(input, pw);
 }
 
-export function createToken(now = Date.now()): string | null {
+export type Role = 'owner' | 'writer';
+export type Session = { uid: string; role: Role };
+
+/** Cookie value: uid.role.expires.signature. The owner uses uid "owner"; writers use their account id. */
+export function createToken(now = Date.now(), uid = 'owner', role: Role = 'owner'): string | null {
   const pw = password();
   if (!pw) return null;
   const expires = String(Math.floor(now / 1000) + SESSION_SECONDS);
-  return `${expires}.${sign(pw, expires)}`;
+  const payload = `${uid}.${role}.${expires}`;
+  return `${payload}.${sign(pw, payload)}`;
 }
 
-export function verifyToken(token: string | undefined | null, now = Date.now()): boolean {
+export function readSession(token: string | undefined | null, now = Date.now()): Session | null {
   const pw = password();
-  if (!pw || !token) return false;
-  const [expires, mac] = token.split('.');
-  if (!expires || !mac || !/^\d+$/.test(expires)) return false;
-  if (Number(expires) * 1000 < now) return false;
-  return safeEqual(mac, sign(pw, expires));
+  if (!pw || !token) return null;
+  const parts = token.split('.');
+  if (parts.length !== 4) return null;
+  const [uid, role, expires, mac] = parts;
+  if (role !== 'owner' && role !== 'writer') return null;
+  if (!/^\d+$/.test(expires) || Number(expires) * 1000 < now) return null;
+  if (role === 'owner' && uid !== 'owner') return null;
+  if (!safeEqual(mac, sign(pw, `${uid}.${role}.${expires}`))) return null;
+  return { uid, role };
+}
+
+/** True only for the owner session. Every owner-only route and page uses this. */
+export function verifyToken(token: string | undefined | null, now = Date.now()): boolean {
+  return readSession(token, now)?.role === 'owner';
 }
 
 export function sessionCookie(token: string): string {
@@ -69,8 +83,14 @@ export function tokenFromRequest(request: Request): string | null {
   return null;
 }
 
+/** Owner only. */
 export function isAdminRequest(request: Request): boolean {
   return verifyToken(tokenFromRequest(request));
+}
+
+/** Owner or writer (a writer still has to be checked against the database for being active). */
+export function sessionFromRequest(request: Request): Session | null {
+  return readSession(tokenFromRequest(request));
 }
 
 /** State-changing requests must come from this site (the cookie is also SameSite=Strict). */

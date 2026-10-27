@@ -125,3 +125,31 @@ create table if not exists public.mail_sends (
   unique (campaign, batch)
 );
 alter table public.mail_sends enable row level security;
+
+-- ---------------------------------------------------------------------------------------------
+-- Blog editor and team accounts (/admin/blog). status: draft -> review -> published. The public site
+-- still only reads rows where published = true.
+-- ---------------------------------------------------------------------------------------------
+alter table public.posts
+  add column if not exists status text not null default 'draft',
+  add column if not exists author_id text,
+  add column if not exists review_note text not null default '',
+  add column if not exists updated_at timestamptz not null default now();
+alter table public.posts drop constraint if exists posts_status_check;
+alter table public.posts add constraint posts_status_check check (status in ('draft','review','published'));
+update public.posts set status = 'published' where published = true and status = 'draft';
+drop trigger if exists posts_touch on public.posts;
+create trigger posts_touch before update on public.posts for each row execute function public.touch_updated_at();
+
+create table if not exists public.admin_users (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  role text not null default 'writer' check (role in ('writer')),
+  password_hash text not null,
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  last_login timestamptz
+);
+create unique index if not exists admin_users_email_idx on public.admin_users (lower(email));
+alter table public.admin_users enable row level security;

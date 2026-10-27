@@ -12,7 +12,7 @@ export function dbConfigured(): boolean {
   return Boolean(URL_BASE() && SERVICE_KEY());
 }
 
-function headers(extra: Record<string, string> = {}): Record<string, string> {
+export function headers(extra: Record<string, string> = {}): Record<string, string> {
   const key = SERVICE_KEY() as string;
   return {
     apikey: key,
@@ -22,7 +22,7 @@ function headers(extra: Record<string, string> = {}): Record<string, string> {
   };
 }
 
-async function call(path: string, init: RequestInit): Promise<{ ok: boolean; status: number; body: unknown }> {
+export async function call(path: string, init: RequestInit): Promise<{ ok: boolean; status: number; body: unknown }> {
   const res = await fetch(`${URL_BASE()}/rest/v1/${path}`, { ...init, cache: 'no-store', signal: AbortSignal.timeout(20000) });
   let body: unknown = null;
   const text = await res.text();

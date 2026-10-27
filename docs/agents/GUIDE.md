@@ -91,6 +91,14 @@ Columns include opportunity_id, title (or course_name), link (or course_link), i
 
 The agents prepare ready-to-upload CSV files in `content/csv/` from verified official sources only. You review them, then upload them here. Nothing is shown to the public until `published` is yes.
 
+### Writing blog posts and adding team writers (admin section 5)
+
+- **You (owner):** open `/admin/blog` (or section 5 of the admin page). Press "Write a new post": title, short summary, the post itself (blank line = new paragraph, `## ` heading, `- ` bullet), tags, optional cover image link, date. A live preview sits underneath. "Save draft" keeps it private, "Publish now" puts it on the blog.
+- **A team member who wants to write:** in section 5 type their name and email and press "Add writer". You get a temporary password, shown once. Send it to them privately. They sign in at `/admin/login` with their **email and that password** (the owner leaves the email empty). They only ever see the blog editor.
+- **Writer flow:** write a draft, preview it, press "Send for review". It shows in your list as "waiting for review" (filter "Waiting for review"). Open it and either "Publish now" or "Send back to writer" with a note. Writers cannot publish, cannot see other people's posts, and cannot edit a post once it is live (you can). Writers can change their own password on the same page.
+- You can switch a writer off (their access stops straight away), give them a new password, or delete the account. Their posts stay.
+- Many posts at once: use section 1 with the Blog posts type instead (CSV).
+
 ### Emailing subscribers (admin section 4)
 
 Needs in Vercel (Preview, branch `platform`, same way as above): `RESEND_API_KEY` (your Resend key; the one on Production is not shared with Preview), `RESEND_SEGMENT_ID` (already there) and `RESEND_FROM` (for example `OppVault <hello@oppvault.app>`, only after the domain shows Verified in Resend).
