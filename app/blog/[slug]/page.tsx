@@ -62,7 +62,10 @@ export default async function PostPage({ params }: Props) {
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
           <p className="detail__lead">{post.excerpt}</p>
           <Prose text={post.body} />
-          <p className="article__by">Written by {post.author}</p>
+          <p className="article__by">
+            {post.author_avatar ? <img className="article__avatar" src={post.author_avatar} alt="" width={32} height={32} loading="lazy" referrerPolicy="no-referrer" /> : null}
+            Written by {post.author}
+          </p>
         </div>
       </section>
 

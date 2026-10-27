@@ -33,7 +33,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="adm__form">
-      <label className="adm__label" htmlFor="adm-email">Email (team members only; the owner leaves this empty)</label>
+      <label className="adm__label" htmlFor="adm-email">Email</label>
       <input id="adm-email" name="email" type="email" autoComplete="username" className="adm__input" />
       <label className="adm__label" htmlFor="adm-password">Password</label>
       <input id="adm-password" name="password" type="password" autoComplete="current-password" required className="adm__input" />

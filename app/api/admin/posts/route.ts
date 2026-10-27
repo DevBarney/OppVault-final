@@ -8,17 +8,17 @@ import { activeWriter } from '../../../../lib/admin/users';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-type Who = { session: Session; name: string };
+type Who = { session: Session; name: string; avatar: string | null };
 
 /** Owner or an active writer. Writers are re-checked against the database on every request. */
 async function who(request: Request): Promise<Who | Response> {
   const session = sessionFromRequest(request);
   if (!session) return json({ ok: false, error: 'Please sign in again.' }, 401);
   if (!dbConfigured()) return json({ ok: false, error: 'The database connection is not set up yet (SUPABASE_SERVICE_ROLE_KEY).' }, 503);
-  if (session.role === 'owner') return { session, name: 'OppVault team' };
+  if (session.role === 'owner') return { session, name: 'OppVault team', avatar: null };
   const u = await activeWriter(session.uid);
   if (!u) return json({ ok: false, error: 'This account is switched off. Ask the owner.' }, 401);
-  return { session, name: u.name };
+  return { session, name: u.name, avatar: u.avatar_url };
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -59,7 +59,7 @@ export async function POST(request: Request): Promise<Response> {
     const status = action === 'publish' ? 'published' : action === 'submit' ? 'review' : 'draft';
 
     if (!id) {
-      const created = await createPost(v.data, w.name, owner ? null : w.session.uid, status);
+      const created = await createPost(v.data, w.name, owner ? null : w.session.uid, status, w.avatar);
       if (!created.ok) return json({ ok: false, error: created.error ?? 'Could not save.' }, 502);
       if (status === 'published') revalidatePath('/', 'layout');
       return json({ ok: true, id: created.id, status });
@@ -80,6 +80,7 @@ export async function POST(request: Request): Promise<Response> {
       status: owner && action === 'save' ? existing.status : status,
       published: owner && action === 'save' ? existing.published : status === 'published',
     };
+    if (!owner) patch.author_avatar = w.avatar;
     if (owner && typeof b.author === 'string' && b.author.trim()) patch.author = b.author.trim().slice(0, 80);
     if (owner && typeof b.slug === 'string' && b.slug.trim()) {
       const slug = await uniqueSlug(b.slug, id);

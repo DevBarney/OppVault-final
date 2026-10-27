@@ -2355,3 +2355,5 @@ body > main { min-height: 50vh; }
 .facts__coupon code { font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--navy); overflow-wrap: anywhere; user-select: all; }
 .detail__image { margin: 0 0 20px; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16 / 9; background: var(--pale); }
 .detail__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.article__by { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.article__avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid rgba(255, 255, 255, 0.7); }

@@ -4,7 +4,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { call, dbConfigured, headers } from './db';
 
-export type TeamUser = { id: string; name: string; email: string; role: 'writer'; active: boolean; created_at: string; last_login: string | null };
+export type TeamUser = { id: string; name: string; email: string; role: 'writer'; active: boolean; created_at: string; last_login: string | null; avatar_url: string | null };
 type Row = TeamUser & { password_hash: string };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -53,7 +53,7 @@ export async function findById(id: string): Promise<Row | null> {
 }
 
 export async function listUsers(): Promise<TeamUser[]> {
-  const r = await call('admin_users?select=id,name,email,role,active,created_at,last_login&order=created_at.desc&limit=200', { headers: headers() });
+  const r = await call('admin_users?select=id,name,email,role,active,created_at,last_login,avatar_url&order=created_at.desc&limit=200', { headers: headers() });
   return r.ok && Array.isArray(r.body) ? (r.body as TeamUser[]) : [];
 }
 

@@ -48,3 +48,10 @@
 .adm__prose h2 { margin: 0 0 8px; color: var(--navy); font-size: 1.3rem; }
 .adm__prose .prose-body h2 { font-size: 1.1rem; margin: 16px 0 6px; }
 .adm__prose p, .adm__prose li { line-height: 1.65; }
+.adm__avatar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.adm__avatarimg { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: var(--pale); border: 2px solid var(--line); flex: none; display: inline-block; }
+.adm__avatarimg--empty { background: linear-gradient(135deg, var(--royal), var(--sky)); }
+.adm__avatarimg--sm { width: 36px; height: 36px; border-width: 1px; }
+.adm__filebtn { position: relative; display: inline-flex; align-items: center; cursor: pointer; overflow: hidden; }
+.adm__fileinput { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+.adm__filebtn:focus-within { outline: 3px solid var(--sky); outline-offset: 2px; }

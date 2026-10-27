@@ -33,4 +33,5 @@ export type Post = {
   read_minutes: number;
   published_at: string;
   image_url?: string | null;
+  author_avatar?: string | null; // small profile picture of the writer, optional
 };

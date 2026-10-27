@@ -2,13 +2,16 @@ import Link from 'next/link';
 import BlogEditor from '../../../components/admin/BlogEditor';
 import ChangePassword from '../../../components/admin/ChangePassword';
 import SignOutButton from '../../../components/admin/SignOutButton';
+import AvatarUploader from '../../../components/admin/AvatarUploader';
 import { requireSession } from '../../../lib/admin/session';
+import { findById } from '../../../lib/admin/users';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminBlogPage() {
   const session = await requireSession();
   const owner = session.role === 'owner';
+  const me = owner ? null : await findById(session.uid);
   return (
     <section className="adm__wrap">
       <header className="adm__head">
@@ -29,6 +32,13 @@ export default async function AdminBlogPage() {
         </p>
         <BlogEditor role={session.role} />
       </div>
+      {owner ? null : (
+        <div className="adm__panel">
+          <h2 className="adm__h2">Your profile photo</h2>
+          <p className="adm__muted">A small round photo shown next to your name on your posts. Any JPG, PNG or WebP; it is cropped to a square and shrunk for you.</p>
+          <AvatarUploader current={me?.avatar_url ?? null} />
+        </div>
+      )}
       {owner ? null : (
         <div className="adm__panel">
           <h2 className="adm__h2">Change your password</h2>

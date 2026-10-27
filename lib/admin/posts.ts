@@ -12,6 +12,7 @@ export type PostRecord = {
   body: string;
   author: string;
   author_id: string | null;
+  author_avatar: string | null;
   tags: string[];
   read_minutes: number;
   image_url: string | null;
@@ -68,7 +69,7 @@ export function readMinutes(body: string): number {
   return Math.max(1, Math.ceil(body.split(/\s+/).filter(Boolean).length / 200));
 }
 
-const SELECT = 'id,slug,title,excerpt,body,author,author_id,tags,read_minutes,image_url,status,published,published_at,review_note,updated_at';
+const SELECT = 'id,slug,title,excerpt,body,author,author_id,author_avatar,tags,read_minutes,image_url,status,published,published_at,review_note,updated_at';
 
 export async function listPosts(authorId: string | null, status?: string): Promise<Partial<PostRecord>[]> {
   if (!dbConfigured()) return [];
@@ -96,7 +97,7 @@ export async function uniqueSlug(title: string, exceptId?: string): Promise<stri
   return slug;
 }
 
-export async function createPost(input: PostInput, author: string, authorId: string | null, status: PostStatus): Promise<{ ok: boolean; id?: string; error?: string }> {
+export async function createPost(input: PostInput, author: string, authorId: string | null, status: PostStatus, authorAvatar: string | null = null): Promise<{ ok: boolean; id?: string; error?: string }> {
   const slug = await uniqueSlug(input.title);
   const r = await call('posts', {
     method: 'POST',
@@ -112,6 +113,7 @@ export async function createPost(input: PostInput, author: string, authorId: str
       read_minutes: readMinutes(input.body),
       author,
       author_id: authorId,
+      author_avatar: authorAvatar,
       status,
       published: status === 'published',
     }),

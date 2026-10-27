@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import AvatarUploader from './AvatarUploader';
 
-type User = { id: string; name: string; email: string; active: boolean; last_login: string | null };
+type User = { id: string; name: string; email: string; active: boolean; last_login: string | null; avatar_url: string | null };
 
 export default function Team() {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -78,10 +79,12 @@ export default function Team() {
         {users?.map((u) => (
           <li key={u.id}>
             <div className="adm__rowtitle" style={{ padding: '10px 12px' }}>
+              {u.avatar_url ? <img className="adm__avatarimg adm__avatarimg--sm" src={u.avatar_url} alt="" width={36} height={36} style={{ marginRight: 8, verticalAlign: 'middle' }} /> : null}
               {u.name} <span className="adm__muted">{u.email}</span>
               <span className={`adm__chip ${u.active ? '' : 'adm__chip--draft'}`}>{u.active ? 'active' : 'switched off'}</span>
             </div>
             <div className="adm__rowtools">
+              <AvatarUploader userId={u.id} current={null} label="Photo" onDone={() => void load()} />
               <button type="button" className="adm__ghost" disabled={busy} onClick={() => act({ action: 'reset', id: u.id, email: u.email })}>New password</button>
               <button type="button" className="adm__ghost" disabled={busy} onClick={() => act({ action: u.active ? 'deactivate' : 'activate', id: u.id })}>{u.active ? 'Switch off' : 'Switch on'}</button>
               <button type="button" className="adm__ghost adm__ghost--danger" disabled={busy} onClick={() => { if (window.confirm(`Delete ${u.name}'s account? Their posts stay.`)) void act({ action: 'delete', id: u.id }); }}>Delete</button>

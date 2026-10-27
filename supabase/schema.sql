@@ -153,3 +153,10 @@ create table if not exists public.admin_users (
 );
 create unique index if not exists admin_users_email_idx on public.admin_users (lower(email));
 alter table public.admin_users enable row level security;
+
+-- Writer profile pictures (stored in the public "avatars" Storage bucket; posts keep a copy of the link).
+alter table public.admin_users add column if not exists avatar_url text;
+alter table public.posts add column if not exists author_avatar text;
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 204800, array['image/jpeg','image/png','image/webp'])
+on conflict (id) do update set public = true, file_size_limit = 204800, allowed_mime_types = array['image/jpeg','image/png','image/webp'];
