@@ -1,0 +1,27 @@
+/* Student offers pages (Agent 5). Class prefix: .off-
+   Uses the shared brand variables from globals.css. No motion, so nothing to switch off for reduced motion. */
+
+.off-lead { max-width: 44rem; margin: 0 0 24px; padding: 14px 18px; border-radius: 14px; background: var(--tint); color: var(--ink); font-size: 0.9375rem; font-weight: 400; line-height: 1.6; box-shadow: inset 4px 0 0 var(--sky); }
+
+/* Offer type and code on cards */
+.off-kind { padding: 3px 9px; border-radius: 999px; background: rgba(27, 219, 227, 0.16); color: #035462; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.off-card .off-code { color: var(--navy); font-weight: 500; overflow-wrap: anywhere; }
+
+/* Detail header chip (sits on the dark band) */
+.off-chip { padding: 6px 12px; border-radius: 999px; background: rgba(27, 219, 227, 0.18); color: #fff; font-size: 0.8125rem; font-weight: 500; }
+
+.off-first { margin-top: 0; }
+
+.off-endednote { margin: 0 0 24px; padding: 14px 18px; border-radius: 14px; background: #eef2fa; color: var(--ink); font-size: 0.9375rem; font-weight: 400; box-shadow: inset 4px 0 0 var(--muted); }
+
+/* Verification steps */
+.off-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: off-step; }
+.off-steps li { position: relative; padding-left: 40px; color: var(--ink); line-height: 1.6; counter-increment: off-step; }
+.off-steps li::before { content: counter(off-step); position: absolute; left: 0; top: 0.1em; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--pale); color: var(--royal); font-size: 0.8125rem; font-weight: 500; box-shadow: inset 0 0 0 1.5px var(--sky); }
+
+/* Check before you buy */
+.off-check { margin-top: 40px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--tint); box-shadow: inset 4px 0 0 var(--sky); }
+.off-check__title { margin: 0 0 12px; color: var(--navy); font-size: 1.25rem; font-weight: 500; }
+.off-check ul { margin: 0; padding-left: 1.2em; list-style: disc; color: var(--ink); font-size: 0.9375rem; line-height: 1.65; }
+.off-check li { margin-bottom: 0.55em; }
+.off-check li:last-child { margin-bottom: 0; }
