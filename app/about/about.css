@@ -176,3 +176,10 @@ a.abt-way__link:focus-visible, .abt-way__social a:focus-visible { outline: 3px s
   a.abt-way__link:hover .abt-way__go svg { transform: translateX(4px); }
   .abt-way__social a:hover { background: rgba(255, 255, 255, 0.14); border-color: var(--teal); }
 }
+
+/* Display font (Fraunces) for the big expressive moments. Poppins stays the main font everywhere else. */
+.abt-quote__text p { font-family: var(--font-display); letter-spacing: -0.02em; }
+.abt-quote__echo { font-style: italic; font-weight: 600; }
+.abt-join__title { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; }
+.abt-step__num, .abt-beat__num { font-family: var(--font-display); }
+.abt-hero__tagline { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 1.15rem; letter-spacing: 0; }
