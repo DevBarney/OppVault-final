@@ -27,3 +27,6 @@ Decided by: Barnabas. Subscribers are batched by sign-up date. A batch can be se
 
 ### D-008 Blog posts can be written in the admin, by the owner or by writer accounts
 Decided by: Barnabas. Writers sign in with their own email and password, can only write drafts and send them for review, and cannot publish. The owner publishes. Public blog pages must keep reading only rows with `published = true` (unchanged); `posts` now also has `status`, `author_id` and `review_note`.
+
+### D-009 Visitors can create an account to save opportunities
+Decided by: Barnabas. Sign-in with email and password, Google, LinkedIn and X, through Supabase Auth over REST (no new package). Sessions are HttpOnly cookies (`ov_at`, `ov_rt`); pages never see tokens. Table `saved_items` has row level security: a visitor can only read, add and remove their own rows. Pages: `/account/sign-in`, `/account/saved`, `/account/callback`, `/account/reset` (all noindex, disallowed in robots). Cards and detail pages use the shared `SaveButton` (`components/account/SaveButton.tsx`). Sample listings cannot be saved. Setup steps for the provider apps are in `docs/ACCOUNTS-SETUP.md`.

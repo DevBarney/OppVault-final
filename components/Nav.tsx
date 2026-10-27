@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
+import AccountLink from './account/AccountLink';
 import { ArrowIcon } from './Icons';
 
 // Main navigation. Each link is a page of the platform.
@@ -139,6 +140,7 @@ export default function Nav() {
           </nav>
 
           <div className="nav__actions">
+            <AccountLink />
             <a className="btn btn--primary btn--sm nav__cta" href="#subscribe" onClick={goToSignup}>
               <span>Get updates</span>
               <ArrowIcon className="btn__arrow" />
@@ -182,6 +184,7 @@ export default function Nav() {
               ))}
             </ul>
           </nav>
+ <AccountLink variant="text" onNavigate={() => setOpen(false)} />
           <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
             <span>Get updates</span>
             <ArrowIcon className="btn__arrow" />

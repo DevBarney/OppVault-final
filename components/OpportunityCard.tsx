@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SaveButton from './account/SaveButton';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from './Icons';
 import { getCategory } from '../lib/categories';
 import { urgency } from '../lib/dates';
@@ -9,6 +10,7 @@ export default function OpportunityCard({ item, showCategory = false }: { item: 
   const u = urgency(item.deadline);
   return (
     <article className="card">
+      {item.is_sample ? null : <SaveButton category={item.category} slug={item.slug} title={item.title} variant="icon" />}
       <Link className="card__link" href={`/${item.category}/${item.slug}`}>
         {item.image_url ? (
           <span className="card__thumb">

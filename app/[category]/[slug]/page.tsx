@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import SaveButton from '../../../components/account/SaveButton';
 import OpportunityCard from '../../../components/OpportunityCard';
 import Prose from '../../../components/Prose';
 import { ArrowIcon, ClockIcon, ExternalIcon, PinIcon } from '../../../components/Icons';
@@ -143,6 +144,7 @@ export default async function OpportunityPage({ params }: Props) {
               ) : (
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
+              {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
             </div>
           </aside>
         </div>

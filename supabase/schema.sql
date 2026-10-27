@@ -160,3 +160,27 @@ alter table public.posts add column if not exists author_avatar text;
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('avatars', 'avatars', true, 204800, array['image/jpeg','image/png','image/webp'])
 on conflict (id) do update set public = true, file_size_limit = 204800, allowed_mime_types = array['image/jpeg','image/png','image/webp'];
+
+-- ---------------------------------------------------------------------------
+-- Visitor accounts: saved opportunities (migrations saved_items, saved_items_tighten_grants)
+-- Visitors sign in through Supabase Auth. Each can only see and change their own rows.
+-- ---------------------------------------------------------------------------
+create table if not exists public.saved_items (
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  category text not null,
+  slug text not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, category, slug),
+  constraint saved_items_category_ok check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  constraint saved_items_slug_len check (char_length(slug) between 1 and 200)
+);
+create index if not exists saved_items_user_created on public.saved_items (user_id, created_at desc);
+alter table public.saved_items enable row level security;
+drop policy if exists "saved_select_own" on public.saved_items;
+drop policy if exists "saved_insert_own" on public.saved_items;
+drop policy if exists "saved_delete_own" on public.saved_items;
+create policy "saved_select_own" on public.saved_items for select to authenticated using (user_id = (select auth.uid()));
+create policy "saved_insert_own" on public.saved_items for insert to authenticated with check (user_id = (select auth.uid()));
+create policy "saved_delete_own" on public.saved_items for delete to authenticated using (user_id = (select auth.uid()));
+revoke all on public.saved_items from authenticated, anon, public;
+grant select, insert, delete on public.saved_items to authenticated;
