@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import AccountActions from '../../../components/account/AccountActions';
+import EventCard from '../../../components/events/EventCard';
+import OfferCard from '../../../components/student-offers/OfferCard';
 import OpportunityCard from '../../../components/OpportunityCard';
 import PageHeader from '../../../components/PageHeader';
 import { listSaved } from '../../../lib/account/saved';
@@ -50,7 +52,13 @@ export default async function SavedPage() {
               <ul className="grid">
                 {items.map((item) => (
                   <li key={`${item.category}/${item.slug}`}>
-                    <OpportunityCard item={item} showCategory />
+                    {item.category === 'events' ? (
+                      <EventCard item={item} />
+                    ) : item.category === 'student-offers' ? (
+                      <OfferCard item={item} />
+                    ) : (
+                      <OpportunityCard item={item} showCategory />
+                    )}
                   </li>
                 ))}
               </ul>

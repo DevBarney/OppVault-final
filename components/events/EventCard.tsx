@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SaveButton from '../account/SaveButton';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from '../Icons';
 import { formatDate } from '../../lib/dates';
 import type { Opportunity } from '../../lib/types';
@@ -9,6 +10,7 @@ export default function EventCard({ item }: { item: Opportunity }) {
   const t = eventTiming(item.deadline);
   return (
     <article className={`card evt-card${t.past ? ' evt-card--past' : ''}`}>
+      {item.is_sample ? null : <SaveButton category={item.category} slug={item.slug} title={item.title} variant="icon" />}
       <Link className="card__link" href={`/events/${item.slug}`}>
         {item.image_url ? (
           <span className="card__thumb">

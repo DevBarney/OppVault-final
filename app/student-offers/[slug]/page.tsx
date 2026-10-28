@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SaveButton from '../../../components/account/SaveButton';
 import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -163,6 +164,7 @@ export default async function StudentOfferPage({ params }: Props) {
               ) : (
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
+              {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
             </div>
           </aside>
         </div>

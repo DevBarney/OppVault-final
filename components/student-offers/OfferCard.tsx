@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SaveButton from '../account/SaveButton';
 import { ArrowIcon, ClockIcon, PinIcon } from '../Icons';
 import type { Opportunity } from '../../lib/types';
 import { offerTiming } from './timing';
@@ -8,6 +9,7 @@ export default function OfferCard({ item }: { item: Opportunity }) {
   const t = offerTiming(item.deadline);
   return (
     <article className="card off-card">
+      {item.is_sample ? null : <SaveButton category={item.category} slug={item.slug} title={item.title} variant="icon" />}
       <Link className="card__link" href={`/student-offers/${item.slug}`}>
         {item.image_url ? (
           <span className="card__thumb">
