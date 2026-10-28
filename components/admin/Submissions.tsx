@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ListingForm from './ListingForm';
 
 type Sub = {
   id: string;
@@ -25,8 +26,10 @@ const TABS = [
   { status: 'rejected', label: 'Rejected' },
 ];
 
-export default function Submissions() {
+export default function Submissions({ pending = 0 }: { pending?: number }) {
   const [status, setStatus] = useState('pending');
+  const [waiting, setWaiting] = useState(pending);
+  const [editing, setEditing] = useState<string | null>(null);
   const [items, setItems] = useState<Sub[] | null>(null);
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
@@ -37,8 +40,10 @@ export default function Submissions() {
     try {
       const res = await fetch(`/api/admin/submissions?status=${s}`);
       const data = (await res.json()) as { ok: boolean; error?: string; items?: Sub[] };
-      if (data.ok) setItems(data.items ?? []);
-      else {
+      if (data.ok) {
+        setItems(data.items ?? []);
+        if (s === 'pending') setWaiting((data.items ?? []).length);
+      } else {
         setItems(null);
         setMsg(data.error ?? 'Could not load submissions.');
       }
@@ -47,6 +52,12 @@ export default function Submissions() {
     }
     setBusy(false);
   }
+
+  // Open the Waiting tab straight away so new suggestions are visible without pressing Load.
+  useEffect(() => {
+    void load('pending');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function act(id: string, action: 'approve' | 'approve_draft' | 'reject' | 'delete') {
     if (action === 'delete' && !window.confirm('Delete this submission for good?')) return;
@@ -85,6 +96,7 @@ export default function Submissions() {
             }}
           >
             {t.label}
+            {t.status === 'pending' ? ` (${waiting})` : ''}
           </button>
         ))}
         <button type="button" className="adm__ghost" disabled={busy} onClick={() => load()}>
@@ -111,9 +123,21 @@ export default function Submissions() {
             {s.level ? <li>Level: {s.level}</li> : null}
             {s.funding ? <li>Funding or cost: {s.funding}</li> : null}
           </ul>
-          {s.status === 'pending' ? (
+          {s.status === 'pending' && editing === s.id ? (
+            <ListingForm
+              submissionId={s.id}
+              initial={{ category: s.category, title: s.title, provider: s.provider, link: s.link, summary: s.summary, deadline: s.deadline ?? '', location: s.location, level: s.level, funding: s.funding }}
+              onSaved={() => {
+                setMsg('Edited and approved.');
+                setEditing(null);
+                void load();
+              }}
+              onCancel={() => setEditing(null)}
+            />
+          ) : s.status === 'pending' ? (
             <div className="adm__actions">
-              <button type="button" className="adm__ghost adm__ghost--on" disabled={busy} onClick={() => act(s.id, 'approve')}>Approve and publish</button>
+              <button type="button" className="adm__ghost adm__ghost--on" disabled={busy} onClick={() => setEditing(s.id)}>Review and edit</button>
+              <button type="button" className="adm__ghost" disabled={busy} onClick={() => act(s.id, 'approve')}>Approve and publish</button>
               <button type="button" className="adm__ghost" disabled={busy} onClick={() => act(s.id, 'approve_draft')}>Approve as draft</button>
               <button type="button" className="adm__ghost" disabled={busy} onClick={() => act(s.id, 'reject')}>Reject</button>
               <button type="button" className="adm__ghost adm__ghost--danger" disabled={busy} onClick={() => act(s.id, 'delete')}>Delete</button>

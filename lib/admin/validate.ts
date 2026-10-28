@@ -105,10 +105,11 @@ function clean(value: string | undefined, max: number): string {
   return (value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max);
 }
 
+/** A full https:// address. Returned exactly as given (never rebuilt), so the link stays the way the person wrote it. */
 function httpsUrl(value: string): string | null {
+  if (/\s/.test(value)) return null;
   try {
-    const u = new URL(value);
-    return u.protocol === 'https:' ? u.toString() : null;
+    return new URL(value).protocol === 'https:' ? value : null;
   } catch {
     return null;
   }

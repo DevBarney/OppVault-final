@@ -4,6 +4,8 @@ import Manager from '../../components/admin/Manager';
 import Submissions from '../../components/admin/Submissions';
 import SignOutButton from '../../components/admin/SignOutButton';
 import { dbConfigured } from '../../lib/admin/db';
+import ListingForm from '../../components/admin/ListingForm';
+import { countPendingSubmissions } from '../../lib/admin/listing';
 import { KINDS } from '../../lib/admin/kinds';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -16,6 +18,7 @@ export default async function AdminPage() {
   const session = await requireSession();
   if (session.role !== 'owner') redirect('/admin/blog');
   const connected = dbConfigured();
+  const pending = connected ? await countPendingSubmissions() : 0;
   return (
     <section className="adm__wrap">
       <header className="adm__head">
@@ -33,6 +36,12 @@ export default async function AdminPage() {
         </p>
       )}
 
+      {pending > 0 ? (
+        <p className="adm__notice adm__notice--warn" role="status">
+          {pending} visitor {pending === 1 ? 'suggestion is' : 'suggestions are'} waiting for review. <a className="adm__link" href="#suggestions">Review {pending === 1 ? 'it' : 'them'}</a>
+        </p>
+      ) : null}
+
       <div className="adm__panel">
         <h2 className="adm__h2">1. Upload a CSV</h2>
         <p className="adm__muted">
@@ -43,23 +52,32 @@ export default async function AdminPage() {
         <Importer kinds={KINDS} canImport={connected} />
       </div>
 
+      <div className="adm__panel" id="add-one">
+        <h2 className="adm__h2">2. Add one listing</h2>
+        <p className="adm__muted">
+          Type in a single scholarship, fellowship, grant, course, event or student offer. It is checked by the same rules as a CSV row. If the title or
+          the official link is already listed, you are warned before anything is saved.
+        </p>
+        <ListingForm canSave={connected} />
+      </div>
+
       <div className="adm__panel">
-        <h2 className="adm__h2">2. Manage what is live</h2>
+        <h2 className="adm__h2">3. Manage what is live</h2>
         <p className="adm__muted">Hide a listing without deleting it, show it again, or remove it for good.</p>
         <Manager kinds={KINDS} />
       </div>
 
-      <div className="adm__panel">
-        <h2 className="adm__h2">3. Suggestions from visitors</h2>
+      <div className="adm__panel" id="suggestions">
+        <h2 className="adm__h2">4. Suggestions from visitors</h2>
         <p className="adm__muted">
           People can suggest opportunities at <code>/submit</code>. Open the official link and check it is genuine before you approve.
-          Approving creates the listing (published or as a hidden draft); rejecting keeps a record; nothing goes live by itself.
+          Use Review and edit to fix or add details before approving. Approve and publish sends it live as it is; Approve as draft keeps it hidden; rejecting keeps a record. Nothing goes live by itself.
         </p>
-        <Submissions />
+        <Submissions pending={pending} />
       </div>
 
       <div className="adm__panel">
-        <h2 className="adm__h2">4. Email your subscribers</h2>
+        <h2 className="adm__h2">5. Email your subscribers</h2>
         <p className="adm__muted">
           Write an email, preview it, send yourself a test, then send it to one batch of up to 1,000 subscribers at a time. People who unsubscribe are skipped
           automatically and every email carries an unsubscribe link.
@@ -68,7 +86,7 @@ export default async function AdminPage() {
       </div>
 
       <div className="adm__panel">
-        <h2 className="adm__h2">5. Blog posts and writers</h2>
+        <h2 className="adm__h2">6. Blog posts and writers</h2>
         <p className="adm__muted">
           Write a single post here, or give a team member a writer account. Writers can only write drafts and send them to you for review. You publish.
           (To upload many posts at once, use section 1 with the Blog posts type.)

@@ -38,8 +38,8 @@ export async function POST(request: Request): Promise<Response> {
   await sendNotification({
     to: notifyAddress(),
     subject: `New opportunity suggested: ${checked.data.title}`.slice(0, 150),
-    lines: [`A visitor suggested a ${checked.data.category} listing.`, `Title: ${checked.data.title}`, `Official link: ${checked.data.link}`, 'Open the admin page, section 3, to check the link and approve or reject it.'],
-    link: { url: `${originOf(request)}/admin`, label: 'Review suggestions' },
+    lines: [`A visitor suggested a ${checked.data.category} listing.`, `Title: ${checked.data.title}`, `Official link: ${checked.data.link}`, 'Open the admin page and go to "Suggestions from visitors" to check the link, edit it if needed, and approve or reject it.'],
+    link: { url: `${originOf(request)}/admin#suggestions`, label: 'Review suggestions' },
   });
   return json({ ok: true });
 }

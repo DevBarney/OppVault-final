@@ -8,6 +8,7 @@ Only Agent 5 edits this file. Keep it short and honest; newest entry at the top.
 
 ## Log
 
+- 2026-10-27: At Barnabas's direct request, added a form to enter one listing by hand and an edit-before-approve step for visitor suggestions. This touched Agent 1's admin files; details are in the message in `docs/agents/inbox/to-agent-1/`. Tested with a stubbed database (14 cases: auth, new, replace warning, duplicate-link warning, address clash, drafts, approving a suggestion, approving twice, unknown suggestion, database not connected), plus a real build and a signed-in render of `/admin`. Nothing was written to the live Supabase project.
 - 2026-10-27: Built `/events` and `/student-offers` (list and `[slug]` detail), with their own cards, styles and sample rows.
   - Events: upcoming first, soonest date first, undated last. Past events come after a "Past events" divider and carry a "Past event" badge. A "Plan your attendance" block (travel, visa, joining online, funding) changes with the format: in person, online, hybrid or unknown. It is general advice only and never states a fact about a specific event. Funded places get their own line. It is hidden on past events.
   - Student offers: what the offer is, who can use it, what you get, how to verify student status (steps taken from `how_to_apply`), and a "Check before you buy" note on every offer. Every offer page and the list say OppVault does not sell, test or endorse offers. An ended offer shows an "ended" note and hides its coupon code. Ended offers are left out of the list.
