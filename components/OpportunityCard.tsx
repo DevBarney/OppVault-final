@@ -5,7 +5,16 @@ import { getCategory } from '../lib/categories';
 import { urgency } from '../lib/dates';
 import type { Opportunity } from '../lib/types';
 
-export default function OpportunityCard({ item, showCategory = false }: { item: Opportunity; showCategory?: boolean }) {
+/** `priority` is for cards at the top of a page: their picture loads straight away instead of waiting until it scrolls near. */
+export default function OpportunityCard({
+  item,
+  showCategory = false,
+  priority = false,
+}: {
+  item: Opportunity;
+  showCategory?: boolean;
+  priority?: boolean;
+}) {
   const cat = getCategory(item.category);
   const u = urgency(item.deadline);
   return (
@@ -15,7 +24,14 @@ export default function OpportunityCard({ item, showCategory = false }: { item: 
         {item.image_url ? (
           <span className="card__thumb">
             {/* Plain img: thumbnails come from many sites, so next/image domain settings are not used. */}
-            <img src={item.image_url} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+            <img
+              src={item.image_url}
+              alt=""
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
           </span>
         ) : null}
         <div className="card__top">

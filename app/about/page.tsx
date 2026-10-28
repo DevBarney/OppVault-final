@@ -1,17 +1,19 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../lib/seo';
 import Link from 'next/link';
 import Reveal from '../../components/Reveal';
 import { ArrowIcon, CategoryIcon, ChatIcon, CheckIcon, ExternalIcon, StarIcon } from '../../components/Icons';
 import { CATEGORIES } from '../../lib/categories';
 import { CONTACT, WHATSAPP_URL } from '../../lib/config';
 import './about.css';
+import { fraunces } from './fraunces';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocial({
   title: 'About',
   description:
     'OppVault exists to help people find the opportunities that are open to them and feel included. Here is what we do, how a listing gets in, and what we promise.',
   alternates: { canonical: '/about' },
-};
+});
 
 const SCATTERED = [
   'A flyer in a group chat',
@@ -122,7 +124,7 @@ function VaultDoor() {
 
 export default function AboutPage() {
   return (
-    <>
+    <div className={`${fraunces.variable} abt-root`}>
       <section className="phead abt-hero">
         <div className="hero__aurora" aria-hidden="true">
           <span />
@@ -379,6 +381,6 @@ export default function AboutPage() {
           </ul>
         </div>
       </section>
-    </>
+    </div>
   );
 }

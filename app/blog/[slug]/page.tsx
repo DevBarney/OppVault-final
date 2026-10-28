@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Prose from '../../../components/Prose';
@@ -12,12 +13,10 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost((await params).slug);
   if (!post) return {};
-  return {
-    title: post.title,
-    description: post.excerpt,
-    alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: { type: 'article', title: post.title, description: post.excerpt, publishedTime: post.published_at },
-  };
+  return withSocial(
+    { title: post.title, description: post.excerpt, alternates: { canonical: `/blog/${post.slug}` } },
+    { type: 'article', publishedTime: post.published_at },
+  );
 }
 
 export default async function PostPage({ params }: Props) {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { listIndexing, withSocial } from '../../lib/seo';
 import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
 import EventCard from '../../components/events/EventCard';
@@ -17,13 +18,9 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 
 const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v) || undefined;
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ searchParams }: Pick<Props, 'searchParams'>): Promise<Metadata> {
   const cat = getCategory('events');
-  return {
-    title: cat?.label ?? 'Events',
-    description: cat?.intro,
-    alternates: { canonical: '/events' },
-  };
+  return withSocial({ title: cat?.label ?? 'Events', description: cat?.intro, ...listIndexing('/events', await searchParams) });
 }
 
 export default async function EventsPage({ searchParams }: Props) {

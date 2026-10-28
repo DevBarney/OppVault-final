@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../lib/seo';
 import Link from 'next/link';
 import PageHeader from '../../components/PageHeader';
 import Reveal from '../../components/Reveal';
@@ -6,11 +7,11 @@ import { ArrowIcon } from '../../components/Icons';
 import { getPosts } from '../../lib/data';
 import { formatDate } from '../../lib/dates';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocial({
   title: 'Blog',
   description: 'Practical guides on finding and applying for scholarships, fellowships, grants and other opportunities.',
   alternates: { canonical: '/blog' },
-};
+});
 
 export default async function BlogPage() {
   const posts = await getPosts();

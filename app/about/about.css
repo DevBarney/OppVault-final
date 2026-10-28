@@ -32,7 +32,7 @@
 }
 
 /* Shared section bits */
-.abt-eyebrow { margin: 0 0 12px; color: var(--royal); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.abt-eyebrow { margin: 0 0 12px; color: var(--royal); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 .abt-h2 { max-width: 24ch; text-wrap: balance; }
 
 /* Before and after */
@@ -40,7 +40,7 @@
 @media (min-width: 900px) { .abt-compare { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; } }
 .abt-compare__side { padding: clamp(22px, 4vw, 34px); border: 1px dashed var(--line); border-radius: 20px; background: var(--tint); }
 .abt-compare__side--after { border: 1px solid var(--line); background: #fff; box-shadow: 0 18px 40px -26px rgba(4, 16, 107, 0.35); }
-.abt-compare__title { margin: 0 0 10px; color: var(--navy); font-size: 1.25rem; font-weight: 600; }
+.abt-compare__title { margin: 0 0 10px; color: var(--navy); font-size: 1.25rem; font-weight: 700; }
 .abt-compare__lead { margin: 0 0 22px; color: var(--muted); line-height: 1.7; }
 .abt-scatter { display: flex; flex-wrap: wrap; gap: 12px 10px; margin: 0; padding: 4px 0 0; list-style: none; }
 .abt-chip { padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--ink); font-size: 0.9rem; line-height: 1.3; box-shadow: 0 6px 14px -10px rgba(4, 16, 107, 0.4); }
@@ -54,7 +54,7 @@
 .abt-card__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
 .abt-card__row:last-child { border-bottom: 0; }
 .abt-card__row:nth-child(odd) { background: var(--tint); }
-.abt-card dt { color: var(--royal); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.abt-card dt { color: var(--royal); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .abt-card dd { margin: 0; color: var(--ink); font-size: 0.975rem; }
 @media (min-width: 520px) {
   .abt-card__row { grid-template-columns: 9.5rem minmax(0, 1fr); gap: 16px; align-items: baseline; }
@@ -86,8 +86,8 @@
 .abt-beats { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; max-width: 60rem; margin: 48px auto 0; padding: 0; list-style: none; text-align: left; }
 @media (min-width: 760px) { .abt-beats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } }
 .abt-beat { padding: 22px; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 18px; background: rgba(255, 255, 255, 0.07); }
-.abt-beat__num { display: block; margin-bottom: 8px; color: var(--teal); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; }
-.abt-beat__title { margin: 0 0 6px; font-size: 1.15rem; font-weight: 600; }
+.abt-beat__num { display: block; margin-bottom: 8px; color: var(--teal); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; }
+.abt-beat__title { margin: 0 0 6px; font-size: 1.15rem; font-weight: 700; }
 .abt-beat p { margin: 0; color: rgba(255, 255, 255, 0.82); font-size: 0.95rem; line-height: 1.65; }
 .abt-quote__close { margin: 36px 0 0; color: #fff; font-size: 1.0625rem; font-weight: 500; }
 
@@ -97,8 +97,8 @@
 .abt-step:last-child { padding-bottom: 0; }
 .abt-step::before { content: ''; position: absolute; top: 46px; bottom: -2px; left: 21px; width: 2px; background: var(--line); }
 .abt-step:last-child::before { display: none; }
-.abt-step__num { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 1.05rem; font-weight: 600; box-shadow: 0 0 0 6px var(--pale); }
-.abt-step__title { margin: 8px 0 6px; color: var(--navy); font-size: 1.2rem; font-weight: 600; }
+.abt-step__num { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 1.05rem; font-weight: 700; box-shadow: 0 0 0 6px var(--pale); }
+.abt-step__title { margin: 8px 0 6px; color: var(--navy); font-size: 1.2rem; font-weight: 700; }
 .abt-step p { margin: 0; color: var(--muted); line-height: 1.7; }
 @media (min-width: 900px) {
   .abt-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
@@ -116,7 +116,7 @@
 .abt-key__link:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 .abt-key__icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 6px; border-radius: 14px; background: var(--pale); color: var(--royal); }
 .abt-key__icon svg { width: 26px; height: 26px; }
-.abt-key__name { color: var(--navy); font-size: 1.15rem; font-weight: 600; }
+.abt-key__name { color: var(--navy); font-size: 1.15rem; font-weight: 700; }
 .abt-key__text { color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
 .abt-key__go { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 10px; color: var(--royal); font-size: 0.9rem; font-weight: 500; }
 .abt-key__go svg { width: 16px; height: 16px; transition: transform 0.3s var(--ease); }
@@ -131,7 +131,7 @@
 .abt-promise__col { padding: clamp(22px, 4vw, 34px); border-radius: 20px; }
 .abt-promise__col--will { background: var(--navy); color: #fff; }
 .abt-promise__col--wont { border: 1px solid var(--line); background: var(--tint); color: var(--ink); }
-.abt-promise__title { margin: 0 0 16px; font-size: 1.3rem; font-weight: 600; }
+.abt-promise__title { margin: 0 0 16px; font-size: 1.3rem; font-weight: 700; }
 .abt-promise__col--will .abt-promise__title { color: var(--teal); }
 .abt-promise__col--wont .abt-promise__title { color: var(--navy); }
 .abt-promise ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
@@ -165,7 +165,7 @@
 .abt-way__link { position: relative; display: flex; flex-direction: column; flex: 1; gap: 8px; min-height: 44px; padding: 22px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 18px; background: rgba(255, 255, 255, 0.08); color: #fff; text-decoration: none; transition: transform 0.35s var(--ease), background-color 0.35s var(--ease), border-color 0.35s var(--ease); }
 a.abt-way__link:focus-visible, .abt-way__social a:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
 .abt-way__icon { width: 26px; height: 26px; margin-bottom: 4px; color: var(--teal); }
-.abt-way__title { font-size: 1.1rem; font-weight: 600; }
+.abt-way__title { font-size: 1.1rem; font-weight: 700; }
 .abt-way__text { color: rgba(255, 255, 255, 0.82); font-size: 0.925rem; line-height: 1.6; }
 .abt-way__go { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 10px; color: var(--teal); font-size: 0.875rem; font-weight: 500; overflow-wrap: anywhere; }
 .abt-way__go svg { flex: none; width: 16px; height: 16px; transition: transform 0.3s var(--ease); }
@@ -179,7 +179,9 @@ a.abt-way__link:focus-visible, .abt-way__social a:focus-visible { outline: 3px s
 
 /* Display font (Fraunces) for the big expressive moments. Poppins stays the main font everywhere else. */
 .abt-quote__text p { font-family: var(--font-display); letter-spacing: -0.02em; }
-.abt-quote__echo { font-style: italic; font-weight: 600; }
+.abt-quote__echo { font-style: italic; font-weight: 700; }
 .abt-join__title { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; }
 .abt-step__num, .abt-beat__num { font-family: var(--font-display); }
-.abt-hero__tagline { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 1.15rem; letter-spacing: 0; }
+.abt-hero__tagline { font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 1.15rem; letter-spacing: 0; }
+
+.abt-root { --font-display: var(--font-fraunces, Georgia), Georgia, 'Times New Roman', serif; }

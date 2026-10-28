@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../lib/seo';
 import PageHeader from '../../components/PageHeader';
 import SubmitForm from '../../components/SubmitForm';
 import './submit.css';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocial({
   title: 'Suggest an opportunity',
   description: 'Know a scholarship, fellowship, grant, course, event or student offer that others should see? Send it to OppVault for review.',
-};
+  alternates: { canonical: '/submit' },
+});
 
 export default function SubmitPage() {
   return (

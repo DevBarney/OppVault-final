@@ -7,6 +7,7 @@ import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
 import { CATEGORIES, getCategory } from '../../lib/categories';
 import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
+import { listIndexing, withSocial } from '../../lib/seo';
 
 export const dynamicParams = false;
 const PER_PAGE = 9;
@@ -22,14 +23,10 @@ type Props = {
 
 const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v) || undefined;
 
-export async function generateMetadata({ params }: Pick<Props, 'params'>): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const cat = getCategory((await params).category);
   if (!cat) return {};
-  return {
-    title: cat.label,
-    description: cat.intro,
-    alternates: { canonical: `/${cat.slug}` },
-  };
+  return withSocial({ title: cat.label, description: cat.intro, ...listIndexing(`/${cat.slug}`, await searchParams) });
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
@@ -65,7 +62,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             <ul className="grid">
               {items.map((item, i) => (
                 <Reveal as="li" key={item.id} delay={Math.min(i, 5) * 60}>
-                  <OpportunityCard item={item} />
+                  <OpportunityCard item={item} priority={i < 3} />
                 </Reveal>
               ))}
             </ul>

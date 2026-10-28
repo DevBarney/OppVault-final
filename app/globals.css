@@ -14,8 +14,8 @@
   --line: #dce6f7;
   --danger: #b42318;
 
-  --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font: var(--font-poppins, 'Poppins'), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif; /* the About page swaps in Fraunces */
   --gutter: clamp(20px, 5vw, 48px);
   --radius: 14px;
 }
@@ -2358,3 +2358,7 @@ body > main { min-height: 50vh; }
 .detail__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .article__by { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .article__avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid rgba(255, 255, 255, 0.7); }
+
+/* 404 page */
+.nf-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 28px 0 0; padding: 0; list-style: none; }
+.nf-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--royal); font-weight: 500; text-underline-offset: 3px; }

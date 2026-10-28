@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
@@ -5,6 +6,9 @@ import { ArrowIcon, CategoryIcon, SearchIcon, StarIcon } from '../components/Ico
 import { CATEGORIES } from '../lib/categories';
 import { getCounts, getOpportunities, getPosts } from '../lib/data';
 import { formatDate } from '../lib/dates';
+import { withSocial } from '../lib/seo';
+
+export const metadata: Metadata = withSocial({ alternates: { canonical: '/' } });
 
 const STEPS = [
   { title: 'We collect', text: 'Opportunities are gathered from selected sources, so you do not have to search them all yourself.' },

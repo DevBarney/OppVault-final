@@ -30,3 +30,6 @@ Decided by: Barnabas. Writers sign in with their own email and password, can onl
 
 ### D-009 Visitors can create an account to save opportunities
 Decided by: Barnabas. Sign-in with email and password, Google, LinkedIn and X, through Supabase Auth over REST (no new package). Sessions are HttpOnly cookies (`ov_at`, `ov_rt`); pages never see tokens. Table `saved_items` has row level security: a visitor can only read, add and remove their own rows. Pages: `/account/sign-in`, `/account/saved`, `/account/callback`, `/account/reset` (all noindex, disallowed in robots). Cards and detail pages use the shared `SaveButton` (`components/account/SaveButton.tsx`). Sample listings cannot be saved. Setup steps for the provider apps are in `docs/ACCOUNTS-SETUP.md`.
+
+### D-010 Performance and share-tag rules
+Decided by: Barnabas (via the lead session). Poppins loads through `next/font/google` (self-hosted at build, no CDN links); Fraunces is scoped to `/about` only. Listing pages page, filter and count in the database (`limit`/`offset`, `Prefer: count=exact`), never by fetching everything. Pages build their share tags with `withSocial()` and list pages use `listIndexing()` from `lib/seo.ts` (filtered/search views are noindex; `?page=n` is self-canonical). The `ov_s` flag cookie stops signed-out visitors calling the session API.

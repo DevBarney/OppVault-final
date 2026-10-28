@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { listIndexing, withSocial } from '../../lib/seo';
 import { notFound } from 'next/navigation';
 import Filters from '../../components/Filters';
 import PageHeader from '../../components/PageHeader';
@@ -15,13 +16,13 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 
 const one = (v: string | string[] | undefined): string | undefined => (Array.isArray(v) ? v[0] : v) || undefined;
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata({ searchParams }: Pick<Props, 'searchParams'>): Promise<Metadata> {
   const cat = getCategory('student-offers');
-  return {
+  return withSocial({
     title: cat?.label ?? 'Student offers',
     description: cat?.intro,
-    alternates: { canonical: '/student-offers' },
-  };
+    ...listIndexing('/student-offers', await searchParams),
+  });
 }
 
 export default async function StudentOffersPage({ searchParams }: Props) {

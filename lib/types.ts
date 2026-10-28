@@ -21,6 +21,7 @@ export type Opportunity = {
   featured: boolean;
   is_sample: boolean; // sample listings are shown with a "Sample" badge
   created_at: string;
+  updated_at?: string; // when the listing last changed (used for the sitemap)
 };
 
 export type Post = {

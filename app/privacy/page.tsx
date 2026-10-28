@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../lib/seo';
 import { CONTACT } from '../../lib/config';
 
-export const metadata: Metadata = {
-  title: 'Privacy notice | OppVault',
+export const metadata: Metadata = withSocial({
+  title: 'Privacy notice',
   description: 'What OppVault collects when you subscribe to updates, why, and how to change your mind.',
   alternates: { canonical: '/privacy' },
-};
+});
 
 export default function PrivacyPage() {
   return (

@@ -9,6 +9,7 @@ export const accountsConfigured = Boolean(SUPABASE_URL && PUBLIC_KEY);
 
 export const AT_COOKIE = 'ov_at'; // short-lived access token
 export const RT_COOKIE = 'ov_rt'; // longer-lived refresh token
+export const FLAG_COOKIE = 'ov_s'; // readable by page scripts; only says "a session may exist", holds no secret
 export const REFRESH_DAYS = 30;
 
 export const MIN_PASSWORD = 10;

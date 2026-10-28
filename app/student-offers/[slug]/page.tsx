@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowIcon, ClockIcon, ExternalIcon, PinIcon } from '../../../components/Icons';
@@ -16,24 +17,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = await getOpportunity('student-offers', slug);
   if (!item) return {};
-  return {
-    title: `${item.title} | ${item.provider}`,
+  return withSocial({
+    title: item.title,
     description: item.summary,
     alternates: { canonical: `/student-offers/${slug}` },
     robots: item.is_sample ? { index: false, follow: false } : undefined,
-  };
+  });
 }
 
 export default async function StudentOfferPage({ params }: Props) {
   const { slug } = await params;
   const cat = getCategory('student-offers');
   if (!cat) notFound();
-  const item = await getOpportunity('student-offers', slug);
+  const [item, { items: related }] = await Promise.all([
+    getOpportunity('student-offers', slug),
+    getOpportunities({ category: 'student-offers', limit: 4 }),
+  ]);
   if (!item) notFound();
 
   const t = offerTiming(item.deadline);
   const verify = steps(item.how_to_apply);
-  const { items: related } = await getOpportunities({ category: 'student-offers', limit: 4 });
   const more = related.filter((r) => r.id !== item.id).slice(0, 3);
 
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import EventCard from '../../../components/events/EventCard';
@@ -17,24 +18,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = await getOpportunity('events', slug);
   if (!item) return {};
-  return {
-    title: `${item.title} | ${item.provider}`,
+  return withSocial({
+    title: item.title,
     description: item.summary,
     alternates: { canonical: `/events/${slug}` },
     robots: item.is_sample ? { index: false, follow: false } : undefined,
-  };
+  });
 }
 
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;
   const cat = getCategory('events');
   if (!cat) notFound();
-  const item = await getOpportunity('events', slug);
+  const [item, { items: related }] = await Promise.all([getOpportunity('events', slug), getOpportunities({ category: 'events', limit: 4 })]);
   if (!item) notFound();
 
   const t = eventTiming(item.deadline);
   const venue = venueKind(item.location);
-  const { items: related } = await getOpportunities({ category: 'events', limit: 4 });
   const more = related.filter((r) => r.id !== item.id).slice(0, 3);
 
   return (

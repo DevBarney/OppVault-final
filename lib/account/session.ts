@@ -1,20 +1,25 @@
 // Reading and writing the visitor session cookies. Server only.
 
-import { AT_COOKIE, REFRESH_DAYS, RT_COOKIE } from './config';
+import { AT_COOKIE, FLAG_COOKIE, REFRESH_DAYS, RT_COOKIE } from './config';
 import { getUser, refreshSession, type AuthUser, type Tokens } from './gotrue';
 
 const secure = () => (process.env.NODE_ENV === 'production' ? '; Secure' : '');
 
-function cookie(name: string, value: string, maxAge: number): string {
-  return `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.max(0, Math.floor(maxAge))}${secure()}`;
+function cookie(name: string, value: string, maxAge: number, httpOnly = true): string {
+  return `${name}=${encodeURIComponent(value)}; Path=/;${httpOnly ? ' HttpOnly;' : ''} SameSite=Lax; Max-Age=${Math.max(0, Math.floor(maxAge))}${secure()}`;
 }
 
 export function sessionCookies(t: Tokens): string[] {
-  return [cookie(AT_COOKIE, t.access_token, Math.min(t.expires_in, 60 * 60 * 24)), cookie(RT_COOKIE, t.refresh_token, REFRESH_DAYS * 86400)];
+  return [
+    cookie(AT_COOKIE, t.access_token, Math.min(t.expires_in, 60 * 60 * 24)),
+    cookie(RT_COOKIE, t.refresh_token, REFRESH_DAYS * 86400),
+    // Tells the page "someone may be signed in", so anonymous visitors never need to ask the server.
+    cookie(FLAG_COOKIE, '1', REFRESH_DAYS * 86400, false),
+  ];
 }
 
 export function clearCookies(): string[] {
-  return [cookie(AT_COOKIE, '', 0), cookie(RT_COOKIE, '', 0)];
+  return [cookie(AT_COOKIE, '', 0), cookie(RT_COOKIE, '', 0), cookie(FLAG_COOKIE, '', 0, false)];
 }
 
 export function readCookie(header: string | null | undefined, name: string): string | null {

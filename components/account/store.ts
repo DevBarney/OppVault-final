@@ -40,9 +40,22 @@ export function refreshAccount(): Promise<void> {
     });
 }
 
+/** The sign-in flag cookie (see lib/account/session.ts). No flag means nobody is signed in, so no request is needed. */
+function mayBeSignedIn(): boolean {
+  try {
+    return /(?:^|;\s*)ov_s=1(?:;|$)/.test(document.cookie);
+  } catch {
+    return true;
+  }
+}
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  if (!started) void refreshAccount();
+  if (!started) {
+    started = true;
+    if (mayBeSignedIn()) void refreshAccount();
+    else set({ ...EMPTY, status: 'ready' });
+  }
   return () => {
     listeners.delete(listener);
   };

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SaveButton from '../../../components/account/SaveButton';
@@ -16,23 +17,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isCategorySlug(category)) return {};
   const item = await getOpportunity(category, slug);
   if (!item) return {};
-  return {
-    title: `${item.title} | ${item.provider}`,
+  return withSocial({
+    title: item.title,
     description: item.summary,
     alternates: { canonical: `/${category}/${slug}` },
     robots: item.is_sample ? { index: false, follow: false } : undefined,
-  };
+  });
 }
 
 export default async function OpportunityPage({ params }: Props) {
   const { category, slug } = await params;
   const cat = getCategory(category);
   if (!cat || !isCategorySlug(category)) notFound();
-  const item = await getOpportunity(category, slug);
+  // Fetch the listing and the related ones at the same time, not one after the other.
+  const [item, { items: related }] = await Promise.all([getOpportunity(category, slug), getOpportunities({ category, limit: 4 })]);
   if (!item) notFound();
 
   const u = urgency(item.deadline);
-  const { items: related } = await getOpportunities({ category, limit: 4 });
   const more = related.filter((r) => r.id !== item.id).slice(0, 3);
 
   return (
