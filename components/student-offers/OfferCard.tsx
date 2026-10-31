@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SaveButton from '../account/SaveButton';
+import DeadlineRing from '../DeadlineRing';
 import { ArrowIcon, ClockIcon, PinIcon } from '../Icons';
 import type { Opportunity } from '../../lib/types';
 import { offerTiming } from './timing';
@@ -37,6 +38,7 @@ export default function OfferCard({ item }: { item: Opportunity }) {
             {t.text}
           </span>
           <span className="card__go" aria-hidden="true">
+            <DeadlineRing deadline={item.deadline} />
             <ArrowIcon className="card__go-icon" />
           </span>
         </div>

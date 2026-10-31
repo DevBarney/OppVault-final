@@ -2362,3 +2362,17 @@ body > main { min-height: 50vh; }
 /* 404 page */
 .nf-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 28px 0 0; padding: 0; list-style: none; }
 .nf-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--royal); font-weight: 500; text-underline-offset: 3px; }
+
+/* Deadline ring around the card arrow */
+.card__go { position: relative; }
+.ring { position: absolute; left: -4px; top: -4px; width: 42px; height: 42px; transform: rotate(-90deg); pointer-events: none; overflow: visible; }
+.ring circle { fill: none; stroke-width: 2.5; }
+.ring__track { stroke: var(--line); }
+.ring__bar { stroke: var(--royal); stroke-linecap: round; }
+.ring--soon .ring__bar { stroke: #b45309; }
+.ring--urgent .ring__bar { stroke: var(--gold); }
+@media (prefers-reduced-motion: no-preference) {
+  .ring__bar { transition: stroke-dashoffset 0.9s var(--ease); }
+  .ring--urgent { animation: ring-pulse 1.8s ease-in-out infinite; }
+  @keyframes ring-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+}

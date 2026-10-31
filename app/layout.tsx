@@ -6,6 +6,7 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import NewsletterBand from '../components/NewsletterBand';
 import Interactions from '../components/Interactions';
+import CommandPalette from '../components/CommandPalette';
 import { SITE_URL, TAGLINE } from '../lib/config';
 
 /**
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="main">{children}</main>
         <NewsletterBand />
         <Footer />
+        <CommandPalette />
       </body>
     </html>
   );

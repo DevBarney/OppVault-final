@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SaveButton from './account/SaveButton';
+import DeadlineRing from './DeadlineRing';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from './Icons';
 import { getCategory } from '../lib/categories';
 import { urgency } from '../lib/dates';
@@ -63,6 +64,7 @@ export default function OpportunityCard({
             {u.text}
           </span>
           <span className="card__go" aria-hidden="true">
+            <DeadlineRing deadline={item.deadline} />
             <ArrowIcon className="card__go-icon" />
           </span>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import './account.css';
 import { useAccount } from './store';
 
@@ -28,7 +29,20 @@ function HeartIcon() {
 export default function AccountLink({ variant = 'icon', onNavigate }: { variant?: 'icon' | 'text'; onNavigate?: () => void }) {
   const account = useAccount();
   const signedIn = account.status === 'ready' && account.signedIn;
-  const label = signedIn ? 'My saved' : 'Sign in';
+  const count = signedIn ? account.saved.size : 0;
+  const prev = useRef<number | null>(null); // null until the first real answer, so loading your saved list does not count as a new save
+  const [bump, setBump] = useState(false);
+  useEffect(() => {
+    if (account.status !== 'ready') return;
+    if (prev.current !== null && count > prev.current) {
+      prev.current = count;
+      setBump(true);
+      window.setTimeout(() => setBump(false), 600);
+      return;
+    }
+    prev.current = count;
+  }, [count, account.status]);
+  const label = signedIn ? (count > 0 ? `My saved (${count})` : 'My saved') : 'Sign in';
   const href = signedIn ? '/account/saved' : '/account/sign-in';
   if (variant === 'text') {
     return (
@@ -38,8 +52,9 @@ export default function AccountLink({ variant = 'icon', onNavigate }: { variant?
     );
   }
   return (
-    <Link className="acct-navlink" href={href} onClick={onNavigate} title={label}>
+    <Link className={`acct-navlink${bump ? ' is-bump' : ''}`} href={href} onClick={onNavigate} title={label} data-acct-nav="">
       {signedIn ? <HeartIcon /> : <PersonIcon />}
+      {count > 0 ? <span className="acct-badge" aria-hidden="true">{count > 99 ? '99+' : count}</span> : null}
       <span className="visually-hidden">{label}</span>
     </Link>
   );
