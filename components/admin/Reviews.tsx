@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-type Rev = { id: string; name: string; body: string; avatar_url: string | null; status: string; created_at: string };
+type Rev = { id: string; name: string; body: string; rating: number | null; used_for: string; avatar_url: string | null; status: string; created_at: string };
 
 const TABS = [
   { status: 'pending', label: 'Waiting' },
@@ -90,7 +90,7 @@ export default function Reviews() {
             {r.avatar_url ? <img className="adm__avatarimg" src={r.avatar_url} alt="" width={56} height={56} /> : <span className="adm__avatarimg adm__avatarimg--empty" aria-hidden="true" />}
             <div>
               <h3 className="adm__subtitle">{r.name}</h3>
-              <p className="adm__muted">sent {new Date(r.created_at).toLocaleDateString('en-GB')}</p>
+              <p className="adm__muted">{r.rating ? `${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)} · ` : ''}{r.used_for ? `${r.used_for} · ` : ''}sent {new Date(r.created_at).toLocaleDateString('en-GB')}</p>
             </div>
           </div>
           <p style={{ whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}>{r.body}</p>

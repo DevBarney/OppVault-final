@@ -24,7 +24,7 @@ export async function POST(request: Request): Promise<Response> {
   const trap = form.get('company');
   if (typeof trap === 'string' && trap.trim() !== '') return json({ ok: true });
 
-  const checked = validateReview({ name: form.get('name'), body: form.get('body'), consent: form.get('consent') === 'yes' });
+  const checked = validateReview({ name: form.get('name'), body: form.get('body'), rating: form.get('rating'), usedFor: form.get('used_for'), consent: form.get('consent') === 'yes' });
   if (!checked.ok) return json({ ok: false, error: checked.error }, 400);
 
   const photo = form.get('photo');
@@ -51,13 +51,13 @@ export async function POST(request: Request): Promise<Response> {
     }
   }
 
-  const saved = await createReview({ name: checked.data.name, body: checked.data.body, avatar_url: avatar });
+  const saved = await createReview({ ...checked.data, avatar_url: avatar });
   if (!saved) return json({ ok: false, error: 'We could not save that right now. Please try again in a moment.' }, 502);
 
   await sendNotification({
     to: notifyAddress(),
     subject: `New review from ${checked.data.name}`.slice(0, 150),
-    lines: [`${checked.data.name} left a review:`, checked.data.body.slice(0, 300), 'It is not public yet. Open the admin page and go to "Reviews from visitors" to approve or reject it.'],
+    lines: [`${checked.data.name} left a ${checked.data.rating}-star review:`, checked.data.body.slice(0, 300), 'It is not public yet. Open the admin page and go to "Reviews from visitors" to approve or reject it.'],
     link: { url: `${originOf(request)}/admin#reviews`, label: 'Review it' },
   });
   return json({ ok: true });

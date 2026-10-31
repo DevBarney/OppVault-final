@@ -1,6 +1,8 @@
 // Validation for reviews left by visitors (public form at /reviews).
 
-export type ReviewInput = { name: string; body: string };
+export type ReviewInput = { name: string; body: string; rating: number; used_for: string };
+
+export const USED_FOR = ['Scholarships', 'Fellowships', 'Grants', 'Courses', 'Events', 'Student offers', 'Blog guides', 'Something else'] as const;
 
 function text(v: unknown, max: number): string {
   // eslint-disable-next-line no-control-regex
@@ -11,14 +13,18 @@ export const REVIEW_MIN = 20;
 export const REVIEW_MAX = 800;
 export const MAX_REVIEW_PHOTO_BYTES = 60_000;
 
-export function validateReview(input: { name?: unknown; body?: unknown; consent?: unknown }): { ok: true; data: ReviewInput } | { ok: false; error: string } {
+export function validateReview(input: { name?: unknown; body?: unknown; rating?: unknown; usedFor?: unknown; consent?: unknown }): { ok: true; data: ReviewInput } | { ok: false; error: string } {
   const name = text(input.name, 80);
   if (name.length < 2) return { ok: false, error: 'Add your name, or the name you would like shown.' };
   const body = text(input.body, REVIEW_MAX);
   if (body.length < REVIEW_MIN) return { ok: false, error: `Write at least ${REVIEW_MIN} characters so your review says something useful.` };
   if (/https?:\/\/|www\./i.test(body) || /https?:\/\/|www\./i.test(name)) return { ok: false, error: 'Please leave web addresses out of your review.' };
+  const rating = Number(input.rating);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { ok: false, error: 'Choose a star rating from 1 to 5.' };
+  const usedRaw = text(input.usedFor, 60);
+  if (usedRaw && !(USED_FOR as readonly string[]).includes(usedRaw)) return { ok: false, error: 'Choose one of the options for what you used OppVault for.' };
   if (input.consent !== true) return { ok: false, error: 'Please tick the box to confirm you are happy for your review to be shown.' };
-  return { ok: true, data: { name, body } };
+  return { ok: true, data: { name, body, rating, used_for: usedRaw } };
 }
 
 /** Initials for the picture placeholder, e.g. "Ada Obi" -> "AO". */

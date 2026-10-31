@@ -204,3 +204,9 @@ drop policy if exists reviews_public_read on public.reviews;
 create policy reviews_public_read on public.reviews for select to anon, authenticated using (status = 'approved');
 revoke all on public.reviews from anon, authenticated;
 grant select (id, name, body, avatar_url, created_at) on public.reviews to anon, authenticated;
+
+-- Reviews: star rating (1-5) and what the person used OppVault for.
+alter table public.reviews
+  add column if not exists rating smallint check (rating between 1 and 5),
+  add column if not exists used_for text not null default '' check (char_length(used_for) <= 60);
+grant select (rating, used_for) on public.reviews to anon, authenticated;

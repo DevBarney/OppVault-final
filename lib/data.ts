@@ -257,7 +257,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 /** Approved visitor reviews, newest first. Empty when none exist or the database is not configured. */
 export async function getReviews(limit = 12): Promise<Review[]> {
   const rows = await rest<Review>('reviews', {
-    select: 'id,name,body,avatar_url,created_at',
+    select: 'id,name,body,rating,used_for,avatar_url,created_at',
     order: 'created_at.desc',
     limit: String(Math.min(Math.max(limit, 1), 100)),
   });

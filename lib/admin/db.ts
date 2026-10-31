@@ -220,11 +220,13 @@ export type ReviewRow = {
   name: string;
   body: string;
   avatar_url: string | null;
+  rating: number | null;
+  used_for: string;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
 };
 
-export async function createReview(data: { name: string; body: string; avatar_url: string | null }): Promise<boolean> {
+export async function createReview(data: { name: string; body: string; rating: number; used_for: string; avatar_url: string | null }): Promise<boolean> {
   if (!dbConfigured()) return false;
   const r = await call('reviews', { method: 'POST', headers: headers({ prefer: 'return=minimal' }), body: JSON.stringify(data) });
   return r.ok;

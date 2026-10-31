@@ -38,4 +38,4 @@ export type Post = {
 };
 
 /** An approved visitor review (public). */
-export type Review = { id: string; name: string; body: string; avatar_url: string | null; created_at: string };
+export type Review = { id: string; name: string; body: string; rating: number | null; used_for: string; avatar_url: string | null; created_at: string };

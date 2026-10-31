@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { initials, REVIEW_MAX, REVIEW_MIN } from '../../lib/reviews';
+import { initials, REVIEW_MAX, REVIEW_MIN, USED_FOR } from '../../lib/reviews';
 import '../../app/submit/submit.css';
 import './reviews.css';
 
@@ -30,6 +30,9 @@ export default function ReviewForm() {
   const [message, setMessage] = useState('');
   const [name, setName] = useState('');
   const [body, setBody] = useState('');
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [usedFor, setUsedFor] = useState('');
   const [photo, setPhoto] = useState<Blob | null>(null);
   const [preview, setPreview] = useState('');
   const [photoNote, setPhotoNote] = useState('');
@@ -58,12 +61,19 @@ export default function ReviewForm() {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
+    if (rating < 1) {
+      setStatus('error');
+      setMessage('Choose a star rating from 1 to 5.');
+      return;
+    }
     setStatus('loading');
     setMessage('');
     try {
       const data = new FormData();
       data.set('name', name);
       data.set('body', body);
+      data.set('rating', String(rating));
+      data.set('used_for', usedFor);
       data.set('company', (form.elements.namedItem('company') as HTMLInputElement).value);
       data.set('consent', (form.elements.namedItem('consent') as HTMLInputElement).checked ? 'yes' : 'no');
       if (photo) data.set('photo', photo, 'photo.webp');
@@ -73,6 +83,8 @@ export default function ReviewForm() {
         setStatus('success');
         setName('');
         setBody('');
+        setRating(0);
+        setUsedFor('');
         clearPhoto();
         form.reset();
         return;
@@ -102,6 +114,28 @@ export default function ReviewForm() {
       <div className="sub__row">
         <label className="sub__label" htmlFor="rv-name">Your name</label>
         <input id="rv-name" className="sub__input" value={name} onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" />
+      </div>
+      <fieldset className="sub__row rv-rate-wrap" style={{ border: 0, padding: 0, margin: 0 }}>
+        <legend className="sub__label">Your rating</legend>
+        <div className="rv-rate" onMouseLeave={() => setHover(0)}>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <label key={n} className={`rv-rate__opt${n <= (hover || rating) ? ' rv-rate__opt--on' : ''}`} onMouseEnter={() => setHover(n)}>
+              <input type="radio" name="rating" value={n} checked={rating === n} onChange={() => setRating(n)} aria-label={`${n} ${n === 1 ? 'star' : 'stars'}`} />
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z" />
+              </svg>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="sub__row">
+        <label className="sub__label" htmlFor="rv-used">What did you use OppVault for? (optional)</label>
+        <select id="rv-used" className="sub__input" value={usedFor} onChange={(e: ChangeEvent<HTMLSelectElement>) => setUsedFor(e.target.value)}>
+          <option value="">Choose one</option>
+          {USED_FOR.map((u) => (
+            <option key={u} value={u}>{u}</option>
+          ))}
+        </select>
       </div>
       <div className="sub__row">
         <label className="sub__label" htmlFor="rv-body">Your review</label>

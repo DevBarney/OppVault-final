@@ -18,3 +18,13 @@
 .rv-photo__btn:focus-within { outline: 3px solid var(--sky); outline-offset: 2px; }
 .rv-count { font-size: 0.8rem; color: var(--muted); text-align: right; }
 .rv-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+.rv-stars { display: flex; gap: 2px; margin: 0; }
+.rv-star { width: 20px; height: 20px; fill: var(--line); }
+.rv-star--on { fill: var(--gold); }
+.rv-rate { display: flex; gap: 4px; border: 0; padding: 0; margin: 0; }
+.rv-rate__opt { position: relative; cursor: pointer; line-height: 0; }
+.rv-rate__opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.rv-rate__opt svg { width: 32px; height: 32px; fill: var(--line); transition: fill 0.15s; }
+.rv-rate__opt--on svg { fill: var(--gold); }
+.rv-rate__opt:focus-within { outline: 3px solid var(--sky); outline-offset: 2px; border-radius: 6px; }
