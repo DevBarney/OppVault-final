@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import SaveButton from '../../../components/account/SaveButton';
+import ShareActions from '../../../components/ShareActions';
+import { SITE_URL } from '../../../lib/config';
 import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -10,7 +12,7 @@ import { ArrowIcon, ClockIcon, ExternalIcon, PinIcon } from '../../../components
 import Prose from '../../../components/Prose';
 import { getCategory } from '../../../lib/categories';
 import { getOpportunities, getOpportunity } from '../../../lib/data';
-import { formatDate } from '../../../lib/dates';
+import { formatDate, daysUntil } from '../../../lib/dates';
 import '../events.css';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -154,6 +156,7 @@ export default async function EventPage({ params }: Props) {
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
+              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
               <p className="facts__note">Registration may close before the event. The official page has the programme and the registration deadline.</p>
             </div>
           </aside>

@@ -91,3 +91,9 @@
 .acct-navlink { position: relative; }
 .acct-badge { position: absolute; top: 0; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #c2185b; color: #fff; font-size: 0.6875rem; font-weight: 700; line-height: 18px; text-align: center; pointer-events: none; }
 .save-fly { position: fixed; z-index: 1000; width: 22px; height: 22px; color: #c2185b; pointer-events: none; }
+
+/* Share / calendar actions on detail pages */
+.share { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.share__btn { flex: 1 1 auto; min-height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--royal); font: inherit; font-size: 0.875rem; font-weight: 500; text-decoration: none; cursor: pointer; }
+.share__btn:hover { border-color: var(--royal); }
+.share__btn:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }

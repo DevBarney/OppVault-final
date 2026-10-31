@@ -3,12 +3,14 @@ import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SaveButton from '../../../components/account/SaveButton';
+import ShareActions from '../../../components/ShareActions';
+import { SITE_URL } from '../../../lib/config';
 import OpportunityCard from '../../../components/OpportunityCard';
 import Prose from '../../../components/Prose';
 import { ArrowIcon, ClockIcon, ExternalIcon, PinIcon } from '../../../components/Icons';
 import { getCategory, isCategorySlug } from '../../../lib/categories';
 import { getOpportunities, getOpportunity } from '../../../lib/data';
-import { formatDate, urgency } from '../../../lib/dates';
+import { formatDate, urgency, daysUntil } from '../../../lib/dates';
 
 type Props = { params: Promise<{ category: string; slug: string }> };
 
@@ -146,6 +148,7 @@ export default async function OpportunityPage({ params }: Props) {
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
+              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
             </div>
           </aside>
         </div>
