@@ -184,3 +184,23 @@ create policy "saved_insert_own" on public.saved_items for insert to authenticat
 create policy "saved_delete_own" on public.saved_items for delete to authenticated using (user_id = (select auth.uid()));
 revoke all on public.saved_items from authenticated, anon, public;
 grant select, insert, delete on public.saved_items to authenticated;
+
+-- ---------------------------------------------------------------------------------------------
+-- Visitor reviews (public form at /reviews). Every review waits for approval in /admin. The public
+-- can only read approved rows, and only these columns; writes go through the server (service role).
+-- ---------------------------------------------------------------------------------------------
+create table if not exists public.reviews (
+  id uuid primary key default gen_random_uuid(),
+  name text not null check (char_length(name) between 2 and 80),
+  body text not null check (char_length(body) between 20 and 800),
+  avatar_url text,
+  status text not null default 'pending' check (status in ('pending','approved','rejected')),
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+create index if not exists reviews_status_idx on public.reviews (status, created_at desc);
+alter table public.reviews enable row level security;
+drop policy if exists reviews_public_read on public.reviews;
+create policy reviews_public_read on public.reviews for select to anon, authenticated using (status = 'approved');
+revoke all on public.reviews from anon, authenticated;
+grant select (id, name, body, avatar_url, created_at) on public.reviews to anon, authenticated;

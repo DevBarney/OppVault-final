@@ -1,6 +1,7 @@
 import Importer from '../../components/admin/Importer';
 import Mailing from '../../components/admin/Mailing';
 import Manager from '../../components/admin/Manager';
+import Reviews from '../../components/admin/Reviews';
 import Submissions from '../../components/admin/Submissions';
 import SignOutButton from '../../components/admin/SignOutButton';
 import { dbConfigured } from '../../lib/admin/db';
@@ -74,6 +75,14 @@ export default async function AdminPage() {
           Use Review and edit to fix or add details before approving. Approve and publish sends it live as it is; Approve as draft keeps it hidden; rejecting keeps a record. Nothing goes live by itself.
         </p>
         <Submissions pending={pending} />
+      </div>
+
+      <div className="adm__panel" id="reviews">
+        <h2 className="adm__h2">Reviews from visitors</h2>
+        <p className="adm__muted">
+          People can leave a review at <code>/reviews</code>. Nothing appears on the website until you approve it. Rejecting a review also removes its photo.
+        </p>
+        <Reviews />
       </div>
 
       <div className="adm__panel">

@@ -19,9 +19,17 @@ export function sniffImage(bytes: Uint8Array): { ext: 'jpg' | 'png' | 'webp'; mi
 }
 
 export async function uploadAvatar(owner: string, bytes: Uint8Array, ext: string, mime: string): Promise<string> {
+  return putAvatar(`${owner}-${Date.now()}.${ext}`, bytes, mime);
+}
+
+/** A review photo gets an unguessable name, so it can be matched and removed later. */
+export async function uploadReviewPhoto(bytes: Uint8Array, ext: string, mime: string): Promise<string> {
+  return putAvatar(`review-${crypto.randomUUID()}.${ext}`, bytes, mime);
+}
+
+async function putAvatar(path: string, bytes: Uint8Array, mime: string): Promise<string> {
   if (!dbConfigured()) throw new Error('The database connection is not set up yet.');
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, '');
-  const path = `${owner}-${Date.now()}.${ext}`;
   const res = await fetch(`${base}/storage/v1/object/avatars/${path}`, {
     method: 'POST',
     headers: { ...headers(), 'content-type': mime, 'cache-control': 'max-age=31536000' },
@@ -38,4 +46,19 @@ export async function uploadAvatar(owner: string, bytes: Uint8Array, ext: string
     throw new Error(`The picture could not be stored (${res.status}${msg ? `: ${msg.slice(0, 120)}` : ''}).`);
   }
   return `${base}/storage/v1/object/public/avatars/${path}`;
+}
+
+/** Removes a picture that was uploaded for a review (best effort; a leftover file is harmless). */
+export async function removeStoredAvatar(url: string | null): Promise<void> {
+  if (!url || !dbConfigured()) return;
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, '');
+  const marker = `${base}/storage/v1/object/public/avatars/`;
+  if (!url.startsWith(marker)) return;
+  const path = url.slice(marker.length);
+  if (!/^review-[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path)) return; // only ever remove review pictures
+  try {
+    await fetch(`${base}/storage/v1/object/avatars/${path}`, { method: 'DELETE', headers: headers(), signal: AbortSignal.timeout(10000) });
+  } catch {
+    /* ignore */
+  }
 }

@@ -26,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/blog` },
     { url: `${SITE_URL}/privacy` },
     { url: `${SITE_URL}/submit` },
+    { url: `${SITE_URL}/reviews` },
     ...CATEGORIES.map((c) => ({ url: `${SITE_URL}/${c.slug}` })),
   ];
   // Sample listings are never put in the sitemap.

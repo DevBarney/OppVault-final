@@ -33,3 +33,6 @@ Decided by: Barnabas. Sign-in with email and password, Google, LinkedIn and X, t
 
 ### D-010 Performance and share-tag rules
 Decided by: Barnabas (via the lead session). Poppins loads through `next/font/google` (self-hosted at build, no CDN links); Fraunces is scoped to `/about` only. Listing pages page, filter and count in the database (`limit`/`offset`, `Prefer: count=exact`), never by fetching everything. Pages build their share tags with `withSocial()` and list pages use `listIndexing()` from `lib/seo.ts` (filtered/search views are noindex; `?page=n` is self-canonical). The `ov_s` flag cookie stops signed-out visitors calling the session API.
+
+### D-011 Visitors can leave reviews, approved by hand
+Decided by: Barnabas. `/reviews` has a public form (name, review, optional small photo, no account). Rows go into `reviews` as pending; nothing shows until approved in `/admin` ("Reviews from visitors"). The public can only read approved rows and only the columns id, name, body, avatar_url, created_at. Photos are shrunk to 128px in the browser, type-checked on the server and stored in the `avatars` bucket as `review-<uuid>`; rejecting or deleting a review removes its photo. Approved reviews show on the home page (newest 3) and on `/reviews`.

@@ -39,6 +39,9 @@ export default function Footer() {
                   <Link href="/submit">Suggest an opportunity</Link>
                 </li>
                 <li>
+                  <Link href="/reviews">Reviews</Link>
+                </li>
+                <li>
                   <Link href="/account/saved">My saved</Link>
                 </li>
                 <li>

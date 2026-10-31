@@ -212,3 +212,47 @@ export async function finishBatch(campaign: string, batch: number, broadcastId: 
 export async function releaseBatch(campaign: string, batch: number): Promise<void> {
   await call(`mail_sends?campaign=eq.${encodeURIComponent(campaign)}&batch=eq.${batch}&broadcast_id=is.null`, { method: 'DELETE', headers: headers() });
 }
+
+// ---- Reviews left by visitors ----
+
+export type ReviewRow = {
+  id: string;
+  name: string;
+  body: string;
+  avatar_url: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+};
+
+export async function createReview(data: { name: string; body: string; avatar_url: string | null }): Promise<boolean> {
+  if (!dbConfigured()) return false;
+  const r = await call('reviews', { method: 'POST', headers: headers({ prefer: 'return=minimal' }), body: JSON.stringify(data) });
+  return r.ok;
+}
+
+export async function listReviews(status: 'pending' | 'approved' | 'rejected'): Promise<ReviewRow[]> {
+  const r = await call(`reviews?select=*&status=eq.${status}&order=created_at.desc&limit=100`, { headers: headers() });
+  return r.ok && Array.isArray(r.body) ? (r.body as ReviewRow[]) : [];
+}
+
+export async function getReview(id: string): Promise<ReviewRow | null> {
+  if (!UUID.test(id)) return null;
+  const r = await call(`reviews?select=*&id=eq.${id}&limit=1`, { headers: headers() });
+  return r.ok && Array.isArray(r.body) && r.body[0] ? (r.body[0] as ReviewRow) : null;
+}
+
+export async function setReviewStatus(id: string, status: 'approved' | 'rejected'): Promise<boolean> {
+  if (!UUID.test(id)) return false;
+  const r = await call(`reviews?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: headers({ prefer: 'return=minimal' }),
+    body: JSON.stringify({ status, reviewed_at: new Date().toISOString() }),
+  });
+  return r.ok;
+}
+
+export async function deleteReview(id: string): Promise<boolean> {
+  if (!UUID.test(id)) return false;
+  const r = await call(`reviews?id=eq.${id}`, { method: 'DELETE', headers: headers({ prefer: 'return=minimal' }) });
+  return r.ok;
+}

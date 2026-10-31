@@ -36,3 +36,6 @@ export type Post = {
   image_url?: string | null;
   author_avatar?: string | null; // small profile picture of the writer, optional
 };
+
+/** An approved visitor review (public). */
+export type Review = { id: string; name: string; body: string; avatar_url: string | null; created_at: string };

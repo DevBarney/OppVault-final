@@ -4,7 +4,8 @@ import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
 import { ArrowIcon, CategoryIcon, SearchIcon, StarIcon } from '../components/Icons';
 import { CATEGORIES } from '../lib/categories';
-import { getCounts, getOpportunities, getPosts } from '../lib/data';
+import ReviewGrid from '../components/reviews/ReviewCard';
+import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
 import { formatDate } from '../lib/dates';
 import { withSocial } from '../lib/seo';
 
@@ -17,10 +18,11 @@ const STEPS = [
 ];
 
 export default async function HomePage() {
-  const [counts, closing, posts] = await Promise.all([
+  const [counts, closing, posts, reviews] = await Promise.all([
     getCounts(),
     getOpportunities({ limit: 6 }),
     getPosts(3),
+    getReviews(3),
   ]);
 
   return (
@@ -183,6 +185,26 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <section className="section" aria-labelledby="reviews-title">
+        <div className="container">
+          <div className="section__head">
+            <h2 id="reviews-title" className="h2">
+              What people say
+            </h2>
+            <Link className="more" href="/reviews">
+              {reviews.length > 0 ? 'All reviews' : 'Leave a review'} <ArrowIcon className="more__icon" />
+            </Link>
+          </div>
+          {reviews.length > 0 ? (
+            <ReviewGrid reviews={reviews} />
+          ) : (
+            <p className="rv-empty">
+              Used OppVault? <Link href="/reviews">Tell others how it went.</Link>
+            </p>
+          )}
+        </div>
+      </section>
     </>
   );
 }

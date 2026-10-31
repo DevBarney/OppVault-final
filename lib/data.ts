@@ -7,7 +7,7 @@
 // Reads use the public anon key and are protected by row level security (see supabase/schema.sql):
 // only rows with published = true can be read.
 
-import type { Opportunity, Post } from './types';
+import type { Opportunity, Post, Review } from './types';
 import type { CategorySlug } from './categories';
 import { SEED_OPPORTUNITIES, SEED_POSTS } from './seed/index';
 import { daysUntil } from './dates';
@@ -252,4 +252,14 @@ export async function getPost(slug: string): Promise<Post | null> {
     limit: '1',
   });
   return rows[0] ? { ...rows[0], tags: Array.isArray(rows[0].tags) ? rows[0].tags : [] } : null;
+}
+
+/** Approved visitor reviews, newest first. Empty when none exist or the database is not configured. */
+export async function getReviews(limit = 12): Promise<Review[]> {
+  const rows = await rest<Review>('reviews', {
+    select: 'id,name,body,avatar_url,created_at',
+    order: 'created_at.desc',
+    limit: String(Math.min(Math.max(limit, 1), 100)),
+  });
+  return rows.map((r) => ({ ...r, avatar_url: typeof r.avatar_url === 'string' && /^https:\/\//.test(r.avatar_url) ? r.avatar_url : null }));
 }

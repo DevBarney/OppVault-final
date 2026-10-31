@@ -1,0 +1,20 @@
+/* Visitor reviews. Prefix: .rv */
+.rv-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .rv-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .rv-grid { grid-template-columns: repeat(3, 1fr); } }
+.rv-card { height: 100%; display: flex; flex-direction: column; gap: 16px; padding: 22px; margin: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); position: relative; }
+.rv-card::before { content: '\201C'; position: absolute; top: 6px; right: 18px; font-family: var(--font-display); font-size: 4rem; line-height: 1; color: var(--sky); opacity: 0.25; pointer-events: none; }
+.rv-card__body { margin: 0; color: var(--ink); font-size: 0.98rem; line-height: 1.65; white-space: pre-line; overflow-wrap: anywhere; }
+.rv-card__who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.rv-card__name { margin: 0; font-weight: 700; color: var(--navy); font-size: 0.95rem; }
+.rv-card__date { margin: 0; color: var(--muted); font-size: 0.8rem; }
+.rv-avatar { flex: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: var(--pale); }
+.rv-avatar--initials { display: grid; place-items: center; font-weight: 700; font-size: 0.95rem; color: #fff; background: linear-gradient(135deg, var(--royal), var(--sky)); }
+.rv-empty { padding: 24px; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--tint); color: var(--muted); }
+.rv-form-wrap { max-width: 640px; margin-top: 8px; }
+.rv-photo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.rv-photo__btn { cursor: pointer; }
+.rv-photo__input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.rv-photo__btn:focus-within { outline: 3px solid var(--sky); outline-offset: 2px; }
+.rv-count { font-size: 0.8rem; color: var(--muted); text-align: right; }
+.rv-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
