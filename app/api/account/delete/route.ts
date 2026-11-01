@@ -12,6 +12,6 @@ export async function POST(request: Request): Promise<Response> {
   if (!who.user) return reply({ ok: false, error: 'Please sign in first.' }, 401, who.setCookies);
   const body = await readJson(request);
   if (body?.confirm !== 'DELETE') return reply({ ok: false, error: 'Type DELETE to confirm.' }, 400, who.setCookies);
-  if (!(await deleteUser(who.user.id))) return reply({ ok: false, error: 'We could not delete the account just now. Please email hello@oppvault.app.' }, 502, who.setCookies);
+  if (!(await deleteUser(who.user.id))) return reply({ ok: false, error: 'We could not delete the account just now. Please email support@oppvault.app.' }, 502, who.setCookies);
   return reply({ ok: true }, 200, clearCookies());
 }

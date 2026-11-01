@@ -22,6 +22,10 @@ export const SITE_URL = cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://o
 
 export const CONTACT = {
   email: 'hello@oppvault.app',
+  /** Help with an account, a problem, or wrong information on a listing. */
+  supportEmail: 'support@oppvault.app',
+  /** Partnerships, press, and providers who want a listing added or corrected. */
+  infoEmail: 'info@oppvault.app',
   instagramHandle: 'oppvault_official',
   instagramUrl: 'https://instagram.com/oppvault_official',
   xHandle: 'oppvault',
