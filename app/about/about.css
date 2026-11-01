@@ -7,11 +7,12 @@
 .abt-hero__tagline { margin: 26px 0 0; color: var(--teal); font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; }
 .abt-hero__art { position: relative; display: flex; justify-content: center; padding-block: 8px 20px; }
 @media (max-width: 899px) {
-  .abt-hero__grid { gap: 8px; }
-  .abt-hero__art { order: -1; margin-bottom: -6px; }
-  .abt-hero .abt-vaultwrap { width: min(250px, 66vw); }
-  .abt-hero__copy { text-align: center; }
-  .abt-hero__copy .phead__text { margin-inline: auto; }
+  .abt-hero__grid { gap: 0; }
+  .abt-hero__art { position: absolute; top: 50%; left: 50%; z-index: 0; width: 0; padding: 0; transform: translate(-50%, -50%); pointer-events: none; }
+  .abt-hero .abt-vaultwrap { flex: none; width: min(470px, 128vw); opacity: 0.26; -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
+  .abt-hero .abt-vault { filter: none; }
+  .abt-hero__copy { z-index: 1; }
+  .abt-hero__copy .phead__title { text-shadow: 0 2px 18px rgba(4, 16, 107, 0.6); }
 }
 @media (min-width: 900px) {
   .abt-hero__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; }
