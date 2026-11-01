@@ -5,30 +5,49 @@
 .abt-hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: center; }
 .abt-hero__copy { position: relative; }
 .abt-hero__tagline { margin: 26px 0 0; color: var(--teal); font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; }
-.abt-hero__art { position: relative; display: flex; justify-content: center; }
+.abt-hero__art { position: relative; display: flex; justify-content: center; padding-block: 8px 20px; }
+@media (max-width: 899px) {
+  .abt-hero__grid { gap: 8px; }
+  .abt-hero__art { order: -1; margin-bottom: -6px; }
+  .abt-hero .abt-vaultwrap { width: min(250px, 66vw); }
+  .abt-hero__copy { text-align: center; }
+  .abt-hero__copy .phead__text { margin-inline: auto; }
+}
 @media (min-width: 900px) {
   .abt-hero__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; }
 }
 
 /* The vault door */
-.abt-vault { width: min(320px, 78vw); height: auto; overflow: visible; }
+.abt-vaultwrap { position: relative; display: grid; place-items: center; width: min(340px, 84vw); margin-inline: auto; }
+.abt-halo { position: absolute; inset: -14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(13, 180, 248, 0.38), rgba(27, 219, 227, 0.1) 55%, transparent 72%); pointer-events: none; }
+.abt-vault { position: relative; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 28px 36px rgba(2, 8, 70, 0.55)); }
+.abt-vault__rivet { fill: rgba(255, 255, 255, 0.5); }
+.abt-vault__spoke { fill: rgba(255, 255, 255, 0.16); stroke: rgba(255, 255, 255, 0.4); stroke-width: 1.5; }
+.abt-vault__knob { fill: var(--teal); opacity: 0.9; }
+.abt-vault__wheel { transform-origin: 200px 200px; }
+.abt-vault__hub { stroke: rgba(255, 255, 255, 0.5); stroke-width: 2; }
 .abt-vault__outer { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 255, 255, 0.28); stroke-width: 2; }
 .abt-vault__tick { stroke: rgba(255, 255, 255, 0.35); stroke-width: 2; stroke-linecap: round; }
 .abt-vault__tick--long { stroke: var(--teal); stroke-width: 3; }
 .abt-vault__ring { fill: none; stroke: var(--sky); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; opacity: 0.8; }
 .abt-vault__disc { fill: rgba(3, 50, 179, 0.55); stroke: rgba(255, 255, 255, 0.35); stroke-width: 2; }
 .abt-vault__bolts rect { fill: rgba(255, 255, 255, 0.22); }
-.abt-vault__glow { fill: var(--gold); opacity: 0.18; transform-origin: 200px 190px; }
+.abt-vault__glow { transform-origin: 200px 200px; }
 .abt-vault__key { fill: var(--gold); }
 .abt-vault__dial { transform-origin: 200px 200px; }
 @media (prefers-reduced-motion: no-preference) {
   .abt-vault__dial { animation: abt-turn 60s linear infinite; }
   .abt-vault__glow { animation: abt-glow 4.5s ease-in-out infinite; }
+  .abt-vault__wheel { animation: abt-unlock 2.6s var(--ease) 0.5s both, abt-turn-back 90s linear 3.1s infinite; }
+  .abt-halo { animation: abt-breathe 6s ease-in-out infinite; }
 }
+@keyframes abt-unlock { from { transform: rotate(-120deg); } to { transform: rotate(0); } }
+@keyframes abt-turn-back { to { transform: rotate(-360deg); } }
+@keyframes abt-breathe { 0%, 100% { opacity: 0.75; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
 @keyframes abt-turn { to { transform: rotate(360deg); } }
 @keyframes abt-glow {
-  0%, 100% { opacity: 0.12; transform: scale(0.9); }
-  50% { opacity: 0.34; transform: scale(1.12); }
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
 }
 
 /* Shared section bits */
@@ -151,7 +170,11 @@
 .abt-box--next { border-color: var(--gold); background: var(--gold); }
 @media (prefers-reduced-motion: no-preference) {
   .abt-box--next { animation: abt-next 2.6s ease-in-out infinite; }
+  .abt-box--lit { animation: abt-twinkle 4s ease-in-out infinite; }
+  .abt-box--lit:nth-child(3n) { animation-delay: 1.3s; }
+  .abt-box--lit:nth-child(3n+1) { animation-delay: 2.6s; }
 }
+@keyframes abt-twinkle { 0%, 100% { background: rgba(27, 219, 227, 0.35); } 50% { background: rgba(27, 219, 227, 0.6); } }
 @keyframes abt-next {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.18); opacity: 0.7; }
