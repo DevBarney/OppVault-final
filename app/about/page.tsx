@@ -173,6 +173,13 @@ export default function AboutPage() {
               </p>
             </div>
             <p className="abt-hero__tagline">Unlocking Opportunities, Empowering Potential.</p>
+            <nav className="abt-jump" aria-label="On this page">
+              <a href="#why">Why we exist</a>
+              <a href="#how">How it works</a>
+              <a href="#inside">What is inside</a>
+              <a href="#promise">Our promise</a>
+              <a href="#join">Get involved</a>
+            </nav>
           </div>
           <div className="abt-hero__art">
             <VaultDoor />
@@ -180,7 +187,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="why">
         <div className="container">
           <Reveal>
             <p className="abt-eyebrow">Why we are building it</p>
@@ -260,7 +267,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="how">
         <div className="container">
           <Reveal>
             <p className="abt-eyebrow">How a listing gets in</p>
@@ -280,7 +287,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section section--tint">
+      <section className="section section--tint" id="inside">
         <div className="container">
           <Reveal>
             <p className="abt-eyebrow">What is inside</p>
@@ -305,7 +312,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="promise">
         <div className="container">
           <Reveal>
             <p className="abt-eyebrow">How we work</p>
@@ -338,7 +345,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="abt-join">
+      <section className="abt-join" id="join">
         <div className="hero__aurora" aria-hidden="true">
           <span />
           <span />
@@ -380,7 +387,7 @@ export default function AboutPage() {
                 <span className="abt-way__title">Report a mistake</span>
                 <span className="abt-way__text">A wrong date or a broken link? Email us and we will fix it.</span>
                 <span className="abt-way__go" aria-hidden="true">
-                  {CONTACT.email} <ArrowIcon />
+                  Email us <ArrowIcon />
                 </span>
               </a>
             </Reveal>
