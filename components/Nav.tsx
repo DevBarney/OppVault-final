@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
+import type { CategorySlug } from '../lib/categories';
 import AccountLink from './account/AccountLink';
 import { ArrowIcon, SearchIcon } from './Icons';
 
@@ -20,13 +21,29 @@ const LINKS = [
   { href: '/about', label: 'About' },
 ];
 
+// The phone menu: the six kinds of opportunity, each with a plain line and (when known) how many are open now.
+const KINDS: { slug: CategorySlug; label: string; line: string }[] = [
+  { slug: 'scholarships', label: 'Scholarships', line: 'Funding for study' },
+  { slug: 'fellowships', label: 'Fellowships', line: 'Programmes and placements' },
+  { slug: 'grants', label: 'Grants', line: 'Money for projects and ideas' },
+  { slug: 'courses', label: 'Courses', line: 'Learn something new' },
+  { slug: 'events', label: 'Events', line: 'Dates for your diary' },
+  { slug: 'student-offers', label: 'Student Offers', line: 'Discounts and free tools' },
+];
+const MORE = [
+  { href: '/blog', label: 'Blog' },
+  { href: '/about', label: 'About' },
+  { href: '/reviews', label: 'Reviews' },
+  { href: '/support', label: 'Help & contact' },
+];
+
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
  * Site header: the exact OppVault logo, section links, a "Join the list" button, a thin
  * reading-progress line, and a menu for phones. It lives in app/layout.tsx so every page has it.
  */
-export default function Nav() {
+export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, number>> }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? '/';
@@ -170,28 +187,54 @@ export default function Nav() {
           </div>
 
         <div id="mobile-menu" className="nav__menu">
-          <nav aria-label="Mobile">
-            <ul>
-              {LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    className="nav__mlink"
-                    href={link.href}
-                    aria-current={isActive(link.href) ? 'page' : undefined}
-                    onClick={() => setOpen(false)}
-                  >
-                    <span>{link.label}</span>
-                    <ArrowIcon className="nav__marrow" />
+          <nav className="vm" aria-label="Mobile">
+            <div className="vm__rows">
+              {KINDS.map((k) => {
+                const n = counts?.[k.slug];
+                return (
+                  <Link key={k.slug} className="vm__row" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                    <span className="vm__text">
+                      <span className="vm__name">{k.label}</span>
+                      <span className="vm__line">{k.line}</span>
+                    </span>
+                    {typeof n === 'number' && n > 0 ? (
+                      <span className="vm__count">
+                        <svg className="vm__spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M12 1.5c.8 5.3 2.7 8.2 6 9.3 2.2.7 3.6.9 4.5 1.2-1 .3-2.3.5-4.5 1.2-3.3 1.1-5.2 4-6 9.3-.8-5.3-2.7-8.2-6-9.3-2.2-.7-3.6-.9-4.5-1.2 1-.3 2.3-.5 4.5-1.2 3.3-1.1 5.2-4 6-9.3Z" />
+                        </svg>
+                        {n} {k.slug === 'events' ? 'upcoming' : 'open'}
+                      </span>
+                    ) : null}
                   </Link>
-                </li>
+                );
+              })}
+            </div>
+            <div className="vm__more">
+              {MORE.map((m) => (
+                <Link key={m.href} className="vm__minor" href={m.href} aria-current={isActive(m.href) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                  {m.label}
+                </Link>
               ))}
-            </ul>
+            </div>
           </nav>
- <AccountLink variant="text" onNavigate={() => setOpen(false)} />
-          <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
-            <span>Get updates</span>
-            <ArrowIcon className="btn__arrow" />
-          </a>
+          <div className="vm__actions">
+            <button
+              type="button"
+              className="vm__search"
+              onClick={() => {
+                setOpen(false);
+                window.dispatchEvent(new Event('oppvault:open-search'));
+              }}
+            >
+              <SearchIcon className="vm__search-icon" />
+              <span>Search every opportunity</span>
+            </button>
+            <AccountLink variant="text" onNavigate={() => setOpen(false)} />
+            <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
+              <span>Get updates</span>
+              <ArrowIcon className="btn__arrow" />
+            </a>
+          </div>
         </div>
         </div>
       </header>

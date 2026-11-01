@@ -8,6 +8,7 @@ import NewsletterBand from '../components/NewsletterBand';
 import Interactions from '../components/Interactions';
 import CommandPalette from '../components/CommandPalette';
 import { SITE_URL, TAGLINE } from '../lib/config';
+import { getCounts } from '../lib/data';
 
 /**
  * Poppins is the main font everywhere. next/font/google downloads it from Google Fonts at build time and
@@ -41,11 +42,12 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#04106B' };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const counts = await getCounts();
   return (
     <html lang="en-GB" className={poppins.variable}>
       <body>
-        <Nav />
+        <Nav counts={counts} />
         <Interactions />
         <main id="main">{children}</main>
         <NewsletterBand />
