@@ -2376,3 +2376,17 @@ body > main { min-height: 50vh; }
   .ring--urgent { animation: ring-pulse 1.8s ease-in-out infinite; }
   @keyframes ring-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 }
+
+/* Header: keep the button on one line, and trim spacing so everything fits the pill from 1180px up */
+.nav .nav__cta { white-space: nowrap; }
+@media (min-width: 1180px) {
+  .nav__inner { gap: 12px; }
+  .nav__link { padding-left: 8px; padding-right: 8px; }
+  .nav__actions { gap: 2px; }
+  .nav__search, .acct-navlink { width: 40px; height: 40px; }
+  .nav .nav__cta { padding-left: 14px; padding-right: 14px; }
+}
+@media (min-width: 1180px) and (max-width: 1259px) {
+  .nav__logo, .nav.is-scrolled .nav__logo { height: 42px; }
+  .nav__link { font-size: 0.85rem; padding-left: 7px; padding-right: 7px; }
+}

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
 import AccountLink from './account/AccountLink';
-import { ArrowIcon } from './Icons';
+import { ArrowIcon, SearchIcon } from './Icons';
 
 // Main navigation. Each link is a page of the platform.
 const LINKS = [
@@ -140,6 +140,9 @@ export default function Nav() {
           </nav>
 
           <div className="nav__actions">
+            <button type="button" className="nav__search" aria-label="Search OppVault" title="Search (press /)" onClick={() => window.dispatchEvent(new Event('oppvault:open-search'))}>
+              <SearchIcon className="nav__search-icon" />
+            </button>
             <AccountLink />
             <a className="btn btn--primary btn--sm nav__cta" href="#subscribe" onClick={goToSignup}>
               <span>Get updates</span>

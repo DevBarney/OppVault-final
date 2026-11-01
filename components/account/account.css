@@ -20,8 +20,6 @@
 .acct-navicon { width: 24px; height: 24px; }
 .acct-navlink:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 @media (hover: hover) { .acct-navlink:hover { background: var(--pale); } }
-.acct-mnavlink { display: flex; align-items: center; min-height: 48px; padding: 0 4px; color: var(--navy); font-size: 1.05rem; font-weight: 500; text-decoration: none; }
-@media (max-width: 1179px) { .nav__actions .acct-navlink { display: none; } }
 @media (min-width: 1180px) { .acct-mnavlink { display: none; } }
 
 /* Pages */

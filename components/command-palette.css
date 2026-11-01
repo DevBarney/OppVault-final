@@ -14,3 +14,9 @@
   @keyframes cmdk-in { from { opacity: 0; } }
   @keyframes cmdk-pop { from { transform: translateY(-8px) scale(0.98); opacity: 0; } }
 }
+
+/* Search button in the header */
+.nav__search { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--navy); cursor: pointer; }
+.nav__search-icon { width: 22px; height: 22px; }
+.nav__search:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+@media (hover: hover) { .nav__search:hover { background: var(--pale); } }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import './account.css';
+import { ArrowIcon } from '../Icons';
 import { useAccount } from './store';
 
 function PersonIcon() {
@@ -46,8 +47,9 @@ export default function AccountLink({ variant = 'icon', onNavigate }: { variant?
   const href = signedIn ? '/account/saved' : '/account/sign-in';
   if (variant === 'text') {
     return (
-      <Link className="acct-mnavlink" href={href} onClick={onNavigate}>
-        {label}
+      <Link className="nav__mlink acct-mnavlink" href={href} onClick={onNavigate}>
+        <span>{label}</span>
+        <ArrowIcon className="nav__marrow" />
       </Link>
     );
   }

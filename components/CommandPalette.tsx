@@ -58,8 +58,18 @@ export default function CommandPalette() {
         setIndex(0);
       }
     };
+    const onOpen = () => {
+      returnTo.current = document.activeElement as HTMLElement | null;
+      setOpen(true);
+      setQuery('');
+      setIndex(0);
+    };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('oppvault:open-search', onOpen);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('oppvault:open-search', onOpen);
+    };
   }, []);
 
   useEffect(() => {
