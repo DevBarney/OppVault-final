@@ -4,6 +4,9 @@
 
 import { SITE_URL, TAGLINE } from '../config';
 
+/** The logo is a hosted picture, because email apps only show pictures that have a public web address. */
+export const EMAIL_LOGO_URL = 'https://oppvault.app/email-logo.png';
+
 const NAVY = '#04106b';
 const ROYAL = '#0332b3';
 const INK = '#1e2350';
@@ -86,8 +89,9 @@ export function renderEmail(body: string, previewText: string): { html: string; 
 <body style="margin:0;padding:0;background-color:#f5f9ff;">${preview}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f9ff" style="background-color:#f5f9ff;"><tr><td align="center" style="padding-top:24px;padding-bottom:24px;padding-left:12px;padding-right:12px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#ffffff;border-radius:14px;">
-<tr><td bgcolor="${NAVY}" style="background-color:${NAVY};border-top-left-radius:14px;border-top-right-radius:14px;padding-top:24px;padding-bottom:24px;padding-left:28px;padding-right:28px;">
-<a href="${esc(SITE_URL)}" style="font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:30px;font-weight:bold;color:#ffffff;text-decoration:none;">OppVault</a>
+<tr><td align="left" bgcolor="#ffffff" style="background-color:#ffffff;border-top-left-radius:14px;border-top-right-radius:14px;padding-top:22px;padding-bottom:18px;padding-left:28px;padding-right:28px;">
+<a href="${esc(SITE_URL)}" style="text-decoration:none;"><img src="${EMAIL_LOGO_URL}" width="168" height="49" alt="OppVault" style="display:block;border:0;outline:none;width:168px;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:bold;color:${ROYAL};"></a></td></tr>
+<tr><td bgcolor="${NAVY}" style="background-color:${NAVY};padding-top:12px;padding-bottom:12px;padding-left:28px;padding-right:28px;">
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#9fdcfb;">${esc(TAGLINE)}</div></td></tr>
 <tr><td style="padding-top:28px;padding-bottom:12px;padding-left:28px;padding-right:28px;">${out.join('\n')}</td></tr>
 <tr><td style="padding-top:8px;padding-bottom:28px;padding-left:28px;padding-right:28px;border-top:1px solid #dce6f7;">

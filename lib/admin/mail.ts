@@ -4,6 +4,8 @@
 // Free-plan note: Resend's free plan allows 1,000 marketing contacts. Batches matter once the list is larger,
 // so batching is built in, but a list above 1,000 needs a paid Resend plan.
 
+import { EMAIL_LOGO_URL } from './emailTemplate';
+
 export const BATCH_SIZE = 1000;
 
 const API = 'https://api.resend.com';
@@ -180,7 +182,7 @@ export async function sendNotification(input: { to: string; subject: string; lin
     const button = input.link
       ? `<p style="margin-top:16px;margin-bottom:0;"><a href="${esc(input.link.url)}" style="display:inline-block;padding-top:11px;padding-bottom:11px;padding-left:22px;padding-right:22px;background-color:#0332b3;border-radius:999px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">${esc(input.link.label)}</a></p>`
       : '';
-    const html = `<!DOCTYPE html><html><body style="margin:0;padding:20px;background-color:#f5f9ff;"><div style="max-width:560px;background-color:#ffffff;border-radius:12px;padding:24px;"><p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0332b3;font-weight:bold;margin-top:0;margin-bottom:12px;">OppVault</p>${paras}${button}</div></body></html>`;
+    const html = `<!DOCTYPE html><html><body style="margin:0;padding:20px;background-color:#f5f9ff;"><div style="max-width:560px;background-color:#ffffff;border-radius:12px;padding:24px;"><p style="margin-top:0;margin-bottom:16px;"><img src="${EMAIL_LOGO_URL}" width="140" height="41" alt="OppVault" style="display:block;border:0;width:140px;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;color:#0332b3;"></p>${paras}${button}</div></body></html>`;
     const text = [...input.lines, input.link ? `${input.link.label}: ${input.link.url}` : ''].filter(Boolean).join('\n\n');
     const r = await rs('/emails', { method: 'POST', body: JSON.stringify({ from, to: [input.to], subject: input.subject, html, text, reply_to: [replyToAddress()] }) });
     if (!r.ok) console.error(`[notify] could not send "${input.subject}": ${r.error}`);
