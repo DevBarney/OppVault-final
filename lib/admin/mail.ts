@@ -130,7 +130,7 @@ export async function sendBroadcast(input: { segmentId: string; name: string; su
     body: JSON.stringify({
       segment_id: input.segmentId,
       from,
-      reply_to: ['hello@oppvault.app'],
+      reply_to: [replyToAddress()],
       subject: input.subject,
       preview_text: input.previewText || undefined,
       name: input.name,
@@ -155,13 +155,16 @@ export async function sendTest(to: string, subject: string, html: string, text: 
       subject: `[Test] ${subject}`,
       html: html.replace(/\{\{\{RESEND_UNSUBSCRIBE_URL\}\}\}/g, '#'),
       text: text.replace(/\{\{\{RESEND_UNSUBSCRIBE_URL\}\}\}/g, '(unsubscribe link appears here)'),
-      reply_to: ['hello@oppvault.app'],
+      reply_to: [replyToAddress()],
     }),
   });
   if (!r.ok) throw new Error(r.error || 'Resend could not send the test email.');
 }
 
 /** Where "something needs your attention" emails go. Set ADMIN_NOTIFY_EMAIL to your own inbox. */
+/** Where replies to our emails go. Set RESEND_REPLY_TO (for example support@oppvault.app); falls back to hello@oppvault.app. */
+export const replyToAddress = () => process.env.RESEND_REPLY_TO?.trim() || 'hello@oppvault.app';
+
 export const notifyAddress = () => process.env.ADMIN_NOTIFY_EMAIL?.trim() || 'hello@oppvault.app';
 
 /**
@@ -179,7 +182,7 @@ export async function sendNotification(input: { to: string; subject: string; lin
       : '';
     const html = `<!DOCTYPE html><html><body style="margin:0;padding:20px;background-color:#f5f9ff;"><div style="max-width:560px;background-color:#ffffff;border-radius:12px;padding:24px;"><p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0332b3;font-weight:bold;margin-top:0;margin-bottom:12px;">OppVault</p>${paras}${button}</div></body></html>`;
     const text = [...input.lines, input.link ? `${input.link.label}: ${input.link.url}` : ''].filter(Boolean).join('\n\n');
-    const r = await rs('/emails', { method: 'POST', body: JSON.stringify({ from, to: [input.to], subject: input.subject, html, text, reply_to: ['hello@oppvault.app'] }) });
+    const r = await rs('/emails', { method: 'POST', body: JSON.stringify({ from, to: [input.to], subject: input.subject, html, text, reply_to: [replyToAddress()] }) });
     if (!r.ok) console.error(`[notify] could not send "${input.subject}": ${r.error}`);
     return r.ok;
   } catch (err) {
