@@ -2390,3 +2390,12 @@ body > main { min-height: 50vh; }
   .nav__logo, .nav.is-scrolled .nav__logo { height: 42px; }
   .nav__link { font-size: 0.85rem; padding-left: 7px; padding-right: 7px; }
 }
+
+/* Phone menu: when the screen is short (or zoomed in) the list scrolls inside the panel instead of running off the page */
+.nav__menu {
+  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
