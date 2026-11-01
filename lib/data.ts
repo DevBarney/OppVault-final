@@ -263,3 +263,24 @@ export async function getReviews(limit = 12): Promise<Review[]> {
   });
   return rows.map((r) => ({ ...r, avatar_url: typeof r.avatar_url === 'string' && /^https:\/\//.test(r.avatar_url) ? r.avatar_url : null }));
 }
+
+/** Show "N people have applied" only from this many, so a tiny number never looks sad or identifies anyone. */
+export const APPLIED_MIN_PUBLIC = 5;
+
+/** How many visitors marked a listing as "I applied". 0 when unknown or the database is not set up. */
+export async function getAppliedCount(category: CategorySlug, slug: string): Promise<number> {
+  if (!URL_BASE || !ANON_KEY) return 0;
+  const qs = new URLSearchParams({ p_category: category, p_slug: slug }).toString();
+  try {
+    const res = await fetch(`${URL_BASE}/rest/v1/rpc/applied_count?${qs}`, {
+      headers: { apikey: ANON_KEY, ...(ANON_KEY.startsWith('eyJ') ? { authorization: `Bearer ${ANON_KEY}` } : {}), accept: 'application/json' },
+      next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return 0;
+    const n = Number(await res.json());
+    return Number.isInteger(n) && n > 0 ? n : 0;
+  } catch {
+    return 0;
+  }
+}

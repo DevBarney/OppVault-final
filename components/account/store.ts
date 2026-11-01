@@ -11,9 +11,10 @@ export type AccountState = {
   email: string;
   name: string;
   saved: ReadonlySet<string>;
+  applied: ReadonlySet<string>;
 };
 
-const EMPTY: AccountState = { status: 'idle', signedIn: false, email: '', name: '', saved: new Set() };
+const EMPTY: AccountState = { status: 'idle', signedIn: false, email: '', name: '', saved: new Set(), applied: new Set() };
 let state: AccountState = EMPTY;
 let started = false;
 const listeners = new Set<() => void>();
@@ -29,13 +30,14 @@ export function refreshAccount(): Promise<void> {
   return fetch('/api/account/saved', { credentials: 'same-origin', cache: 'no-store' })
     .then((r) => (r.ok ? r.json() : { signedIn: false, items: [] }))
     .catch(() => ({ signedIn: false, items: [] }))
-    .then((d: { signedIn?: boolean; email?: string; name?: string; items?: string[] }) => {
+    .then((d: { signedIn?: boolean; email?: string; name?: string; items?: string[]; applied?: string[] }) => {
       set({
         status: 'ready',
         signedIn: Boolean(d.signedIn),
         email: d.email ?? '',
         name: d.name ?? '',
         saved: new Set(Array.isArray(d.items) ? d.items : []),
+        applied: new Set(Array.isArray(d.applied) ? d.applied : []),
       });
     });
 }
@@ -81,13 +83,40 @@ export async function setSaved(category: string, slug: string, wantSaved: boolea
       body: JSON.stringify({ category, slug }),
     });
     if (res.status === 401) {
-      set({ ...state, signedIn: false, saved: new Set() });
+      set({ ...state, signedIn: false, saved: new Set(), applied: new Set() });
       return false;
     }
     if (!res.ok) throw new Error('failed');
     return true;
   } catch {
     set({ ...state, saved: before });
+    return false;
+  }
+}
+
+/** Mark or unmark "I applied". Same behaviour as setSaved. */
+export async function setApplied(category: string, slug: string, wantApplied: boolean): Promise<boolean> {
+  const key = `${category}/${slug}`;
+  const before = state.applied;
+  const next = new Set(before);
+  if (wantApplied) next.add(key);
+  else next.delete(key);
+  set({ ...state, applied: next });
+  try {
+    const res = await fetch('/api/account/applied', {
+      method: wantApplied ? 'POST' : 'DELETE',
+      credentials: 'same-origin',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ category, slug }),
+    });
+    if (res.status === 401) {
+      set({ ...state, signedIn: false, saved: new Set(), applied: new Set() });
+      return false;
+    }
+    if (!res.ok) throw new Error('failed');
+    return true;
+  } catch {
+    set({ ...state, applied: before });
     return false;
   }
 }

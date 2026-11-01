@@ -1,3 +1,4 @@
+import { listApplied } from '../../../../lib/account/applied';
 import { addSaved, listSaved, removeSaved, validRef } from '../../../../lib/account/saved';
 import { fromThisSite, readJson, reply } from '../../../../lib/account/http';
 import { whoFromRequest } from '../../../../lib/account/session';
@@ -9,8 +10,10 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request): Promise<Response> {
   const who = await whoFromRequest(request);
   if (!who.user || !who.accessToken) return reply({ signedIn: false, items: [] }, 200, who.setCookies);
-  const items = (await listSaved(who.accessToken)).map((r) => `${r.category}/${r.slug}`);
-  return reply({ signedIn: true, email: who.user.email, name: who.user.name, items }, 200, who.setCookies);
+  const [saved, applied] = await Promise.all([listSaved(who.accessToken), listApplied(who.accessToken)]);
+  const items = saved.map((r) => `${r.category}/${r.slug}`);
+  const appliedItems = applied.map((r) => `${r.category}/${r.slug}`);
+  return reply({ signedIn: true, email: who.user.email, name: who.user.name, items, applied: appliedItems }, 200, who.setCookies);
 }
 
 async function change(request: Request, action: 'add' | 'remove'): Promise<Response> {

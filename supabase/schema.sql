@@ -210,3 +210,39 @@ alter table public.reviews
   add column if not exists rating smallint check (rating between 1 and 5),
   add column if not exists used_for text not null default '' check (char_length(used_for) <= 60);
 grant select (rating, used_for) on public.reviews to anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- "I applied": a visitor marks an opportunity as applied. Rows are private to the visitor; only a
+-- count per listing is public, through applied_count() below.
+-- ---------------------------------------------------------------------------
+create table if not exists public.applied_items (
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  category text not null,
+  slug text not null,
+  created_at timestamptz not null default now(),
+  primary key (user_id, category, slug),
+  constraint applied_items_category_ok check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  constraint applied_items_slug_len check (char_length(slug) between 1 and 200)
+);
+create index if not exists applied_items_listing on public.applied_items (category, slug);
+alter table public.applied_items enable row level security;
+drop policy if exists "applied_select_own" on public.applied_items;
+drop policy if exists "applied_insert_own" on public.applied_items;
+drop policy if exists "applied_delete_own" on public.applied_items;
+create policy "applied_select_own" on public.applied_items for select to authenticated using (user_id = (select auth.uid()));
+create policy "applied_insert_own" on public.applied_items for insert to authenticated with check (user_id = (select auth.uid()));
+create policy "applied_delete_own" on public.applied_items for delete to authenticated using (user_id = (select auth.uid()));
+revoke all on public.applied_items from authenticated, anon, public;
+grant select, insert, delete on public.applied_items to authenticated;
+
+create or replace function public.applied_count(p_category text, p_slug text)
+returns integer
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select count(*)::integer from public.applied_items where category = p_category and slug = p_slug;
+$$;
+revoke all on function public.applied_count(text, text) from public;
+grant execute on function public.applied_count(text, text) to anon, authenticated;

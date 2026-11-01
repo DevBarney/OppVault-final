@@ -97,3 +97,14 @@
 .share__btn { flex: 1 1 auto; min-height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--royal); font: inherit; font-size: 0.875rem; font-weight: 500; text-decoration: none; cursor: pointer; }
 .share__btn:hover { border-color: var(--royal); }
 .share__btn:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+
+/* "I applied" */
+.applied { margin-top: 10px; display: grid; gap: 6px; }
+.applied__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; padding: 0 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--royal); font: inherit; font-size: 0.975rem; font-weight: 500; cursor: pointer; }
+.applied__btn:hover:not(:disabled) { border-color: var(--royal); }
+.applied__btn:disabled { opacity: 0.7; cursor: progress; }
+.applied__btn:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.applied__btn.is-applied { background: var(--navy); border-color: var(--navy); color: #fff; }
+.applied__count { margin: 0; color: var(--muted); font-size: 0.8125rem; text-align: center; }
+.applied__error { margin: 0; color: var(--danger); font-size: 0.85rem; text-align: center; }
+.confetti-bit { position: fixed; z-index: 1000; pointer-events: none; border-radius: 1px; }

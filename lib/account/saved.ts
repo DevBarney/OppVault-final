@@ -13,7 +13,7 @@ export function validRef(category: unknown, slug: unknown): SavedRef | null {
   return { category, slug };
 }
 
-async function rest(path: string, token: string, init: { method: string; body?: unknown; prefer?: string }): Promise<Response | null> {
+export async function rest(path: string, token: string, init: { method: string; body?: unknown; prefer?: string }): Promise<Response | null> {
   if (!SUPABASE_URL || !PUBLIC_KEY) return null;
   try {
     return await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {

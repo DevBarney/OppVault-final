@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import ShareActions from '../../../components/ShareActions';
 import { SITE_URL } from '../../../lib/config';
@@ -11,7 +12,7 @@ import { eventTiming, venueKind, venueLabel } from '../../../components/events/t
 import { ArrowIcon, ClockIcon, ExternalIcon, PinIcon } from '../../../components/Icons';
 import Prose from '../../../components/Prose';
 import { getCategory } from '../../../lib/categories';
-import { getOpportunities, getOpportunity } from '../../../lib/data';
+import { APPLIED_MIN_PUBLIC, getAppliedCount, getOpportunities, getOpportunity } from '../../../lib/data';
 import { formatDate, daysUntil } from '../../../lib/dates';
 import '../events.css';
 
@@ -33,7 +34,7 @@ export default async function EventPage({ params }: Props) {
   const { slug } = await params;
   const cat = getCategory('events');
   if (!cat) notFound();
-  const [item, { items: related }] = await Promise.all([getOpportunity('events', slug), getOpportunities({ category: 'events', limit: 4 })]);
+  const [item, { items: related }, appliedCount] = await Promise.all([getOpportunity('events', slug), getOpportunities({ category: 'events', limit: 4 }), getAppliedCount('events', slug)]);
   if (!item) notFound();
 
   const t = eventTiming(item.deadline);
@@ -156,6 +157,7 @@ export default async function EventPage({ params }: Props) {
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
+              {!item.is_sample ? <AppliedButton category={item.category} slug={item.slug} baseCount={appliedCount} minPublic={APPLIED_MIN_PUBLIC} /> : null}
               <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
               <p className="facts__note">Registration may close before the event. The official page has the programme and the registration deadline.</p>
             </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import { daysUntil, formatDate } from '../../../lib/dates';
 import ShareActions from '../../../components/ShareActions';
@@ -12,7 +13,7 @@ import CheckBeforeYouBuy from '../../../components/student-offers/CheckBeforeYou
 import OfferCard from '../../../components/student-offers/OfferCard';
 import { offerTiming, steps } from '../../../components/student-offers/timing';
 import { getCategory } from '../../../lib/categories';
-import { getOpportunities, getOpportunity } from '../../../lib/data';
+import { APPLIED_MIN_PUBLIC, getAppliedCount, getOpportunities, getOpportunity } from '../../../lib/data';
 import '../offers.css';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -33,9 +34,10 @@ export default async function StudentOfferPage({ params }: Props) {
   const { slug } = await params;
   const cat = getCategory('student-offers');
   if (!cat) notFound();
-  const [item, { items: related }] = await Promise.all([
+  const [item, { items: related }, appliedCount] = await Promise.all([
     getOpportunity('student-offers', slug),
     getOpportunities({ category: 'student-offers', limit: 4 }),
+    getAppliedCount('student-offers', slug),
   ]);
   if (!item) notFound();
 
@@ -168,6 +170,7 @@ export default async function StudentOfferPage({ params }: Props) {
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
+              {!item.is_sample ? <AppliedButton category={item.category} slug={item.slug} baseCount={appliedCount} minPublic={APPLIED_MIN_PUBLIC} /> : null}
               <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
             </div>
           </aside>
