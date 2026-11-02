@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
-import { ArrowIcon, CategoryIcon, SearchIcon, StarIcon } from '../components/Icons';
+import { ArrowIcon, CategoryIcon, SearchIcon } from '../components/Icons';
 import { CATEGORIES } from '../lib/categories';
 import ReviewGrid from '../components/reviews/ReviewCard';
 import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
@@ -37,10 +37,6 @@ export default async function HomePage() {
         <HeroVaultWall />
         <div className="container hero__grid">
           <div className="hero__head">
-            <p className="pill">
-              <StarIcon className="pill__star" />
-              Scholarships, grants and more
-            </p>
             <h1 className="hero__title">
               <span>Unlocking Opportunities,</span> <span className="hero__accent">Empowering Potential.</span>
             </h1>
