@@ -8,6 +8,7 @@ import ReviewGrid from '../components/reviews/ReviewCard';
 import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
 import { formatDate } from '../lib/dates';
 import { withSocial } from '../lib/seo';
+import { HeroVaultStatus, HeroVaultWall } from '../components/HeroVaultWall';
 
 export const metadata: Metadata = withSocial({ alternates: { canonical: '/' } });
 
@@ -33,6 +34,7 @@ export default async function HomePage() {
           <span />
           <span />
         </div>
+        <HeroVaultWall />
         <div className="container hero__grid">
           <div className="hero__head">
             <p className="pill">
@@ -62,13 +64,14 @@ export default async function HomePage() {
             <ul className="chips" aria-label="Browse by type">
               {CATEGORIES.map((c) => (
                 <li key={c.slug}>
-                  <Link className="chip" href={`/${c.slug}`}>
+                  <Link className="chip" href={`/${c.slug}`} data-cat={c.slug}>
                     <CategoryIcon name={c.icon} className="chip__icon" />
                     {c.label}
                   </Link>
                 </li>
               ))}
             </ul>
+            <HeroVaultStatus counts={counts} />
           </div>
         </div>
       </section>

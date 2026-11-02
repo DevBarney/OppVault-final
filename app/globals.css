@@ -2454,3 +2454,44 @@ body > main { min-height: 50vh; }
   .nav.is-open .vm__actions > *:nth-child(3) { animation-delay: 0.58s; }
   @keyframes vm-in { from { opacity: 0; transform: translateY(14px); } }
 }
+
+
+/* Home hero: the vault wall. Point at a kind and its boxes light up. */
+.hero--home { position: relative; overflow: hidden; }
+.hero--home .hero__grid { position: relative; z-index: 1; }
+.vw { position: absolute; inset: 0; z-index: 0; display: grid; place-items: center; overflow: hidden; pointer-events: none; -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 46%, rgba(0,0,0,0.28) 0%, #000 100%); mask-image: radial-gradient(ellipse 70% 62% at 50% 46%, rgba(0,0,0,0.28) 0%, #000 100%); }
+.vw__grid { display: grid; grid-template-columns: repeat(14, 54px); gap: 10px; flex: none; transform: rotate(-4deg) scale(1.08); }
+.vw__cell { aspect-ratio: 1; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9px; background: rgba(255, 255, 255, 0.03); transition: background-color 0.45s ease, border-color 0.45s ease, transform 0.45s var(--ease), box-shadow 0.45s ease; }
+.vw__cell--gold { border-color: rgba(251, 184, 0, 0.55); background: rgba(251, 184, 0, 0.22); }
+@media (prefers-reduced-motion: no-preference) {
+  .vw__cell { animation: vw-breathe 7s ease-in-out infinite; }
+  .vw__cell:nth-child(3n) { animation-delay: 1.8s; }
+  .vw__cell:nth-child(5n) { animation-delay: 3.6s; }
+  .vw__cell--gold { animation: vw-gold 3.2s ease-in-out infinite; }
+}
+@keyframes vw-breathe { 0%, 100% { background-color: rgba(255, 255, 255, 0.03); } 50% { background-color: rgba(27, 219, 227, 0.09); } }
+@keyframes vw-gold { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(251, 184, 0, 0); } 50% { transform: scale(1.14); box-shadow: 0 0 26px rgba(251, 184, 0, 0.55); } }
+
+.hero--home:has(.chip[data-cat='scholarships']:is(:hover, :focus-visible)) .vw__cell[data-cat='scholarships'],
+.hero--home:has(.chip[data-cat='fellowships']:is(:hover, :focus-visible)) .vw__cell[data-cat='fellowships'],
+.hero--home:has(.chip[data-cat='grants']:is(:hover, :focus-visible)) .vw__cell[data-cat='grants'],
+.hero--home:has(.chip[data-cat='courses']:is(:hover, :focus-visible)) .vw__cell[data-cat='courses'],
+.hero--home:has(.chip[data-cat='events']:is(:hover, :focus-visible)) .vw__cell[data-cat='events'],
+.hero--home:has(.chip[data-cat='student-offers']:is(:hover, :focus-visible)) .vw__cell[data-cat='student-offers'] {
+  animation: none; border-color: var(--teal); background: rgba(27, 219, 227, 0.32); transform: scale(1.06); box-shadow: 0 0 18px rgba(27, 219, 227, 0.35);
+}
+
+.vw__status { position: relative; display: grid; justify-items: center; min-height: 1.6em; margin: 20px 0 0; color: rgba(255, 255, 255, 0.78); font-size: 0.9rem; text-align: center; }
+.vw__line { grid-area: 1 / 1; transition: opacity 0.3s ease; }
+.vw__line[data-cat] { opacity: 0; color: var(--teal); font-weight: 500; }
+.hero--home:has(.chip[data-cat]:is(:hover, :focus-visible)) .vw__line--all { opacity: 0; }
+.hero--home:has(.chip[data-cat='scholarships']:is(:hover, :focus-visible)) .vw__line[data-cat='scholarships'],
+.hero--home:has(.chip[data-cat='fellowships']:is(:hover, :focus-visible)) .vw__line[data-cat='fellowships'],
+.hero--home:has(.chip[data-cat='grants']:is(:hover, :focus-visible)) .vw__line[data-cat='grants'],
+.hero--home:has(.chip[data-cat='courses']:is(:hover, :focus-visible)) .vw__line[data-cat='courses'],
+.hero--home:has(.chip[data-cat='events']:is(:hover, :focus-visible)) .vw__line[data-cat='events'],
+.hero--home:has(.chip[data-cat='student-offers']:is(:hover, :focus-visible)) .vw__line[data-cat='student-offers'] { opacity: 1; }
+@media (max-width: 639px) {
+  .vw__grid { grid-template-columns: repeat(14, 34px); gap: 8px; transform: rotate(-4deg) scale(1.1); }
+  .vw__cell { border-radius: 7px; }
+}
