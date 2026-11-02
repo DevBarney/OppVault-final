@@ -101,6 +101,7 @@ function VaultDoor() {
   return (
     <div className="abt-vaultwrap">
       <span className="abt-halo" aria-hidden="true" />
+      <span className="abt-rays" aria-hidden="true" />
       <svg className="abt-vault" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id="abt-face" cx="50%" cy="40%" r="70%">
