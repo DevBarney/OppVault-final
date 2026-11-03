@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
+import StepsTrack from '../components/StepsTrack';
+import VaultOpen from '../components/VaultOpen';
 import { ArrowIcon, CategoryIcon, SearchIcon } from '../components/Icons';
 import { CATEGORIES } from '../lib/categories';
 import ReviewGrid from '../components/reviews/ReviewCard';
@@ -111,9 +113,9 @@ export default async function HomePage() {
             </div>
             <ul className="grid">
               {closing.items.map((item, i) => (
-                <Reveal as="li" key={item.id} delay={Math.min(i, 5) * 60}>
+                <VaultOpen key={item.id} delay={Math.min(i, 5) * 140}>
                   <OpportunityCard item={item} showCategory />
-                </Reveal>
+                </VaultOpen>
               ))}
             </ul>
           </div>
@@ -127,17 +129,17 @@ export default async function HomePage() {
               How OppVault helps
             </h2>
           </Reveal>
-          <ol className="steps">
+          <StepsTrack count={STEPS.length}>
             {STEPS.map((step, i) => (
-              <Reveal as="li" className="steps__item" key={step.title} delay={i * 110}>
+              <li className="steps__item" key={step.title} data-step={i + 1}>
                 <span className="badge" aria-hidden="true">
                   {i + 1}
                 </span>
                 <h3 className="steps__title">{step.title}</h3>
                 <p className="steps__text">{step.text}</p>
-              </Reveal>
+              </li>
             ))}
-          </ol>
+          </StepsTrack>
           <Reveal>
             <p className="note">
               OppVault helps you discover opportunities. It cannot guarantee that you will be selected for any of them,

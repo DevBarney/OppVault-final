@@ -2504,3 +2504,39 @@ body > main { min-height: 50vh; }
 .vw__cell--gold { border-color: rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.03); }
 .vw__line--all { display: none; }
 .vw__status { min-height: 1.6em; }
+
+/* Closing soon: each card arrives behind a small vault door */
+.vo { position: relative; display: flex; perspective: 1100px; }
+.vo > .card { width: 100%; }
+.vo__door { display: none; }
+.vo--closed .vo__door, .vo--open .vo__door { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 20px; background: radial-gradient(120% 90% at 20% 0%, rgba(13, 180, 248, 0.35), transparent 60%), linear-gradient(160deg, #0a2aa0, #04106b); box-shadow: 0 18px 30px -18px rgba(4, 16, 107, 0.7); transform-origin: left center; backface-visibility: hidden; pointer-events: none; }
+.vo__key { width: 34px; fill: var(--gold); filter: drop-shadow(0 0 12px rgba(251, 184, 0, 0.55)); }
+.vo--open .vo__door { transform: rotateY(-112deg); opacity: 0; transition: transform 0.9s var(--ease) var(--vo-delay, 0ms), opacity 0.35s ease calc(var(--vo-delay, 0ms) + 0.6s), visibility 0s linear calc(var(--vo-delay, 0ms) + 1s); visibility: hidden; }
+.vo--closed > .card { opacity: 0.001; }
+.vo--open > .card { opacity: 1; transition: opacity 0.4s ease var(--vo-delay, 0ms); }
+
+/* How OppVault helps: the line fills as you scroll and each step lights up in turn */
+.stp__line { position: absolute; top: 18px; bottom: 18px; left: 17px; width: 2px; margin: 0; padding: 0; list-style: none; border-radius: 2px; background: var(--line); pointer-events: none; }
+.stp__fill { display: block; width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(180deg, var(--royal), var(--sky), var(--teal)); transform-origin: top; transform: scaleY(1); }
+.stp .steps__item { padding-left: 56px; }
+.stp .badge { position: absolute; top: 0; left: 0; z-index: 1; box-shadow: 0 0 0 6px #fff; }
+.stp .steps__title { margin-top: 4px; }
+@media (min-width: 900px) {
+  .stp::before { display: none; }
+  .stp .steps__item { padding-left: 0; padding-top: 0; }
+  .stp .badge { position: relative; box-shadow: 0 0 0 8px var(--tint, #fff); }
+  .stp .steps__title { margin-top: 18px; }
+  .stp__line { top: 17px; bottom: auto; left: 18px; right: 18px; width: auto; height: 2px; }
+  .stp__fill { transform: scaleX(1); transform-origin: left; background: linear-gradient(90deg, var(--royal), var(--sky), var(--teal)); }
+}
+.stp[data-live='true'] .stp__fill { transform: scaleY(var(--p, 0)); }
+@media (min-width: 900px) { .stp[data-live='true'] .stp__fill { transform: scaleX(var(--p, 0)); } }
+.stp[data-live='true'] .steps__item { opacity: 0.45; transition: opacity 0.5s ease; }
+.stp[data-live='true'] .badge { background: #e7edfb; color: var(--navy); transition: background-color 0.5s ease, color 0.5s ease, transform 0.55s var(--ease), box-shadow 0.55s var(--ease); }
+.stp[data-live='true'][data-on='1'] .steps__item[data-step='1'],
+.stp[data-live='true'][data-on='2'] .steps__item[data-step='1'], .stp[data-live='true'][data-on='2'] .steps__item[data-step='2'],
+.stp[data-live='true'][data-on='3'] .steps__item { opacity: 1; }
+.stp[data-live='true'][data-on='1'] .steps__item[data-step='1'] .badge,
+.stp[data-live='true'][data-on='2'] .steps__item[data-step='1'] .badge, .stp[data-live='true'][data-on='2'] .steps__item[data-step='2'] .badge,
+.stp[data-live='true'][data-on='3'] .steps__item .badge { background: linear-gradient(135deg, var(--navy), #0a5fe0); color: #fff; }
+.stp[data-live='true'][data-on='3'] .steps__item[data-step='3'] .badge { background: var(--gold); color: var(--navy); box-shadow: 0 0 0 6px #fff, 0 0 24px rgba(251, 184, 0, 0.6); }
