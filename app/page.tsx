@@ -8,8 +8,9 @@ import { ArrowIcon, CategoryIcon, SearchIcon } from '../components/Icons';
 import { CATEGORIES } from '../lib/categories';
 import ReviewGrid from '../components/reviews/ReviewCard';
 import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
-import { formatDate } from '../lib/dates';
+import { daysUntil, formatDate } from '../lib/dates';
 import { withSocial } from '../lib/seo';
+import HeroDial from '../components/HeroDial';
 import { HeroVaultStatus, HeroVaultWall } from '../components/HeroVaultWall';
 
 export const metadata: Metadata = withSocial({ alternates: { canonical: '/' } });
@@ -37,6 +38,7 @@ export default async function HomePage() {
           <span />
         </div>
         <HeroVaultWall />
+        <HeroDial next={closing.items.find((o) => o.deadline && (daysUntil(o.deadline) ?? -1) >= 0)} />
         <div className="container hero__grid">
           <div className="hero__head">
             <h1 className="hero__title">
