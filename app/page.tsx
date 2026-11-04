@@ -54,7 +54,7 @@ export default async function HomePage() {
               <label className="hsearch__field">
                 <span className="visually-hidden">Search opportunities</span>
                 <SearchIcon className="hsearch__icon" />
-                <input type="search" name="q" placeholder="Search scholarships, grants, courses..." maxLength={60} />
+                <input type="search" name="q" placeholder="Search all opportunities" maxLength={60} />
               </label>
               <button className="btn btn--primary hsearch__btn" type="submit">
                 <span>Search</span>

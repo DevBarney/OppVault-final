@@ -2665,3 +2665,21 @@ body > main { min-height: 50vh; }
   .hdial__go { width: 15px; height: 15px; margin-left: auto; color: var(--teal); transition: transform 0.3s var(--ease); }
 }
 @media (hover: hover) and (min-width: 1024px) { .hdial__card:hover { transform: translateY(-4px); border-color: var(--teal); } .hdial__card:hover .hdial__go { transform: translateX(4px); } }
+
+/* Home hero on a phone: quieter. No emblem, one search row, one scrolling row of kinds. */
+@media (max-width: 1023px) {
+  .hdial { display: none; }
+  .hero--home .hsearch { flex-direction: row; gap: 8px; margin-top: 26px; }
+  .hero--home .hsearch__btn { flex: none; min-width: 0; padding-inline: 18px; }
+  .hero--home .hsearch__btn .btn__arrow { display: none; }
+  .hero--home .chips { flex-wrap: nowrap; justify-content: flex-start; gap: 8px; width: calc(100% + 40px); margin: 18px -20px 0; padding: 2px 20px 8px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .hero--home .chips::-webkit-scrollbar { display: none; }
+  .hero--home .chips li { flex: none; scroll-snap-align: start; }
+  .hero--home .chip { white-space: nowrap; }
+  .hero--home .vw__status { display: none; }
+}
+@media (max-width: 559px) {
+  .hero--home .hsearch input { min-height: 54px; padding-left: 44px; font-size: 0.95rem; }
+  .hero--home .hsearch__btn { min-height: 54px; }
+  .hero--home .hero__lead { font-size: 1rem; }
+}
