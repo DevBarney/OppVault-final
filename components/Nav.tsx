@@ -47,6 +47,8 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? '/';
+  // On the home page the hero already has a search box, so the nav icon waits until that box has scrolled away.
+  const [heroSearchSeen, setHeroSearchSeen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -119,6 +121,18 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (pathname !== '/') {
+      setHeroSearchSeen(false);
+      return;
+    }
+    const target = document.querySelector('.hsearch');
+    if (!target || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([entry]) => setHeroSearchSeen(entry.isIntersecting), { rootMargin: '-80px 0px 0px 0px' });
+    io.observe(target);
+    return () => io.disconnect();
+  }, [pathname]);
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const className = `nav${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`;
@@ -157,7 +171,7 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
           </nav>
 
           <div className="nav__actions">
-            <button type="button" className="nav__search" aria-label="Search OppVault" title="Search (press /)" onClick={() => window.dispatchEvent(new Event('oppvault:open-search'))}>
+            <button type="button" className="nav__search" data-away={heroSearchSeen ? 'true' : undefined} aria-hidden={heroSearchSeen ? true : undefined} tabIndex={heroSearchSeen ? -1 : undefined} aria-label="Search OppVault" title="Search (press /)" onClick={() => window.dispatchEvent(new Event('oppvault:open-search'))}>
               <SearchIcon className="nav__search-icon" />
             </button>
             <AccountLink />

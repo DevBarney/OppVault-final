@@ -20,3 +20,5 @@
 .nav__search-icon { width: 22px; height: 22px; }
 .nav__search:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 @media (hover: hover) { .nav__search:hover { background: var(--pale); } }
+.nav__search { transition: width 0.3s var(--ease, ease), opacity 0.25s ease, margin 0.3s var(--ease, ease); }
+.nav__search[data-away='true'] { width: 0; margin-inline: -4px; opacity: 0; overflow: hidden; pointer-events: none; }
