@@ -280,3 +280,14 @@ a.abt-way__link:focus-visible, .abt-way__social a:focus-visible { outline: 3px s
   .abt-hero__copy { padding-bottom: 6px; }
   .abt-hero__copy .phead__text, .abt-hero__tagline { text-shadow: 0 1px 14px rgba(4, 16, 107, 0.85); }
 }
+
+/* Mobile: the vault sits top right behind the text, cropped by the edge, like the category and blog pages */
+@media (max-width: 899px) {
+  .abt-hero__grid { position: static; }
+  .abt-hero__art { top: 50%; right: -90px; left: auto; width: 320px; transform: translateY(-46%); }
+  .abt-hero .abt-vaultwrap { width: 100%; opacity: 0.34; -webkit-mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); }
+}
+@media (max-width: 899px) and (prefers-reduced-motion: no-preference) {
+  .abt-hero__art { animation: abt-art-in 1.1s var(--ease) both; }
+}
+@keyframes abt-art-in { from { opacity: 0; transform: translateY(-46%) scale(0.9); } to { opacity: 1; transform: translateY(-46%) scale(1); } }
