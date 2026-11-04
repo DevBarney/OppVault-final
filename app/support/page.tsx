@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import PageHeader from '../../components/PageHeader';
+import MotifHero, { JumpLink } from '../../components/MotifHero';
 import { CONTACT } from '../../lib/config';
 import { withSocial } from '../../lib/seo';
 import './support.css';
@@ -45,10 +45,10 @@ const FAQ = [
 export default function SupportPage() {
   return (
     <>
-      <PageHeader eyebrow="We are here" title="Help & contact">
+      <MotifHero motif="help" eyebrow="We are here" title="Help & contact" meta={<JumpLink href="#contact">Choose who to write to</JumpLink>}>
         <p>Write to the address that fits, and your message gets to the right person faster.</p>
-      </PageHeader>
-      <section className="section section--list">
+      </MotifHero>
+      <section className="section section--list" id="contact">
         <div className="container">
           <ul className="help-grid">
             {CARDS.map((c) => (
