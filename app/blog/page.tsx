@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { withSocial } from '../../lib/seo';
 import Link from 'next/link';
-import PageHeader from '../../components/PageHeader';
+import BlogHero from '../../components/BlogHero';
 import Reveal from '../../components/Reveal';
 import { ArrowIcon } from '../../components/Icons';
 import { getPosts } from '../../lib/data';
@@ -17,9 +17,7 @@ export default async function BlogPage() {
   const posts = await getPosts();
   return (
     <>
-      <PageHeader eyebrow="The OppVault blog" title="Guides for applying with confidence">
-        <p>Practical, honest advice on finding opportunities and putting your best application forward.</p>
-      </PageHeader>
+      <BlogHero count={posts.length} latest={posts[0] ? { slug: posts[0].slug, title: posts[0].title } : undefined} />
       <section className="section section--list">
         <div className="container">
           {posts.length === 0 ? (
@@ -30,11 +28,11 @@ export default async function BlogPage() {
           ) : (
             <ul className="grid">
               {posts.map((p, i) => (
-                <Reveal as="li" key={p.slug} delay={Math.min(i, 5) * 60}>
-                  <article className="card card--post">
+                <Reveal as="li" key={p.slug} className={i === 0 && posts.length > 2 ? 'grid__feature' : undefined} delay={Math.min(i, 5) * 60}>
+                  <article className={i === 0 && posts.length > 2 ? 'card card--post card--feature' : 'card card--post'}>
                     <Link className="card__link" href={`/blog/${p.slug}`}>
                       <div className="card__top">
-                        <span className="tag tag--plain">{p.tags[0] ?? 'Guide'}</span>
+                        <span className="tag tag--plain">{i === 0 && posts.length > 2 ? 'Newest · ' : ''}{p.tags[0] ?? 'Guide'}</span>
                       </div>
                       <h2 className="card__title">{p.title}</h2>
                       <p className="card__summary">{p.excerpt}</p>

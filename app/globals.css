@@ -2579,3 +2579,32 @@ body > main { min-height: 50vh; }
   .chero__inner { padding-block: 10px; }
 }
 @keyframes chero-spin { to { transform: rotate(360deg); } }
+
+/* Blog hero: a fanned stack of pages */
+.bhero__emblem { width: 300px; }
+.bhero__sheet { position: absolute; top: 50%; left: 50%; width: 52%; aspect-ratio: 0.78; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 14px; background: rgba(255, 255, 255, 0.07); transform-origin: 50% 90%; display: grid; align-content: center; gap: 9%; padding: 14% 12%; }
+.bhero__sheet i { display: block; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.35); }
+.bhero__sheet i:last-child { width: 60%; }
+.bhero__sheet--1 { transform: translate(-50%, -52%) rotate(8deg); background: rgba(255, 255, 255, 0.12); }
+.bhero__sheet--2 { transform: translate(-50%, -52%) rotate(-7deg); }
+.bhero__sheet--3 { transform: translate(-50%, -52%) rotate(-20deg); opacity: 0.6; }
+.bhero__tile { width: 30%; left: 56%; top: 60%; border-radius: 28%; }
+.bhero__latest { max-width: 100%; }
+.bhero__latest-text { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; max-width: min(26rem, 70vw); }
+.bhero__arrow { transform: none; }
+@media (hover: hover) { .bhero__latest:hover .bhero__arrow { transform: translateX(4px); } }
+@media (min-width: 900px) { .bhero__emblem { width: clamp(250px, 26vw, 340px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .bhero__sheet--1 { animation: bhero-fan 1.2s var(--ease) 0.2s both; }
+  .bhero__sheet--3 { animation: bhero-fan3 1.2s var(--ease) 0.2s both; }
+}
+@keyframes bhero-fan { from { transform: translate(-50%, -52%) rotate(-7deg); } }
+@keyframes bhero-fan3 { from { transform: translate(-50%, -52%) rotate(-7deg); } }
+
+/* Blog list: the newest guide gets the wide spot */
+@media (min-width: 1024px) {
+  .grid > li.grid__feature { grid-column: 1 / -1; }
+  .card--feature .card__link { padding: 34px 38px; gap: 14px; }
+  .card--feature .card__title { max-width: 34ch; font-size: 1.75rem; line-height: 1.2; }
+  .card--feature .card__summary { max-width: 62ch; font-size: 1.05rem; }
+}
