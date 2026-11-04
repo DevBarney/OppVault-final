@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
 import EventCard from '../../components/events/EventCard';
 import Filters from '../../components/Filters';
-import PageHeader from '../../components/PageHeader';
+import CategoryHero from '../../components/CategoryHero';
 import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
 import { getCategory } from '../../lib/categories';
@@ -50,11 +50,9 @@ export default async function EventsPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader eyebrow={cat.tagline} title={cat.label}>
-        <p>{cat.intro}</p>
-      </PageHeader>
+      <CategoryHero cat={cat} noun={'event'} count={filtered ? undefined : total} />
 
-      <section className="section section--list">
+      <section className="section section--list" id="listings">
         <div className="container">
           <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
 

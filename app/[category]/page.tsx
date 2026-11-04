@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Filters from '../../components/Filters';
 import OpportunityCard from '../../components/OpportunityCard';
-import PageHeader from '../../components/PageHeader';
+import CategoryHero from '../../components/CategoryHero';
 import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
 import { CATEGORIES, getCategory } from '../../lib/categories';
@@ -45,11 +45,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <PageHeader eyebrow={cat.tagline} title={cat.label}>
-        <p>{cat.intro}</p>
-      </PageHeader>
+      <CategoryHero cat={cat} noun={cat.singular} count={filtered ? undefined : total} />
 
-      <section className="section section--list">
+      <section className="section section--list" id="listings">
         <div className="container">
           <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
 

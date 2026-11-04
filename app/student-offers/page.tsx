@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { listIndexing, withSocial } from '../../lib/seo';
 import { notFound } from 'next/navigation';
 import Filters from '../../components/Filters';
-import PageHeader from '../../components/PageHeader';
+import CategoryHero from '../../components/CategoryHero';
 import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
 import OfferCard from '../../components/student-offers/OfferCard';
@@ -42,11 +42,9 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader eyebrow={cat.tagline} title={cat.label}>
-        <p>{cat.intro}</p>
-      </PageHeader>
+      <CategoryHero cat={cat} noun={'offer'} count={filtered ? undefined : total} />
 
-      <section className="section section--list">
+      <section className="section section--list" id="listings">
         <div className="container">
           <p className="off-lead">
             OppVault lists these offers for information. We do not sell them, we have not tested them and we do not endorse them. Each page links to the
