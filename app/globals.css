@@ -526,7 +526,7 @@ ol {
   padding: 20px;
   border-radius: 18px;
   background: var(--pale);
-  box-shadow: inset 4px 0 0 var(--gold);
+  border: 1px solid var(--line);
 }
 .signup__check {
   display: grid;
@@ -587,7 +587,7 @@ ol {
 }
 .signup--dark.signup--done {
   background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 4px 0 0 var(--gold);
+  border: 1px solid var(--line);
 }
 .signup--dark .signup__check {
   background: var(--gold);
@@ -815,7 +815,7 @@ ol {
   padding: 18px 22px;
   border-radius: 14px;
   background: #fff;
-  box-shadow: inset 4px 0 0 var(--gold);
+  border: 1px solid var(--line);
   color: var(--ink);
   font-size: 0.975rem;
   font-weight: 400;

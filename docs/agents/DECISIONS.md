@@ -36,3 +36,6 @@ Decided by: Barnabas (via the lead session). Poppins loads through `next/font/go
 
 ### D-011 Visitors can leave reviews, approved by hand
 Decided by: Barnabas. `/reviews` has a public form (name, review, optional small photo, no account). Rows go into `reviews` as pending; nothing shows until approved in `/admin` ("Reviews from visitors"). The public can only read approved rows and only the columns id, name, body, avatar_url, created_at. Photos are shrunk to 128px in the browser, type-checked on the server and stored in the `avatars` bucket as `review-<uuid>`; rejecting or deleting a review removes its photo. Approved reviews show on the home page (newest 3) and on `/reviews`.
+
+### D-012 No accent lines on containers, and no em dashes
+Decided by: Barnabas. Do not add a vertical accent line or a coloured left border (including `box-shadow: inset 4px 0 0 ...`) to boxes, notes, callouts or blockquotes. Use a plain 1px border or a background tint instead. Do not use em dashes anywhere: not in page copy, listing text, emails, comments or documents. Use a comma, a colon, a full stop or brackets. Timeline connectors between numbered steps are not accent lines and can stay.

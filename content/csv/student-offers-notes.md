@@ -35,7 +35,7 @@ Listed in `student-offers-missing-links.csv` with an empty `link` column. Fill i
 | 207 | NY Times | Student plan ~$1/week + free access via partnered schools |
 | 234 | ProtoPie | Discounted 1-year student license for select universities |
 | 238 | QuillBot | Up to 25% off via Student Beans & UNiDAYS |
-| 246 | Samsung | Save up to 30% Off — offer varies by country |
+| 246 | Samsung | Save up to 30% Off, offer varies by country |
 | 272 | Starbucks | 20% off in select markets |
 | 304 | Uber One Student | 12 months free Uber One |
 | 305 | Udemy | 10-60% off via partner verifications |
