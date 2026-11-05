@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import CookieSettingsLink from './CookieSettingsLink';
 import Link from 'next/link';
 import { ArrowUpIcon } from './Icons';
 import { CATEGORIES } from '../lib/categories';
@@ -49,6 +50,9 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link href="/privacy">Privacy notice</Link>
+                </li>
+                <li>
+                  <CookieSettingsLink />
                 </li>
               </ul>
             </div>

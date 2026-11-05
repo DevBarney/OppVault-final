@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           Back to OppVault
         </a>
         <h1>Privacy notice</h1>
-        <p className="prose__meta">Last updated 24 October 2026</p>
+        <p className="prose__meta">Last updated 5 November 2026</p>
 
         <p>
           This page explains what happens to your details when you subscribe to updates on OppVault.
@@ -35,6 +35,32 @@ export default function PrivacyPage() {
           This page does not use advertising trackers or analytics cookies. Our hosting provider receives technical
           details such as your IP address when you load the page, which it needs in order to serve the page and to limit
           abuse.
+        </p>
+
+        <h2 id="cookies">Cookies</h2>
+        <p>
+          OppVault uses only the cookies it needs. We do not use advertising cookies, and we do not use analytics cookies at the moment.
+          If we add analytics later, it will stay off unless you turn it on in the cookie settings.
+        </p>
+        <ul>
+          <li>
+            <strong>ov_at and ov_rt</strong>: keep you signed in if you create an account. They are set only when you sign in, are not readable by page
+            scripts, and the longer one lasts up to 30 days.
+          </li>
+          <li>
+            <strong>ov_s</strong>: a small marker that says a sign-in may exist, so signed-out visitors do not make needless requests. It holds no personal
+            details and lasts up to 30 days.
+          </li>
+          <li>
+            <strong>ov_consent</strong>: remembers your cookie choice for 180 days.
+          </li>
+          <li>
+            <strong>oppvault_admin</strong>: used only by the people who run OppVault, to sign in to the admin area. Visitors never receive it.
+          </li>
+        </ul>
+        <p>
+          You can change your choice at any time with &ldquo;Cookie settings&rdquo; in the footer. You can also clear cookies in your browser, which signs you
+          out.
         </p>
 
         <h2>Why we collect it</h2>

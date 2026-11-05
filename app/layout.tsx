@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import CookieNotice from '../components/CookieNotice';
 import type { ReactNode } from 'react';
 import { Poppins } from 'next/font/google';
 import './globals.css';
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <NewsletterBand />
         <Footer />
         <CommandPalette />
+        <CookieNotice />
       </body>
     </html>
   );
