@@ -18,7 +18,8 @@ export const DEFAULT_WHATSAPP_URL = 'https://chat.whatsapp.com/EvaSDdZLs1VEK7fSP
 
 export const WHATSAPP_URL = cleanUrl(process.env.NEXT_PUBLIC_WHATSAPP_URL) ?? DEFAULT_WHATSAPP_URL;
 
-export const SITE_URL = cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://oppvault.app';
+/** Always without a trailing slash, so `${SITE_URL}/about` never becomes a double slash. */
+export const SITE_URL = (cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://oppvault.app').replace(/\/+$/, '');
 
 export const CONTACT = {
   email: 'hello@oppvault.app',
