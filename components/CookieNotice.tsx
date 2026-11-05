@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ANALYTICS_AVAILABLE } from '../lib/analytics';
 import { OPEN_COOKIES_EVENT, readConsent, saveConsent } from '../lib/consent';
 
 /**
@@ -73,7 +74,10 @@ export default function CookieNotice() {
           A quick word about cookies
         </h2>
         <p id="ck-text" className="ck__text">
-          We use a few small cookies to keep you signed in and to remember your choices. We do not use advertising or tracking cookies.{' '}
+          We use a few small cookies to keep you signed in and to remember your choices.{' '}
+          {ANALYTICS_AVAILABLE
+            ? 'With your permission we also use Google Analytics to see which pages are useful. We do not use advertising cookies.'
+            : 'We do not use advertising or tracking cookies.'}{' '}
           <Link href="/privacy#cookies">Read the details</Link>
         </p>
 
@@ -89,7 +93,11 @@ export default function CookieNotice() {
             <li className="ck__row">
               <span className="ck__row-text">
                 <strong id="ck-an">Analytics</strong>
-                <span>Would show us which pages are useful. We do not use any yet. If we add it, it stays off unless you turn it on.</span>
+                <span>
+                  {ANALYTICS_AVAILABLE
+                    ? 'Google Analytics shows us which pages are useful, without ads or profiles. It stays off unless you turn it on.'
+                    : 'Would show us which pages are useful. We do not use any yet. If we add it, it stays off unless you turn it on.'}
+                </span>
               </span>
               <button type="button" role="switch" aria-checked={analytics} aria-labelledby="ck-an" className="ck__switch" onClick={() => setAnalytics((v) => !v)}>
                 <span className="ck__knob" />

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { withSocial } from '../../lib/seo';
 import { CONTACT } from '../../lib/config';
+import { ANALYTICS_AVAILABLE } from '../../lib/analytics';
 
 export const metadata: Metadata = withSocial({
   title: 'Privacy notice',
@@ -32,16 +33,25 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          This page does not use advertising trackers or analytics cookies. Our hosting provider receives technical
+          This site does not use advertising trackers. See Cookies below for the cookies it does set. Our hosting provider receives technical
           details such as your IP address when you load the page, which it needs in order to serve the page and to limit
           abuse.
         </p>
 
         <h2 id="cookies">Cookies</h2>
-        <p>
-          OppVault uses only the cookies it needs. We do not use advertising cookies, and we do not use analytics cookies at the moment.
-          If we add analytics later, it will stay off unless you turn it on in the cookie settings.
-        </p>
+        {ANALYTICS_AVAILABLE ? (
+          <p>
+            OppVault uses the cookies it needs to work, and Google Analytics only if you allow it. We do not use advertising cookies. Analytics is off until
+            you choose &ldquo;Accept all&rdquo; or switch it on in the cookie settings, and nothing is sent to Google before then. When it is on, Google
+            receives page views and technical details such as your approximate location and device, so we can see which pages are useful. We turn off
+            advertising features and Google signals, and your IP address is not stored in full. You can switch it off again at any time.
+          </p>
+        ) : (
+          <p>
+            OppVault uses only the cookies it needs. We do not use advertising cookies, and we do not use analytics cookies at the moment. If we add
+            analytics later, it will stay off unless you turn it on in the cookie settings.
+          </p>
+        )}
         <ul>
           <li>
             <strong>ov_at and ov_rt</strong>: keep you signed in if you create an account. They are set only when you sign in, are not readable by page
@@ -54,6 +64,12 @@ export default function PrivacyPage() {
           <li>
             <strong>ov_consent</strong>: remembers your cookie choice for 180 days.
           </li>
+          {ANALYTICS_AVAILABLE ? (
+            <li>
+              <strong>_ga and _ga_ followed by letters</strong>: set by Google Analytics, only if you allow analytics. They tell visits apart and last up to
+              2 years. Switching analytics off removes them.
+            </li>
+          ) : null}
           <li>
             <strong>oppvault_admin</strong>: used only by the people who run OppVault, to sign in to the admin area. Visitors never receive it.
           </li>

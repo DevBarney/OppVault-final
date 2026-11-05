@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Analytics from '../components/Analytics';
 import CookieNotice from '../components/CookieNotice';
 import type { ReactNode } from 'react';
 import { Poppins } from 'next/font/google';
@@ -55,6 +56,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Footer />
         <CommandPalette />
         <CookieNotice />
+        <Analytics />
       </body>
     </html>
   );
