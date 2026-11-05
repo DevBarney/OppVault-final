@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { withSocial } from '../../lib/seo';
 import Link from 'next/link';
 import Reveal from '../../components/Reveal';
+import FinePrint from '../../components/FinePrint';
 import { ArrowIcon, CategoryIcon, ChatIcon, CheckIcon, ExternalIcon, StarIcon } from '../../components/Icons';
 import { CATEGORIES } from '../../lib/categories';
 import { CONTACT, WHATSAPP_URL } from '../../lib/config';
@@ -337,12 +338,7 @@ export default function AboutPage() {
               </ul>
             </Reveal>
           </div>
-          <Reveal>
-            <p className="note">
-              OppVault helps you discover opportunities. It cannot guarantee that you will be selected for any of them.
-              Requirements and deadlines can change, so always confirm them with the official source.
-            </p>
-          </Reveal>
+          <FinePrint />
         </div>
       </section>
 

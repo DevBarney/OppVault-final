@@ -2683,3 +2683,20 @@ body > main { min-height: 50vh; }
   .hero--home .hsearch__btn { min-height: 54px; }
   .hero--home .hero__lead { font-size: 1rem; }
 }
+
+/* Fine print: the honest "no guarantees" note, as a small card with a gold keyhole seal */
+.fp { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; max-width: 52rem; margin-top: 56px; padding: clamp(22px, 4vw, 34px); overflow: hidden; border-radius: 22px; background: radial-gradient(90% 120% at 0% 0%, rgba(13, 180, 248, 0.28), transparent 60%), linear-gradient(150deg, #06187f, #04106b); color: #fff; box-shadow: 0 26px 48px -30px rgba(4, 16, 107, 0.7); }
+.fp__seal { position: relative; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.05), 0 0 0 16px rgba(255, 255, 255, 0.03); }
+.fp__key { width: 22px; fill: var(--gold); filter: drop-shadow(0 0 10px rgba(251, 184, 0, 0.5)); }
+.fp__title { max-width: 24ch; margin: 0; font-size: clamp(1.3rem, 3.4vw, 1.75rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.015em; text-wrap: balance; }
+.fp__text { max-width: 40rem; margin: 12px 0 0; color: rgba(255, 255, 255, 0.84); font-size: 1rem; line-height: 1.65; }
+.fp__points { display: grid; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.fp__points li { display: flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.92); font-size: 0.9rem; }
+.fp__tick { flex: none; width: 18px; height: 18px; color: var(--teal); }
+@media (min-width: 720px) {
+  .fp { grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; }
+  .fp__seal { width: 76px; height: 76px; margin: 6px 8px 0 8px; }
+  .fp__key { width: 26px; }
+  .fp__points { grid-auto-flow: column; justify-content: start; gap: 10px 26px; }
+}
+@media (min-width: 720px) and (max-width: 959px) { .fp__points { grid-auto-flow: row; } }

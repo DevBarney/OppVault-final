@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import OpportunityCard from '../components/OpportunityCard';
 import Reveal from '../components/Reveal';
+import FinePrint from '../components/FinePrint';
 import StepsTrack from '../components/StepsTrack';
 import VaultOpen from '../components/VaultOpen';
 import { ArrowIcon, CategoryIcon, SearchIcon } from '../components/Icons';
@@ -142,12 +143,7 @@ export default async function HomePage() {
               </li>
             ))}
           </StepsTrack>
-          <Reveal>
-            <p className="note">
-              OppVault helps you discover opportunities. It cannot guarantee that you will be selected for any of them,
-              so always confirm the details with the official source.
-            </p>
-          </Reveal>
+          <FinePrint />
         </div>
       </section>
 
