@@ -28,7 +28,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ category: 
     headers: {
       'content-type': 'text/calendar; charset=utf-8',
       'content-disposition': `attachment; filename="oppvault-${slug.slice(0, 60)}.ics"`,
-      'cache-control': 'public, max-age=3600, s-maxage=3600',
+      'cache-control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
     },
   });
 }

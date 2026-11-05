@@ -7,9 +7,10 @@ const nextConfig = {
   async headers() {
     return [
       // Brand images in /public never change name, so let browsers and the CDN keep them for a day
-      // (and serve a stale copy for a week while checking for a new one).
+      // (and serve a stale copy for a week while checking for a new one). email-logo.png is fetched by
+      // mail apps every time someone opens one of our emails, so it matters most here.
       {
-        source: '/(og\\.png|logo-horizontal\\.png)',
+        source: '/(og\\.png|logo-horizontal\\.png|email-logo\\.png)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
       },
       {
