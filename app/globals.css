@@ -2700,3 +2700,27 @@ body > main { min-height: 50vh; }
   .fp__points { grid-auto-flow: column; justify-content: start; gap: 10px 26px; }
 }
 @media (min-width: 720px) and (max-width: 959px) { .fp__points { grid-auto-flow: row; } }
+
+/* Callouts: small notes with a round icon badge. No side bars. */
+.callout { display: flex; align-items: flex-start; gap: 14px; max-width: 46rem; margin: 28px 0 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--tint); color: var(--ink); }
+.callout__badge { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--navy), var(--royal)); box-shadow: 0 0 0 5px rgba(3, 50, 179, 0.08); color: #fff; }
+.callout__icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.callout__icon--key { width: 14px; height: 18px; fill: var(--gold); stroke: none; }
+.callout__body { min-width: 0; }
+.callout__title { margin: 0; color: var(--navy); font-size: 1rem; font-weight: 600; line-height: 1.35; }
+.callout__text { margin: 4px 0 0; color: var(--ink); font-size: 0.9375rem; line-height: 1.6; }
+.callout--quiet { background: #eef2fa; }
+.callout--quiet .callout__badge { background: #cfd8ee; color: var(--navy); box-shadow: 0 0 0 5px rgba(79, 96, 140, 0.1); }
+.section--list > .container > .callout, .detail__main > .callout:first-child { margin-top: 0; margin-bottom: 24px; }
+
+/* Check before you buy: ticks instead of bullets */
+.off-check__list { padding-left: 0 !important; list-style: none !important; display: grid; gap: 12px; }
+.off-check__list li { display: flex; align-items: flex-start; gap: 10px; margin: 0 !important; }
+.off-check__tick { flex: none; width: 18px; height: 18px; margin-top: 0.22em; color: var(--royal); }
+
+/* Newsletter success: the badge rings out once */
+.signup__check { position: relative; }
+.signup__check::after { content: ''; position: absolute; inset: -2px; border-radius: inherit; border: 2px solid var(--sky); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .signup__check::after { animation: signup-ring 1.1s ease-out 0.15s 1 both; } }
+@keyframes signup-ring { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.9); } }
+.signup--dark.signup--done { border-color: rgba(255, 255, 255, 0.24); }

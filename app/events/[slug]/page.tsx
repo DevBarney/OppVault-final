@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Callout from '../../../components/Callout';
 import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import ShareActions from '../../../components/ShareActions';
@@ -72,9 +73,9 @@ export default async function EventPage({ params }: Props) {
         <div className="container detail">
           <article className="detail__main">
             {t.past ? (
-              <p className="evt-pastnote" role="note">
-                This event date has passed. The details stay here for reference. Check the official page to see whether it runs again.
-              </p>
+              <Callout tone="quiet" icon="calendar" title="This event has passed">
+                The details stay here for reference. Check the official page to see whether it runs again.
+              </Callout>
             ) : null}
             {item.image_url ? (
               <div className="detail__image">
@@ -115,10 +116,10 @@ export default async function EventPage({ params }: Props) {
 
             <PlanYourAttendance venue={venue} fundedPlaces={item.funding === 'Funded places'} past={t.past} />
 
-            <p className="note">
+            <Callout icon="keyhole" title="Confirm before you plan">
               OppVault helps you discover events. It cannot guarantee a place, funding or a visa, and details can change, so always
               confirm the date, the cost and the registration deadline with the organiser before you plan.
-            </p>
+            </Callout>
           </article>
 
           <aside className="detail__side" aria-label="Key facts">

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Callout from '../../../components/Callout';
 import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -105,10 +106,10 @@ export default async function OpportunityPage({ params }: Props) {
               </>
             ) : null}
 
-            <p className="note">
+            <Callout icon="keyhole" title="Check before you apply">
               OppVault helps you discover opportunities. It cannot guarantee that you will be selected, and details can
               change, so always confirm the requirements and the deadline with the official source before you apply.
-            </p>
+            </Callout>
           </article>
 
           <aside className="detail__side" aria-label="Key facts">

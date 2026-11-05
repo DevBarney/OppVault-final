@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Callout from '../../components/Callout';
 import { listIndexing, withSocial } from '../../lib/seo';
 import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
@@ -63,7 +64,7 @@ export default async function EventsPage({ searchParams }: Props) {
           </p>
 
           {total > 0 && upcoming.length === 0 ? (
-            <p className="evt-none">No upcoming events match right now. Past events are shown below for reference.</p>
+            <Callout icon="calendar" title="Nothing upcoming right now">No upcoming events match. Past events are shown below for reference.</Callout>
           ) : null}
 
           {items.length > 0 ? (

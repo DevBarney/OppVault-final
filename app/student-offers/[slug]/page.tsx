@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Callout from '../../../components/Callout';
 import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import { daysUntil, formatDate } from '../../../lib/dates';
@@ -76,9 +77,9 @@ export default async function StudentOfferPage({ params }: Props) {
         <div className="container detail">
           <article className="detail__main">
             {t.ended ? (
-              <p className="off-endednote" role="note">
-                This offer ended on the date shown. Check the provider&rsquo;s page before you rely on it.
-              </p>
+              <Callout tone="quiet" icon="clock" title="This offer has ended">
+                It ended on the date shown. Check the provider&rsquo;s page before you rely on it.
+              </Callout>
             ) : null}
             {item.image_url ? (
               <div className="detail__image">
@@ -125,10 +126,10 @@ export default async function StudentOfferPage({ params }: Props) {
 
             <CheckBeforeYouBuy ended={t.ended} />
 
-            <p className="note">
+            <Callout icon="keyhole" title="Confirm before you pay">
               OppVault helps you discover offers. Providers can change or withdraw them at any time, so always confirm the details with the provider
               before you pay.
-            </p>
+            </Callout>
           </article>
 
           <aside className="detail__side" aria-label="Key facts">

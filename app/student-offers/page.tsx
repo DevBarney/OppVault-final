@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Callout from '../../components/Callout';
 import { listIndexing, withSocial } from '../../lib/seo';
 import { notFound } from 'next/navigation';
 import Filters from '../../components/Filters';
@@ -46,10 +47,10 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <p className="off-lead">
-            OppVault lists these offers for information. We do not sell them, we have not tested them and we do not endorse them. Each page links to the
+          <Callout icon="tag" title="We list offers. We do not sell them.">
+            OppVault lists these offers for information. We have not tested them and we do not endorse them. Each page links to the
             provider, where you confirm the price, the terms and the end date.
-          </p>
+          </Callout>
 
           <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
 
