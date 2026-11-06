@@ -1,0 +1,40 @@
+/* Shared by the About hero and the home hero */
+/* The vault door */
+.abt-vaultwrap { position: relative; display: grid; place-items: center; width: min(340px, 84vw); margin-inline: auto; }
+.abt-halo { position: absolute; inset: -14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(13, 180, 248, 0.38), rgba(27, 219, 227, 0.1) 55%, transparent 72%); pointer-events: none; }
+.abt-vault { position: relative; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 28px 36px rgba(2, 8, 70, 0.55)); }
+.abt-vault__rivet { fill: rgba(255, 255, 255, 0.5); }
+.abt-vault__spoke { fill: rgba(255, 255, 255, 0.16); stroke: rgba(255, 255, 255, 0.4); stroke-width: 1.5; }
+.abt-vault__knob { fill: var(--teal); opacity: 0.9; }
+.abt-vault__wheel { transform-origin: 200px 200px; }
+.abt-vault__hub { stroke: rgba(255, 255, 255, 0.5); stroke-width: 2; }
+.abt-vault__outer { fill: rgba(255, 255, 255, 0.04); stroke: rgba(255, 255, 255, 0.28); stroke-width: 2; }
+.abt-vault__tick { stroke: rgba(255, 255, 255, 0.35); stroke-width: 2; stroke-linecap: round; }
+.abt-vault__tick--long { stroke: var(--teal); stroke-width: 3; }
+.abt-vault__ring { fill: none; stroke: var(--sky); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; opacity: 0.8; }
+.abt-vault__disc { fill: rgba(3, 50, 179, 0.55); stroke: rgba(255, 255, 255, 0.35); stroke-width: 2; }
+.abt-vault__bolts rect { fill: rgba(255, 255, 255, 0.22); }
+.abt-vault__glow { transform-origin: 200px 200px; }
+.abt-vault__key { fill: var(--gold); }
+.abt-vault__dial { transform-origin: 200px 200px; }
+@media (prefers-reduced-motion: no-preference) {
+  .abt-vault__dial { animation: abt-turn 60s linear infinite; }
+  .abt-vault__glow { animation: abt-glow 4.5s ease-in-out infinite; }
+  .abt-vault__wheel { animation: abt-unlock 2.6s var(--ease) 0.5s both, abt-turn-back 90s linear 3.1s infinite; }
+  .abt-halo { animation: abt-breathe 6s ease-in-out infinite; }
+}
+@keyframes abt-unlock { from { transform: rotate(-120deg); } to { transform: rotate(0); } }
+@keyframes abt-turn-back { to { transform: rotate(-360deg); } }
+@keyframes abt-breathe { 0%, 100% { opacity: 0.75; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
+@keyframes abt-turn { to { transform: rotate(360deg); } }
+@keyframes abt-glow {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.abt-rays { position: absolute; inset: -42%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(251, 184, 0, 0.16) 0deg 1.6deg, transparent 1.6deg 10deg); -webkit-mask-image: radial-gradient(closest-side, transparent 38%, #000 52%, transparent 100%); mask-image: radial-gradient(closest-side, transparent 38%, #000 52%, transparent 100%); opacity: 0.4; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .abt-rays { animation: abt-rays 80s linear infinite, abt-rays-in 2.4s ease-out 0.5s both; }
+}
+@keyframes abt-rays { to { transform: rotate(360deg); } }
+@keyframes abt-rays-in { from { opacity: 0; } to { opacity: 0.4; } }

@@ -2637,7 +2637,7 @@ body > main { min-height: 50vh; }
 /* Home hero: dial emblem and the "closing next" card */
 .hdial { position: absolute; z-index: 0; top: 54%; right: -96px; width: 330px; aspect-ratio: 1; transform: translateY(-50%); pointer-events: none; }
 .hdial .hdial__emblem { inset: 0; top: 0; right: 0; width: 100%; transform: none; opacity: 0.3; animation: none; -webkit-mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); }
-.hdial__key { width: 38%; fill: var(--gold); filter: drop-shadow(0 0 14px rgba(251, 184, 0, 0.5)); }
+.hdial .abt-vaultwrap { width: 100%; }
 .hdial__card { display: none; }
 @media (prefers-reduced-motion: no-preference) { .hdial .hdial__emblem { animation: hdial-in 1.1s var(--ease) both; } }
 @keyframes hdial-in { from { opacity: 0; transform: scale(0.92); } to { opacity: 0.3; transform: none; } }
@@ -2666,9 +2666,10 @@ body > main { min-height: 50vh; }
 }
 @media (hover: hover) and (min-width: 1024px) { .hdial__card:hover { transform: translateY(-4px); border-color: var(--teal); } .hdial__card:hover .hdial__go { transform: translateX(4px); } }
 
-/* Home hero on a phone: quieter. No emblem, one search row, one scrolling row of kinds. */
+/* Home hero on a phone: quieter. The vault door sits faintly behind the top right, as on About; one search row, one scrolling row of kinds. */
 @media (max-width: 1023px) {
-  .hdial { display: none; }
+  .hdial { top: 28%; right: -138px; width: 320px; }
+  .hdial .hdial__emblem { opacity: 0.34; }
   .hero--home .hsearch { flex-direction: row; gap: 8px; margin-top: 26px; }
   .hero--home .hsearch__btn { flex: none; min-width: 0; padding-inline: 18px; }
   .hero--home .hsearch__btn .btn__arrow { display: none; }
