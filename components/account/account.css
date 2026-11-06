@@ -106,3 +106,45 @@
 .applied__count { margin: 0; color: var(--muted); font-size: 0.8125rem; text-align: center; }
 .applied__error { margin: 0; color: var(--danger); font-size: 0.85rem; text-align: center; }
 .confetti-bit { position: fixed; z-index: 1000; pointer-events: none; border-radius: 1px; }
+
+/* Sign in and create account: a dark hero page with the card on top */
+.acct-auth-page { position: relative; isolation: isolate; overflow: hidden; margin-top: -92px; padding: calc(92px + clamp(28px, 5vw, 64px)) 0 clamp(48px, 7vw, 96px); min-height: 100svh; color: #fff; background: radial-gradient(60% 70% at 85% 0%, rgba(13, 180, 248, 0.28), transparent 70%), linear-gradient(180deg, #04106b 0%, #030d56 100%); }
+.acct-auth-page__in { position: relative; z-index: 1; }
+.acct-auth { position: relative; display: grid; gap: 22px; align-items: center; }
+.acct-aside { position: relative; }
+.acct-aside__copy { position: relative; z-index: 1; }
+.acct-aside__title { margin: 0; max-width: 16ch; color: #fff; font-size: clamp(2rem, 7vw, 3.25rem); font-weight: 700; line-height: 1.06; letter-spacing: -0.025em; text-wrap: balance; }
+.acct-aside__lead { max-width: 30rem; margin: 14px 0 0; color: #d3dcff; font-size: 1.0625rem; line-height: 1.65; }
+.acct-perks { display: none; margin: 26px 0 0; padding: 0; list-style: none; gap: 12px; }
+.acct-perks li { display: flex; align-items: center; gap: 12px; color: #e8edff; font-size: 0.975rem; }
+.acct-perks__tick { flex: none; width: 22px; height: 22px; padding: 4px; border-radius: 50%; background: rgba(27, 219, 227, 0.18); color: var(--teal); }
+/* The vault door: faint behind the top right on a phone, large behind the copy on a desktop */
+.acct-aside__art { position: absolute; z-index: 0; top: -40px; right: -150px; width: 320px; opacity: 0.3; pointer-events: none; -webkit-mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); }
+.acct-aside__art .abt-vaultwrap { width: 100%; }
+.acct-auth .acct-card { position: relative; z-index: 1; width: 100%; margin: 0; border-color: rgba(255, 255, 255, 0.5); border-radius: 24px; box-shadow: 0 40px 70px -34px rgba(2, 8, 70, 0.9); }
+.acct-auth-page .acct-card--narrow { max-width: 28rem; margin: 0 auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .acct-auth .acct-card { animation: acct-rise 0.7s var(--ease) both; }
+  @keyframes acct-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+}
+@media (min-width: 900px) {
+  .acct-auth { grid-template-columns: minmax(0, 1fr) minmax(0, 28rem); gap: clamp(40px, 7vw, 110px); }
+  .acct-perks { display: grid; }
+  .acct-aside__art { top: 50%; right: auto; left: -340px; width: 620px; opacity: 0.22; transform: translateY(-50%); -webkit-mask-image: none; mask-image: none; }
+}
+
+/* Tabs, brand marks, password meter */
+.acct-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 20px; padding: 4px; border-radius: 14px; background: var(--pale); }
+.acct-tab { min-height: 44px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease; }
+.acct-tab[aria-pressed='true'] { background: #fff; color: var(--navy); font-weight: 600; box-shadow: 0 2px 10px -3px rgba(4, 16, 107, 0.3); }
+.acct-tab:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.acct-social__icon { flex: none; width: 22px; height: 22px; color: #000; }
+.acct-social__btn { justify-content: center; }
+.acct-meter { display: grid; gap: 6px; margin-top: -6px; }
+.acct-meter__bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.acct-meter__bars i { height: 4px; border-radius: 2px; background: var(--line); transition: background 0.3s ease; }
+.acct-meter[data-level='1'] .acct-meter__bars i:nth-child(1) { background: #e0a100; }
+.acct-meter[data-level='2'] .acct-meter__bars i:nth-child(-n+2) { background: var(--sky); }
+.acct-meter[data-level='3'] .acct-meter__bars i { background: #14a05a; }
+.acct-meter__text { color: var(--muted); font-size: 0.85rem; }
+.acct-switch { justify-content: center; margin-top: 10px; }

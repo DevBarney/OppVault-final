@@ -20,8 +20,13 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   if (visitor) redirect(next);
 
   return (
-    <section className="acct-page">
-      <div className="container">
+    <section className="acct-auth-page">
+      <div className="hero__aurora" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="container acct-auth-page__in">
         {accountsConfigured ? (
           <AuthForm next={next} save={typeof sp.save === 'string' ? sp.save : null} startOn={sp.mode === 'signup' ? 'signup' : 'signin'} />
         ) : (

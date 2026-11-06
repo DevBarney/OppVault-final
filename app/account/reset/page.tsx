@@ -6,8 +6,13 @@ export const metadata: Metadata = { title: 'Choose a new password', robots: { in
 
 export default function ResetPage() {
   return (
-    <section className="acct-page">
-      <div className="container">
+    <section className="acct-auth-page">
+      <div className="hero__aurora" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="container acct-auth-page__in">
         <ResetClient />
       </div>
     </section>
