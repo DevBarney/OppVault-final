@@ -6,8 +6,13 @@ export const metadata: Metadata = { title: 'Signing in', robots: { index: false,
 
 export default function CallbackPage() {
   return (
-    <section className="acct-page">
-      <div className="container">
+    <section className="acct-auth-page">
+      <div className="hero__aurora" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="container acct-auth-page__in">
         <CallbackClient />
       </div>
     </section>

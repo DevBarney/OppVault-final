@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import AccountActions from '../../../components/account/AccountActions';
 import EventCard from '../../../components/events/EventCard';
 import OfferCard from '../../../components/student-offers/OfferCard';
 import OpportunityCard from '../../../components/OpportunityCard';
-import PageHeader from '../../../components/PageHeader';
+import { SavedEmpty, SavedHero } from '../../../components/account/SavedParts';
 import { listSaved } from '../../../lib/account/saved';
 import { currentVisitor } from '../../../lib/account/server';
 import { getOpportunity } from '../../../lib/data';
@@ -29,21 +28,11 @@ export default async function SavedPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Your account" title="My saved">
-        <p>The opportunities you have saved, newest first. Always check the official page for the latest deadline before you apply.</p>
-      </PageHeader>
+      <SavedHero items={items} />
       <section className="section section--list">
         <div className="container">
           {items.length === 0 ? (
-            <div className="acct-empty">
-              <h2 className="acct-empty__title">Nothing saved yet</h2>
-              <p>Tap the heart on any opportunity to keep it here.</p>
-              <p>
-                <Link className="btn btn--primary" href="/scholarships">
-                  Browse scholarships
-                </Link>
-              </p>
-            </div>
+            <SavedEmpty />
           ) : (
             <>
               <p className="results-count">

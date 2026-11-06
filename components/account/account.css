@@ -63,7 +63,7 @@
 .acct-legal a { color: var(--royal); }
 
 /* My saved */
-.acct-empty { max-width: 32rem; margin: 24px auto; padding: 36px 24px; border: 1px dashed var(--line); border-radius: 20px; background: var(--tint); text-align: center; }
+.acct-empty { max-width: 34rem; margin: 24px auto; padding: clamp(28px, 5vw, 44px) 24px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(180deg, var(--tint), #fff); text-align: center; box-shadow: 0 24px 48px -34px rgba(4, 16, 107, 0.4); }
 .acct-empty__title { margin: 0 0 8px; color: var(--navy); font-size: 1.35rem; font-weight: 700; }
 .acct-empty p { margin: 0 0 14px; color: var(--muted); }
 .acct-note { margin: 20px 0 0; color: var(--muted); font-size: 0.9rem; }
@@ -148,3 +148,21 @@
 .acct-meter[data-level='3'] .acct-meter__bars i { background: #14a05a; }
 .acct-meter__text { color: var(--muted); font-size: 0.85rem; }
 .acct-switch { justify-content: center; margin-top: 10px; }
+
+/* My saved: hero with the vault door, stats, empty state, account panel */
+.acct-shero__art { position: absolute; z-index: 0; top: 54%; right: -120px; width: 300px; opacity: 0.26; transform: translateY(-50%); pointer-events: none; -webkit-mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); mask-image: radial-gradient(closest-side, #000 58%, transparent 100%); }
+.acct-shero__art .abt-vaultwrap { width: 100%; }
+@media (min-width: 900px) { .acct-shero__art { right: max(2vw, calc((100vw - 1240px) / 2)); width: 380px; opacity: 0.8; -webkit-mask-image: none; mask-image: none; } }
+.acct-shero .phead__inner { z-index: 1; }
+.acct-shero__stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.acct-shero__stats li { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 14px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(255, 255, 255, 0.08); color: #e8edff; font-size: 0.875rem; }
+.acct-shero__stats .acct-shero__total { background: rgba(251, 184, 0, 0.16); border-color: rgba(251, 184, 0, 0.5); color: #fff; }
+.acct-shero__stats strong { font-weight: 700; }
+.acct-shero__icon { width: 16px; height: 16px; color: var(--teal); }
+.acct-empty__tile { display: inline-grid; place-items: center; width: 68px; height: 68px; margin-bottom: 16px; border-radius: 20px; background: linear-gradient(135deg, var(--navy), var(--royal)); box-shadow: 0 14px 28px -14px rgba(4, 16, 107, 0.7); }
+.acct-empty__heart { width: 30px; height: 30px; fill: none; stroke: var(--gold); stroke-width: 1.8; stroke-linejoin: round; }
+.acct-empty__kinds { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+.acct-empty__kinds .chip { background: #fff; border-color: var(--line); color: var(--navy); }
+@media (hover: hover) { .acct-empty__kinds .chip:hover { border-color: var(--royal); background: var(--tint); } }
+@media (prefers-reduced-motion: no-preference) { .acct-empty__tile { animation: acct-bob 3.6s ease-in-out infinite; } @keyframes acct-bob { 50% { transform: translateY(-5px); } } }
+.acct-actions { margin-top: 56px; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--tint); }
