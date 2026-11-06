@@ -52,6 +52,9 @@ export default function Footer() {
                   <Link href="/privacy">Privacy notice</Link>
                 </li>
                 <li>
+                  <Link href="/terms">Terms of use</Link>
+                </li>
+                <li>
                   <CookieSettingsLink />
                 </li>
               </ul>
