@@ -1,0 +1,2 @@
+opportunity_id,title,provider,summary,description,link,image_url,coupon_code,location,level,funding,deadline,eligibility,benefits,how_to_apply,featured,published
+CRS-001,Example Introduction to Data Skills,Example Academy,A free beginner course on working with data.,,https://example.org/course,https://example.org/thumbnail.jpg,LEARN100,Online,Beginner,Free with code,,Open to everyone,Certificate on completion|Learn at your own pace,Open the course page|Enter the coupon code at checkout,no,no

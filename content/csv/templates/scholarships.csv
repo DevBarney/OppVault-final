@@ -1,0 +1,4 @@
+opportunity_id,title,provider,summary,description,link,image_url,location,level,funding,deadline,eligibility,benefits,how_to_apply,featured,published
+SCH-001,Example Foundation Undergraduate Scholarship,Example Foundation,Tuition support for outstanding undergraduates.,"Longer details.
+
+Second paragraph after a blank line.",https://example.org/scholarship,,Nigeria,Undergraduate,Full tuition,2027-01-30,Be a citizen of a listed country|Have a minimum grade of 3.5 out of 5,Full tuition|Annual book allowance,Create an account on the official page|Upload your transcript|Submit before the deadline,no,no

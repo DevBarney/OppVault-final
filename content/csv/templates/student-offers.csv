@@ -1,0 +1,2 @@
+opportunity_id,title,provider,summary,description,link,image_url,coupon_code,location,level,funding,deadline,eligibility,benefits,how_to_apply,featured,published
+OFR-001,Example Tool: 50% off for students,Example Tool,Half-price plan for verified students.,,https://example.com/students,,,Global,Students,Discount,,Verify student status,50% off the Pro plan,Verify with your student email,no,no
