@@ -31,7 +31,7 @@ const SECTIONS: LegalSection[] = [
             If you arrived through a tagged link (for example from one of our social posts), a short tag such as &ldquo;instagram&rdquo;, so we can see which
             posts bring people in.
           </li>
-          <li>If you create an account: your email address, an optional name, and which sign-in method you used (email, Google, LinkedIn or X).</li>
+          <li>If you create an account: your email address, an optional name, and which sign-in method you used (email, Google, GitHub, LinkedIn or X).</li>
           <li>What you do with an account: the opportunities you save and the ones you mark as applied for.</li>
           <li>If you leave a review: your name, your rating and review, and a photo if you add one.</li>
           <li>If you suggest an opportunity or write to us: what you send.</li>
@@ -115,7 +115,7 @@ const SECTIONS: LegalSection[] = [
           stores accounts, saved items and reviews, an email service that sends our updates, and our website host.
         </p>
         <p>
-          If you sign in with Google, LinkedIn or X, that company tells us your email address and name, and handles your sign-in under its own privacy
+          If you sign in with Google, GitHub, LinkedIn or X, that company tells us your email address and name, and handles your sign-in under its own privacy
           policy. We never see your password for those accounts. Passwords for email sign-ups are handled by our sign-in provider and are never stored by
           OppVault code.
         </p>

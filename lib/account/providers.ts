@@ -1,11 +1,12 @@
 // Which social sign-in buttons to show. Safe to import from browser code.
 // Set NEXT_PUBLIC_AUTH_PROVIDERS (comma separated) to show only the ones you have switched on in Supabase,
-// for example "google" until LinkedIn and X are ready. The default shows all three.
+// for example "google" until LinkedIn and X are ready. The default shows all four (google, github, linkedin, x).
 
-export type ProviderId = 'google' | 'linkedin_oidc' | 'x';
+export type ProviderId = 'google' | 'github' | 'linkedin_oidc' | 'x';
 
 export const ALL_PROVIDERS: { id: ProviderId; label: string }[] = [
   { id: 'google', label: 'Google' },
+  { id: 'github', label: 'GitHub' },
   { id: 'linkedin_oidc', label: 'LinkedIn' },
   { id: 'x', label: 'X' },
 ];
