@@ -20,3 +20,7 @@ Plain summary for whoever looks after the site.
 
 ## Checking it
 `curl -sI https://oppvault.app/about | grep -i cache-control` and look for `x-vercel-cache: HIT` on the second request.
+
+## Function region
+
+`vercel.json` pins the server functions to `dub1` (Dublin). The Supabase project runs in `eu-west-1` (Ireland), so every sign-in, save and page data request stays in the same part of the world instead of crossing the Atlantic from the Vercel default (`iad1`, US East). If the Supabase project ever moves, move this with it.
