@@ -41,7 +41,7 @@ export default function LazyChrome() {
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('oppvault:open-search', onOpen);
-    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (n: number) => void };
+    const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (n: number) => void };
     const id = w.requestIdleCallback ? w.requestIdleCallback(go, { timeout: 2500 }) : window.setTimeout(go, 1500);
     const replay = window.setInterval(() => {
       if (pending && done && document.querySelector('.cmdk') === null) {
