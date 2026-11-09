@@ -41,7 +41,7 @@ export default function LazyChrome() {
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('oppvault:open-search', onOpen);
-    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (n: number) => void };
     const id = w.requestIdleCallback ? w.requestIdleCallback(go, { timeout: 2500 }) : window.setTimeout(go, 1500);
     const replay = window.setInterval(() => {
       if (pending && done && document.querySelector('.cmdk') === null) {
@@ -54,9 +54,8 @@ export default function LazyChrome() {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('oppvault:open-search', onOpen);
       window.clearInterval(replay);
-      if (w.requestIdleCallback && (window as unknown as { cancelIdleCallback?: (n: number) => void }).cancelIdleCallback) {
-        (window as unknown as { cancelIdleCallback: (n: number) => void }).cancelIdleCallback(id);
-      } else window.clearTimeout(id);
+      if (w.requestIdleCallback && w.cancelIdleCallback) w.cancelIdleCallback(id);
+      else window.clearTimeout(id);
     };
   }, []);
 
