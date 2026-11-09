@@ -29,6 +29,11 @@ export default function Importer({ kinds, canImport }: { kinds: Kind[]; canImpor
 
   async function send(mode: 'check' | 'import') {
     if (!file) return;
+    if (file.size > 1024 * 1024) {
+      const mb = (file.size / (1024 * 1024)).toFixed(1);
+      setResult({ ok: false, error: `This file is ${mb} MB. The limit is 1 MB (about 1,000 rows). Split it into smaller CSV files, or remove very long text columns, then upload each part.` });
+      return;
+    }
     setBusy(true);
     // Read the file now, so a file that was edited or moved after it was chosen is caught here with a clear message.
     let text: string;
@@ -58,7 +63,9 @@ export default function Importer({ kinds, canImport }: { kinds: Kind[]; canImpor
           error:
             res.status === 401 || res.status === 403
               ? 'Please sign in again, then upload the file.'
-              : `The server answered with an error (${res.status}). Try again in a moment, and if it repeats, tell Barnabas the time.`,
+              : res.status === 413
+                ? 'This file is too large for the server. Split it into smaller CSV files (under 1 MB each) and upload them one at a time.'
+                : `The server answered with an error (${res.status}). Try again in a moment, and if it repeats, tell Barnabas the time.`,
         });
       }
     }
