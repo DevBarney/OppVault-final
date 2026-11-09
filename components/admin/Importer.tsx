@@ -30,15 +30,37 @@ export default function Importer({ kinds, canImport }: { kinds: Kind[]; canImpor
   async function send(mode: 'check' | 'import') {
     if (!file) return;
     setBusy(true);
+    // Read the file now, so a file that was edited or moved after it was chosen is caught here with a clear message.
+    let text: string;
+    try {
+      text = await file.text();
+    } catch {
+      setResult({ ok: false, error: 'This file changed or moved after you chose it. Choose the file again, then press the button.' });
+      setBusy(false);
+      return;
+    }
     const body = new FormData();
     body.set('kind', kind);
     body.set('mode', mode);
-    body.set('file', file);
+    body.set('file', new File([text], file.name, { type: 'text/csv' }));
+    let res: Response | null = null;
     try {
-      const res = await fetch('/api/admin/import', { method: 'POST', body });
-      setResult((await res.json()) as Result);
+      res = await fetch('/api/admin/import', { method: 'POST', body });
     } catch {
-      setResult({ ok: false, error: 'Could not reach the server. Try again.' });
+      setResult({ ok: false, error: 'Could not reach the server. Check your connection and try again.' });
+    }
+    if (res) {
+      try {
+        setResult((await res.json()) as Result);
+      } catch {
+        setResult({
+          ok: false,
+          error:
+            res.status === 401 || res.status === 403
+              ? 'Please sign in again, then upload the file.'
+              : `The server answered with an error (${res.status}). Try again in a moment, and if it repeats, tell Barnabas the time.`,
+        });
+      }
     }
     setBusy(false);
   }
