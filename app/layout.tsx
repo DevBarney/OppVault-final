@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import Analytics from '../components/Analytics';
-import CookieNotice from '../components/CookieNotice';
+import LazyChrome from '../components/LazyChrome';
 import type { ReactNode } from 'react';
 import { Poppins } from 'next/font/google';
 import './globals.css';
@@ -8,7 +7,6 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import NewsletterBand from '../components/NewsletterBand';
 import Interactions from '../components/Interactions';
-import CommandPalette from '../components/CommandPalette';
 import { SITE_URL, TAGLINE } from '../lib/config';
 import { getCounts } from '../lib/data';
 
@@ -54,9 +52,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <main id="main">{children}</main>
         <NewsletterBand />
         <Footer />
-        <CommandPalette />
-        <CookieNotice />
-        <Analytics />
+        <LazyChrome />
       </body>
     </html>
   );

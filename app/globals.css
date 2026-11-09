@@ -2765,3 +2765,6 @@ body > main { min-height: 50vh; }
   .ck { animation: ck-in 0.5s var(--ease) both; }
 }
 @keyframes ck-in { from { opacity: 0; transform: translateY(16px); } }
+
+/* Below-the-fold home sections are laid out only when they near the viewport. */
+.section--defer { content-visibility: auto; contain-intrinsic-size: auto 720px; }

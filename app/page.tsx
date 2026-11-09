@@ -148,7 +148,7 @@ export default async function HomePage() {
       </section>
 
       {posts.length > 0 ? (
-        <section className="section section--tint" aria-labelledby="blog-title">
+        <section className="section section--tint section--defer" aria-labelledby="blog-title">
           <div className="container">
             <div className="section__head">
               <h2 id="blog-title" className="h2">
@@ -185,7 +185,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="section" aria-labelledby="reviews-title">
+      <section className="section section--defer" aria-labelledby="reviews-title">
         <div className="container">
           <div className="section__head">
             <h2 id="reviews-title" className="h2">
