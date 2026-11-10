@@ -30,7 +30,7 @@ Files: `scholarships.csv`, `fellowships.csv`, `grants.csv`, `courses.csv`, `even
 ## Rules
 
 - Save as CSV with UTF-8 encoding. In Excel, choose "CSV UTF-8". In Google Sheets, choose File, Download, Comma-separated values.
-- Maximum 1000 rows and 1 MB per file.
+- Up to 10 MB and 20,000 rows per file. Large files are sent in parts automatically, and empty rows are skipped.
 - Wrap any cell that contains a comma or a line break in double quotes. Spreadsheet programs do this for you.
 - Only add verified listings from official sources, and always link to the official page.
 - Check a file before uploading with `npm run check:csv -- content/csv/yourfile.csv scholarships`.
