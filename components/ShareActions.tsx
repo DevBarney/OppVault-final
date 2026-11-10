@@ -1,10 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** "Add to calendar" (only when there is an upcoming date), "Share on WhatsApp" and "Copy link". */
-export default function ShareActions({ category, slug, title, url, hasDate, dateLabel }: { category: string; slug: string; title: string; url: string; hasDate: boolean; dateLabel: string }) {
+export default function ShareActions({ category, slug, title, url: officialUrl, hasDate, dateLabel }: { category: string; slug: string; title: string; url: string; hasDate: boolean; dateLabel: string }) {
   const [copied, setCopied] = useState(false);
+  // Share the address the page is open on, so a link copied from a preview opens that same preview.
+  // On the live site this is the official address, so nothing changes there.
+  const [url, setUrl] = useState(officialUrl);
+  useEffect(() => {
+    try {
+      setUrl(`${window.location.origin}/${category}/${slug}`);
+    } catch {
+      setUrl(officialUrl);
+    }
+  }, [category, slug, officialUrl]);
   const text = `${title} (${dateLabel}). Details on OppVault: ${url}`;
 
   async function copy() {
