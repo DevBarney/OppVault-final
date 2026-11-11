@@ -21,6 +21,7 @@ type Result = {
 };
 
 
+const KIND_WORDS: [string, string][] = [['scholarship', 'scholarships'], ['fellowship', 'fellowships'], ['grant', 'grants'], ['course', 'courses'], ['event', 'events'], ['offer', 'student-offers']];
 const MAX_FILE = 10 * 1024 * 1024;
 const MAX_ROWS = 20000;
 const CHUNK_CHARS = 600 * 1024;
@@ -91,6 +92,13 @@ export default function Importer({ kinds, canImport }: { kinds: Kind[]; canImpor
       const mb = (file.size / (1024 * 1024)).toFixed(1);
       setResult({ ok: false, error: `This file is ${mb} MB. The limit is 10 MB. Remove empty rows and very long text columns, or split it into two files.` });
       return;
+    }
+    // Guard against the commonest slip: a file named for one kind uploaded under another.
+    const named = KIND_WORDS.find(([word]) => file.name.toLowerCase().includes(word));
+    if (named && named[1] !== kind && kind !== 'opportunities' && kinds.some((k) => k.kind === named[1])) {
+      const here = kinds.find((k) => k.kind === kind)?.label ?? kind;
+      const there = kinds.find((k) => k.kind === named[1])?.label ?? named[1];
+      if (!window.confirm(`This file is named "${file.name}" (looks like ${there}) but you chose ${here}. Upload it as ${here} anyway?`)) return;
     }
     setBusy(true);
     setProgress('');
