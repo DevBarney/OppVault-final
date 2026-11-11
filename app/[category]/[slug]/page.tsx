@@ -143,7 +143,8 @@ export default async function OpportunityPage({ params }: Props) {
               ) : null}
               {item.source_url ? (
                 <a className="btn btn--primary facts__cta" href={item.source_url} target="_blank" rel="noopener noreferrer nofollow">
-                  <span>Visit the official source</span>
+                  <span>Apply</span>
+                  <span className="visually-hidden"> on the official website (opens in a new tab)</span>
                   <ExternalIcon className="btn__arrow" />
                 </a>
               ) : (
