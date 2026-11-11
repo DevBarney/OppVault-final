@@ -76,6 +76,9 @@ export default function Manager({ kinds }: { kinds: Kind[] }) {
         ) : (
           <>
             <div className="adm__actions">
+              <button type="button" className="adm__ghost" disabled={busy} onClick={() => setPicked(picked.size === items.length ? new Set() : new Set(items.map((i) => i.id)))}>
+                {picked.size === items.length ? 'Clear selection' : `Select all ${items.length}`}
+              </button>
               <button type="button" className="adm__ghost" disabled={busy || picked.size === 0} onClick={() => act('unpublish')}>Hide selected</button>
               <button type="button" className="adm__ghost" disabled={busy || picked.size === 0} onClick={() => act('publish')}>Show selected</button>
               <button type="button" className="adm__ghost adm__ghost--danger" disabled={busy || picked.size === 0} onClick={() => act('delete')}>Delete selected</button>
@@ -103,7 +106,7 @@ export default function Manager({ kinds }: { kinds: Kind[] }) {
                 </li>
               ))}
             </ul>
-            <p className="adm__muted">Tip: use Delete on a single row for a fake or wrong listing. Showing the newest {items.length}.</p>
+            <p className="adm__muted">Tip: use Delete on a single row for a wrong listing, or Select all then Delete selected to remove a whole wrong upload. Showing the newest {items.length}; load the list again to see more.</p>
           </>
         )
       ) : null}
