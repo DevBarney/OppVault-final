@@ -37,6 +37,8 @@ export default async function SearchPage({ searchParams }: Props) {
           ) : null}
 
           {items.length > 0 ? (
+            <>
+            <h2 className="visually-hidden">Search results</h2>
             <ul className="grid">
               {items.map((item) => (
                 <li key={item.id}>
@@ -44,6 +46,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 </li>
               ))}
             </ul>
+            </>
           ) : q ? (
             <div className="empty">
               <h2 className="empty__title">Nothing matches that search</h2>

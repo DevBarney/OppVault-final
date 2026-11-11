@@ -68,6 +68,8 @@ export default async function EventsPage({ searchParams }: Props) {
           ) : null}
 
           {items.length > 0 ? (
+            <>
+            <h2 className="visually-hidden">Events</h2>
             <ul className="grid">
               {items.map((item, i) => (
                 <Fragment key={item.id}>
@@ -82,6 +84,7 @@ export default async function EventsPage({ searchParams }: Props) {
                 </Fragment>
               ))}
             </ul>
+            </>
           ) : (
             <div className="empty">
               <h2 className="empty__title">{filtered ? 'Nothing matches that search' : 'No events listed yet'}</h2>

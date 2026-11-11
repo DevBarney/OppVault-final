@@ -57,6 +57,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </p>
 
           {items.length > 0 ? (
+            <>
+            <h2 className="visually-hidden">{cat.label} results</h2>
             <ul className="grid">
               {items.map((item, i) => (
                 <Reveal as="li" key={item.id} delay={Math.min(i, 5) * 60}>
@@ -64,6 +66,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 </Reveal>
               ))}
             </ul>
+            </>
           ) : (
             <div className="empty">
               <h2 className="empty__title">{filtered ? 'Nothing matches that search' : `No ${cat.label.toLowerCase()} listed yet`}</h2>

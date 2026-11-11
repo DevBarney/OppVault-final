@@ -60,6 +60,8 @@ export default async function StudentOffersPage({ searchParams }: Props) {
           </p>
 
           {items.length > 0 ? (
+            <>
+            <h2 className="visually-hidden">Student offers</h2>
             <ul className="grid">
               {items.map((item, i) => (
                 <Reveal as="li" key={item.id} delay={Math.min(i, 5) * 60}>
@@ -67,6 +69,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
                 </Reveal>
               ))}
             </ul>
+            </>
           ) : (
             <div className="empty">
               <h2 className="empty__title">{filtered ? 'Nothing matches that search' : 'No student offers listed yet'}</h2>
