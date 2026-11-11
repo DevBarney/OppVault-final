@@ -2772,3 +2772,15 @@ body > main { min-height: 50vh; }
 
 /* Long listing descriptions: no easy text selection or touch-hold copy menu. */
 .prose-body--protect { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+/* Topic tiles (student offers) */
+.tt { margin: 0 0 28px; }
+.tt__title { margin: 0 0 14px; color: var(--navy); font-size: 1.25rem; font-weight: 500; }
+.tt__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.tt__tile { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 56px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; color: var(--navy); font-size: 0.9375rem; font-weight: 500; line-height: 1.3; text-decoration: none; transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease; }
+.tt__tile:hover { border-color: var(--sky); background: var(--tint); transform: translateY(-2px); }
+.tt__tile:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.tt__tile.is-active { border-color: var(--royal); background: var(--navy); color: #fff; }
+.tt__count { flex: none; min-width: 28px; padding: 2px 8px; border-radius: 999px; background: var(--pale); color: var(--royal); font-size: 0.75rem; font-weight: 500; text-align: center; }
+.tt__tile.is-active .tt__count { background: rgba(255, 255, 255, 0.18); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .tt__tile { transition: none; } .tt__tile:hover { transform: none; } }

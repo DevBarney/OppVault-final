@@ -164,7 +164,8 @@ export default async function StudentOfferPage({ params }: Props) {
               {item.coupon_code && !t.ended ? <p className="facts__note">Codes can expire early. Try it on the provider&rsquo;s page.</p> : null}
               {item.source_url ? (
                 <a className="btn btn--primary facts__cta" href={item.source_url} target="_blank" rel="noopener noreferrer nofollow">
-                  <span>Go to the provider&rsquo;s page</span>
+                  <span>Get the offer</span>
+                  <span className="visually-hidden"> on the provider&rsquo;s website (opens in a new tab)</span>
                   <ExternalIcon className="btn__arrow" />
                 </a>
               ) : (

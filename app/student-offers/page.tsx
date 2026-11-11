@@ -6,6 +6,7 @@ import Filters from '../../components/Filters';
 import CategoryHero from '../../components/CategoryHero';
 import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
+import TopicTiles from '../../components/TopicTiles';
 import OfferCard from '../../components/student-offers/OfferCard';
 import { getCategory } from '../../lib/categories';
 import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
@@ -51,6 +52,8 @@ export default async function StudentOffersPage({ searchParams }: Props) {
             OppVault lists these offers for information. We have not tested them and we do not endorse them. Each page links to the
             provider, where you confirm the price, the terms and the end date.
           </Callout>
+
+          <TopicTiles basePath="/student-offers" topics={facets.topics} counts={facets.topicCounts} active={values.topic} label="Browse by topic" />
 
           <Filters category={cat} levels={facets.levels} locations={facets.locations} topics={facets.topics} values={values} />
 
