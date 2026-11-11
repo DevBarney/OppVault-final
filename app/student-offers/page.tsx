@@ -30,7 +30,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
   const cat = getCategory('student-offers');
   if (!cat) notFound();
   const sp = await searchParams;
-  const values = { q: one(sp.q)?.slice(0, 60), funding: one(sp.funding), level: one(sp.level), location: one(sp.location) };
+  const values = { q: one(sp.q)?.slice(0, 60), funding: one(sp.funding), level: one(sp.level), location: one(sp.location), topic: one(sp.topic) };
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
   // Offers that have ended are hidden by the shared query, so the list only shows offers you can still use.
@@ -39,7 +39,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
     getFacets('student-offers'),
   ]);
   const pages = Math.max(1, Math.ceil(total / PER_PAGE));
-  const filtered = Boolean(values.q || values.funding || values.level || values.location);
+  const filtered = Boolean(values.q || values.funding || values.level || values.location || values.topic);
 
   return (
     <>
@@ -52,7 +52,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
             provider, where you confirm the price, the terms and the end date.
           </Callout>
 
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} topics={facets.topics} values={values} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No offers found' : `${total} ${total === 1 ? 'offer' : 'offers'}`}

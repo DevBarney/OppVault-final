@@ -81,6 +81,13 @@ alter table public.opportunities drop constraint if exists opportunities_categor
 alter table public.opportunities add constraint opportunities_category_external_id_key unique (category, external_id);
 alter table public.posts add column if not exists image_url text;
 
+-- Student offers: a topic (for the filter) and an offer type that keeps Credit as its own value.
+alter table public.opportunities add column if not exists topic text, add column if not exists offer_type text;
+alter table public.opportunities drop constraint if exists opportunities_offer_type_check;
+alter table public.opportunities add constraint opportunities_offer_type_check
+  check (offer_type is null or offer_type in ('free','free_trial','discount','credit'));
+create index if not exists opportunities_category_topic_idx on public.opportunities (category, topic) where topic is not null;
+
 create or replace function public.default_external_id() returns trigger
 language plpgsql set search_path = '' as $$
 begin if new.external_id is null or new.external_id = '' then new.external_id := new.slug; end if; return new; end $$;

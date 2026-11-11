@@ -17,6 +17,8 @@ const ALIASES: Record<string, string[]> = {
   link: ['link', 'url', 'course_link', 'source_url', 'official_link', 'apply_link', 'website', 'application_link'],
   image_url: ['image', 'image_url', 'thumbnail', 'thumbnail_url', 'thumbnail_link', 'image_link', 'cover', 'cover_image'],
   coupon_code: ['coupon', 'coupon_code', 'promo_code', 'discount_code', 'code'],
+  topic: ['topic', 'category_main', 'subject', 'theme'],
+  offer_type: ['offer_type', 'type_of_offer', 'offer_kind'],
   location: ['location', 'country', 'place', 'where'],
   level: ['level', 'study_level', 'audience'],
   funding: ['funding', 'cost', 'price', 'amount', 'funding_type', 'fee'],
@@ -74,6 +76,8 @@ export type OpportunityRow = {
   source_url: string;
   image_url: string | null;
   coupon_code: string | null;
+  topic?: string | null;
+  offer_type?: string | null;
   featured: boolean;
   published: boolean;
 };
@@ -237,6 +241,10 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
     const published = parseBool(get('published', 10), true);
     if (published === null) problems.push('published must be yes or no');
 
+    const offerTypeRaw = get('offer_type', 30).toLowerCase().replace(/[\s-]+/g, '_');
+    const offerType = offerTypeRaw === 'credits' ? 'credit' : offerTypeRaw === '' ? null : offerTypeRaw;
+    if (offerType && !['free', 'free_trial', 'discount', 'credit'].includes(offerType)) problems.push('offer_type must be free, free_trial, discount or credit');
+
     const slug = slugify(get('slug', 120) || title);
     if (!slug) problems.push('could not make a web address from the title');
     const externalId = get('opportunity_id', 120) || slug;
@@ -283,6 +291,9 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
         source_url: link,
         image_url: image,
         coupon_code: get('coupon_code', 60) || null,
+        // Only touched when the file has the column, so a file without it never wipes existing values.
+        ...(table.headers.includes('topic') ? { topic: get('topic', 80) || null } : {}),
+        ...(table.headers.includes('offer_type') ? { offer_type: offerType } : {}),
         featured,
         published,
       },
@@ -376,9 +387,12 @@ export function templateFor(kind: Kind): { headers: string[]; example: string[] 
     published: 'yes',
     coupon_code: 'SAVE20',
     category: 'courses',
+    topic: 'Development Tools',
+    offer_type: 'free_trial',
   };
   let headers = base;
   if (kind === 'courses' || kind === 'student-offers') headers = [...base.slice(0, 7), 'coupon_code', ...base.slice(7)];
+  if (kind === 'student-offers') headers = [...headers, 'topic', 'offer_type'];
   if (kind === 'opportunities') headers = ['category', ...base.slice(0, 7), 'coupon_code', ...base.slice(7)];
   return { headers, example: headers.map((h) => example[h] ?? '') };
 }

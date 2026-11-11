@@ -18,6 +18,8 @@ export type Opportunity = {
   source_url: string | null; // the official announcement
   image_url?: string | null; // thumbnail (https link), optional
   coupon_code?: string | null; // shown on the detail page when present
+  topic?: string | null; // student offers: what it is about, used for the topic filter
+  offer_type?: 'free' | 'free_trial' | 'discount' | 'credit' | null; // student offers
   featured: boolean;
   is_sample: boolean; // sample listings are shown with a "Sample" badge
   created_at: string;

@@ -38,3 +38,13 @@ Files: `scholarships.csv`, `fellowships.csv`, `grants.csv`, `courses.csv`, `even
 ## Blog posts
 
 Columns: slug, title, excerpt, body, author, tags (pipe separated), read_minutes, published_at, image_url, published. The body can use Markdown headings such as `## Heading`.
+
+
+## Student offers: two extra columns
+
+| Column | Required | Notes |
+|---|---|---|
+| topic | Optional | What the offer is about, such as AI & Machine Learning or Design & Creative. Used for the Topic filter on the student offers page. |
+| offer_type | Optional | free, free_trial, discount or credit. Credit is its own value. |
+
+A file without these columns leaves any existing topic and offer type untouched.

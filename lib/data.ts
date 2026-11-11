@@ -83,6 +83,7 @@ export type Filters = {
   funding?: string;
   level?: string;
   location?: string;
+  topic?: string;
   /** hide listings whose deadline has passed (default true) */
   hideClosed?: boolean;
   featuredOnly?: boolean;
@@ -104,6 +105,7 @@ function matches(o: Opportunity, f: Filters): boolean {
   if (f.funding && o.funding !== f.funding) return false;
   if (f.level && o.level !== f.level) return false;
   if (f.location && o.location !== f.location) return false;
+  if (f.topic && o.topic !== f.topic) return false;
   if (f.featuredOnly && !o.featured) return false;
   if (f.hideClosed !== false) {
     const d = daysUntil(o.deadline);
@@ -119,7 +121,7 @@ function matches(o: Opportunity, f: Filters): boolean {
 
 // What a card needs. The long text (description, eligibility, benefits, how to apply) is only loaded on a detail page.
 const LIST_COLUMNS =
-  'id,slug,category,title,provider,summary,location,level,funding,deadline,source_url,image_url,coupon_code,featured,created_at,updated_at';
+  'id,slug,category,title,provider,summary,location,level,funding,deadline,source_url,image_url,coupon_code,topic,offer_type,featured,created_at,updated_at';
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
@@ -144,6 +146,7 @@ export async function getOpportunities(filters: Filters = {}): Promise<Page<Oppo
   if (filters.funding) query.funding = `eq.${filters.funding}`;
   if (filters.level) query.level = `eq.${filters.level}`;
   if (filters.location) query.location = `eq.${filters.location}`;
+  if (filters.topic) query.topic = `eq.${filters.topic}`;
   if (filters.featuredOnly) query.featured = 'eq.true';
 
   const and: string[] = [];
@@ -167,6 +170,8 @@ function normaliseOpportunity(o: Opportunity): Opportunity {
     how_to_apply: o.how_to_apply ?? '',
     image_url: o.image_url ?? null,
     coupon_code: o.coupon_code ?? null,
+    topic: o.topic ?? null,
+    offer_type: o.offer_type ?? null,
     is_sample: false,
   };
 }
@@ -186,19 +191,19 @@ export async function getOpportunity(category: CategorySlug, slug: string): Prom
 }
 
 /** Distinct values used to build the filter drop-downs for a category. */
-export async function getFacets(category: CategorySlug): Promise<{ levels: string[]; locations: string[] }> {
+export async function getFacets(category: CategorySlug): Promise<{ levels: string[]; locations: string[]; topics: string[] }> {
   const uniq = (xs: string[]) => [...new Set(xs.filter(Boolean))].sort((a, b) => a.localeCompare(b));
   if (!usingSupabase) {
     const items = SEED_OPPORTUNITIES.filter((o) => o.category === category);
-    return { levels: uniq(items.map((i) => i.level)), locations: uniq(items.map((i) => i.location)) };
+    return { levels: uniq(items.map((i) => i.level)), locations: uniq(items.map((i) => i.location)), topics: uniq(items.map((i) => i.topic ?? '')) };
   }
-  const rows = await rest<{ level: string; location: string }>('opportunities', {
-    select: 'level,location',
+  const rows = await rest<{ level: string; location: string; topic: string | null }>('opportunities', {
+    select: 'level,location,topic',
     published: 'eq.true',
     category: `eq.${category}`,
     limit: '1000',
   });
-  return { levels: uniq(rows.map((r) => r.level)), locations: uniq(rows.map((r) => r.location)) };
+  return { levels: uniq(rows.map((r) => r.level)), locations: uniq(rows.map((r) => r.location)), topics: uniq(rows.map((r) => r.topic ?? '')) };
 }
 
 /** How many open listings each category has. One tiny count query per category instead of downloading rows. */

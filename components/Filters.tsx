@@ -6,12 +6,14 @@ type Props = {
   category: Category;
   levels: string[];
   locations: string[];
-  values: { q?: string; funding?: string; level?: string; location?: string };
+  /** when given, a topic filter is shown (student offers) */
+  topics?: string[];
+  values: { q?: string; funding?: string; level?: string; location?: string; topic?: string };
 };
 
 /** A plain GET form, so searching and filtering work without any JavaScript. */
-export default function Filters({ category, levels, locations, values }: Props) {
-  const active = Boolean(values.q || values.funding || values.level || values.location);
+export default function Filters({ category, levels, locations, topics, values }: Props) {
+  const active = Boolean(values.q || values.funding || values.level || values.location || values.topic);
   return (
     <form className="filters" method="get" action={`/${category.slug}`} role="search" aria-label={`Search ${category.label}`}>
       <label className="filters__search">
@@ -19,6 +21,7 @@ export default function Filters({ category, levels, locations, values }: Props) 
         <SearchIcon className="filters__icon" />
         <input type="search" name="q" defaultValue={values.q ?? ''} placeholder={`Search ${category.label.toLowerCase()}`} maxLength={60} />
       </label>
+      {topics && topics.length > 0 ? <Select name="topic" label="Topic" options={topics} value={values.topic} /> : null}
       <Select name="funding" label={category.fundingLabel} options={category.fundingOptions} value={values.funding} />
       <Select name="level" label="Level" options={levels} value={values.level} />
       <Select name="location" label="Location" options={locations} value={values.location} />
