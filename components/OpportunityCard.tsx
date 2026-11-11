@@ -4,6 +4,8 @@ import DeadlineRing from './DeadlineRing';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from './Icons';
 import { getCategory } from '../lib/categories';
 import { urgency } from '../lib/dates';
+import { eventTiming } from './events/timing';
+import { offerTiming } from './student-offers/timing';
 import type { Opportunity } from '../lib/types';
 
 /** `priority` is for cards at the top of a page: their picture loads straight away instead of waiting until it scrolls near. */
@@ -17,7 +19,8 @@ export default function OpportunityCard({
   priority?: boolean;
 }) {
   const cat = getCategory(item.category);
-  const u = urgency(item.deadline);
+  // Events happen on a date and offers end, so they are not worded as "closing".
+  const u = item.category === 'events' ? eventTiming(item.deadline) : item.category === 'student-offers' ? offerTiming(item.deadline) : urgency(item.deadline);
   return (
     <article className="card">
       {item.is_sample ? null : <SaveButton category={item.category} slug={item.slug} title={item.title} variant="icon" />}

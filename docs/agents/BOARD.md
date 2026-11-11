@@ -6,7 +6,7 @@ Status values: `Not started` | `In progress` | `Blocked` | `Ready for review` | 
 
 | Area | Agent | Status | Preview path |
 |---|---|---|---|
-| Foundation, shared UI, data layer | 1 | Not started | everything |
+| Foundation, shared UI, data layer | 1 | In progress | everything |
 | Scholarships | 2 | Not started | /scholarships |
 | Fellowships and Grants | 3 | Not started | /fellowships, /grants |
 | Courses | 4 | Not started | /courses |
