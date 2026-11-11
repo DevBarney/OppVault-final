@@ -12,7 +12,7 @@ import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
 import { daysUntil, formatDate } from '../lib/dates';
 import { withSocial } from '../lib/seo';
 import HeroDial from '../components/HeroDial';
-import { HeroVaultStatus, HeroVaultWall } from '../components/HeroVaultWall';
+import { HeroVaultStatus } from '../components/HeroVaultWall';
 
 export const metadata: Metadata = withSocial({ alternates: { canonical: '/' } });
 
@@ -38,7 +38,6 @@ export default async function HomePage() {
           <span />
           <span />
         </div>
-        <HeroVaultWall />
         <HeroDial next={closing.items.find((o) => o.deadline && (daysUntil(o.deadline) ?? -1) >= 0)} />
         <div className="container hero__grid">
           <div className="hero__head">
