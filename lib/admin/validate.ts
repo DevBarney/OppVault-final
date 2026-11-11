@@ -139,6 +139,11 @@ export function parseDate(value: string): string | null | undefined {
     const mi = MONTHS.indexOf(match[2].slice(0, 3).toLowerCase());
     if (mi < 0) return undefined;
     [d, m, y] = [Number(match[1]), mi + 1, Number(match[3])];
+  } else if ((match = v.match(/^([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})$/))) {
+    // "February 24, 2027" and "Feb. 24 2027"
+    const mi = MONTHS.indexOf(match[1].slice(0, 3).toLowerCase());
+    if (mi < 0) return undefined;
+    [d, m, y] = [Number(match[2]), mi + 1, Number(match[3])];
   } else {
     return undefined;
   }
@@ -225,7 +230,7 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
     if (!summary && description) summary = description.replace(/\s+/g, ' ').slice(0, 200);
 
     const deadline = parseDate(get('deadline', 40));
-    if (deadline === undefined) problems.push(`deadline "${get('deadline', 40)}" is not a date. Use YYYY-MM-DD, DD/MM/YYYY, or leave empty for rolling`);
+    if (deadline === undefined) problems.push(`deadline "${get('deadline', 40)}" is not a date. Use YYYY-MM-DD, DD/MM/YYYY or 24 February 2027 (or leave empty for rolling)`);
 
     const featured = parseBool(get('featured', 10), false);
     if (featured === null) problems.push('featured must be yes or no');
