@@ -75,7 +75,7 @@ export default async function OpportunityPage({ params }: Props) {
               </div>
             ) : null}
             <p className="detail__lead">{item.summary}</p>
-            {item.description ? <Prose text={item.description} /> : null}
+            {item.description ? <Prose text={item.description} protect /> : null}
 
             {item.eligibility.length > 0 ? (
               <>

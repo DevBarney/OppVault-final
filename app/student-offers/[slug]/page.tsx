@@ -89,7 +89,7 @@ export default async function StudentOfferPage({ params }: Props) {
 
             <h2 className="detail__h off-first">What the offer is</h2>
             <p className="detail__lead">{item.summary}</p>
-            {item.description ? <Prose text={item.description} /> : null}
+            {item.description ? <Prose text={item.description} protect /> : null}
 
             {item.eligibility.length > 0 ? (
               <>

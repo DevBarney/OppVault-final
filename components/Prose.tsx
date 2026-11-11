@@ -7,7 +7,8 @@ import type { ReactNode } from 'react';
  *   anything else     -> paragraph (blank line between paragraphs)
  * Text is always rendered as text, never as HTML.
  */
-export default function Prose({ text }: { text: string }) {
+/** `protect` stops easy text selection on long descriptions. It is a light deterrent only; titles, dates, links and codes stay copyable. */
+export default function Prose({ text, protect = false }: { text: string; protect?: boolean }) {
   const blocks = text.split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
   const out: ReactNode[] = [];
   blocks.forEach((block, i) => {
@@ -32,5 +33,5 @@ export default function Prose({ text }: { text: string }) {
       }
     }
   });
-  return <div className="prose-body">{out}</div>;
+  return <div className={protect ? "prose-body prose-body--protect" : "prose-body"}>{out}</div>;
 }

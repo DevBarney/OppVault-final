@@ -90,7 +90,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <ul>
         <li>Do not try to break, overload or get around the security of the site.</li>
-        <li>Do not copy the whole site or collect its listings automatically without asking us first.</li>
+        <li>Do not copy the whole site, or collect, scrape or republish its listings and descriptions, by hand or with a tool, without our written permission. We may slow down or block visitors who do.</li>
         <li>Do not use OppVault to send spam or to pretend to be someone else.</li>
       </ul>
     ),
