@@ -14,6 +14,15 @@ export default function Interactions() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+    // Endless background motion is paused whenever it is scrolled out of view.
+    let seen: IntersectionObserver | null = null;
+    if ('IntersectionObserver' in window) {
+      seen = new IntersectionObserver((entries) => {
+        for (const entry of entries) (entry.target as HTMLElement).dataset.paused = entry.isIntersecting ? 'false' : 'true';
+      });
+      document.querySelectorAll('.hero, .hero__aurora, .hdial, .chero__emblem, .abt-vaultwrap, .abt-quote, .acct-empty').forEach((el) => seen?.observe(el));
+    }
+
     const onDown = (event: PointerEvent) => {
       const target = event.target as Element | null;
       const btn = target?.closest<HTMLElement>('.btn');
@@ -54,6 +63,7 @@ export default function Interactions() {
     document.addEventListener('pointerdown', onDown, { passive: true });
     if (fine) document.addEventListener('pointermove', onMove, { passive: true });
     return () => {
+      seen?.disconnect();
       document.removeEventListener('pointerdown', onDown);
       document.removeEventListener('pointermove', onMove);
       if (frame) window.cancelAnimationFrame(frame);

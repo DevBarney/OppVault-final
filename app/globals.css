@@ -2784,3 +2784,34 @@ body > main { min-height: 50vh; }
 .tt__count { flex: none; min-width: 28px; padding: 2px 8px; border-radius: 999px; background: var(--pale); color: var(--royal); font-size: 0.75rem; font-weight: 500; text-align: center; }
 .tt__tile.is-active .tt__count { background: rgba(255, 255, 255, 0.18); color: #fff; }
 @media (prefers-reduced-motion: reduce) { .tt__tile { transition: none; } .tt__tile:hover { transform: none; } }
+
+/* ---------- Performance: calmer ambient motion ----------
+   Entrance animations and anything that answers a tap or click stay as they were. What changes is the
+   endless background motion: it is lighter on every screen, off on phones and touch devices, and paused
+   whenever it is scrolled out of view (see Interactions.tsx). */
+html .hero__aurora span:nth-child(n) { animation: none; filter: none; will-change: auto; opacity: 0.42; } /* big blurred blobs are the costliest paint, so they stay still */
+html .abt-rays { animation: none; }
+html .abt-halo { animation: none; }
+html [data-paused='true'],
+html [data-paused='true']::before,
+html [data-paused='true']::after,
+html [data-paused='true'] *,
+html [data-paused='true'] *::before,
+html [data-paused='true'] *::after { animation-play-state: paused !important; }
+
+@media (max-width: 767px), (hover: none) {
+  html .hero::before,
+  html .hero__aurora::before,
+  html .hero__aurora::after,
+  html .orbit,
+  html .abt-vault__dial,
+  html .abt-vault__glow,
+  html .abt-vault__wheel,
+  html .chero__ticks,
+  html .chero__ring--dash,
+  html .ring--urgent,
+  html .acct-empty__tile,
+  html .abt-quote__rings span,
+  html .abt-box--next,
+  html .abt-box--lit { animation: none; }
+}
