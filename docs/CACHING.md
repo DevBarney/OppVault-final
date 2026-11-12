@@ -14,7 +14,7 @@ Plain summary for whoever looks after the site.
 
 ## Files and images
 - `/_next/static/*` (code, CSS, fonts) is fingerprinted and cached for a year by Next.js. Do nothing.
-- `og.png`, `logo-horizontal.png`, `email-logo.png`: 1 day, then a week of "serve the old one while checking". If you replace one, give the new file a new name, or wait a day.
+- `og-oppvault.png`, `logo-horizontal.png`, `email-logo.png`: 1 day, then a week of "serve the old one while checking". If you replace one, give the new file a new name, or wait a day.
 - Calendar files (`/api/calendar/...`): 1 hour, plus a day of stale-while-revalidate.
 - Listing thumbnails come from other websites and are not cached by us.
 
