@@ -10,7 +10,7 @@ const nextConfig = {
       // (and serve a stale copy for a week while checking for a new one). email-logo.png is fetched by
       // mail apps every time someone opens one of our emails, so it matters most here.
       {
-        source: '/(og\\.png|logo-horizontal\\.png|email-logo\\.png)',
+        source: '/(og-oppvault\\.png|logo-horizontal\\.png|email-logo\\.png)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' }],
       },
       {
