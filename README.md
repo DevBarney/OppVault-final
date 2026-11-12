@@ -34,7 +34,7 @@ Visitors can only read published rows; they can never write.
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://fsznoimnvntxkvvfqpng.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | the anon (or publishable) key from Supabase > Project Settings > API |
 | `NEXT_PUBLIC_SITE_URL` | `https://oppvault.app` |
-| `RESEND_API_KEY`, `RESEND_SEGMENT_ID`, `RESEND_FROM` | newsletter, as on the preview page |
+| `RESEND_API_KEY`, `RESEND_SEGMENT_ID`, `RESEND_FROM` | newsletter (set them for Production as well as Preview) |
 
 ## Honesty rules built in
 

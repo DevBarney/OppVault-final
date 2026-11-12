@@ -45,7 +45,7 @@ async function rs<T = unknown>(path: string, init: RequestInit = {}, retry = tru
     error = !key.startsWith('re_')
       ? 'RESEND_API_KEY in Vercel does not look like a Resend key (it should start with re_). Copy the key itself, not its name or ID.'
       : res.status === 401
-        ? 'Resend rejected the API key. Create a new key in Resend with Full access, replace RESEND_API_KEY on the preview, and redeploy.'
+        ? 'Resend rejected the API key. Create a new key in Resend with Full access, replace RESEND_API_KEY in Vercel (Production), and redeploy.'
         : 'This Resend key is not allowed to do that. Use a key with Full access (a "Sending access" key cannot read subscribers).';
   }
   return { ok: res.ok, status: res.status, data: data as T, error };
@@ -193,7 +193,7 @@ export async function sendNotification(input: { to: string; subject: string; lin
   }
 }
 
-/** The address this admin is being used from, so links in emails open the right site (preview or live). */
+/** The address this admin is being used from, so links in emails open the right site (live or a test deployment). */
 export function originOf(request: Request): string {
   const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
   return host ? `https://${host}` : 'https://oppvault.app';
