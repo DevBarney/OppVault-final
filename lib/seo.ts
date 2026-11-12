@@ -7,7 +7,7 @@
 import type { Metadata } from 'next';
 import { TAGLINE } from './config';
 
-const DEFAULT_IMAGE = { url: '/og.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` };
+const DEFAULT_IMAGE = { url: '/og-oppvault.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` };
 
 type Options = { type?: 'website' | 'article'; image?: string; publishedTime?: string };
 

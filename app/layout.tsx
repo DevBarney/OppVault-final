@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     siteName: 'OppVault',
     title: `OppVault | ${TAGLINE}`,
     description: DESCRIPTION,
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` }],
+    images: [{ url: '/og-oppvault.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` }],
   },
-  twitter: { card: 'summary_large_image', site: '@oppvault', images: ['/og.png'] },
+  twitter: { card: 'summary_large_image', site: '@oppvault', images: ['/og-oppvault.png'] },
 };
 
 export const viewport: Viewport = { themeColor: '#04106B' };
