@@ -84,6 +84,8 @@ export type Filters = {
   level?: string;
   location?: string;
   topic?: string;
+  /** 'applied' ranks by how many visitors marked a listing applied (then saved), then by deadline */
+  sort?: 'closing' | 'applied';
   /** hide listings whose deadline has passed (default true) */
   hideClosed?: boolean;
   featuredOnly?: boolean;
@@ -125,9 +127,58 @@ const LIST_COLUMNS =
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
+export type Activity = { applied: number; saved: number };
+
+/** Applied and saved counts per listing ("category/slug"). Empty when unknown or the database is not set up. */
+export async function getActivity(category?: CategorySlug): Promise<Map<string, Activity>> {
+  const map = new Map<string, Activity>();
+  if (!URL_BASE || !ANON_KEY) return map;
+  const qs = new URLSearchParams(category ? { p_category: category } : {}).toString();
+  try {
+    const res = await fetch(`${URL_BASE}/rest/v1/rpc/listing_activity?${qs}`, {
+      headers: { apikey: ANON_KEY, ...(ANON_KEY.startsWith('eyJ') ? { authorization: `Bearer ${ANON_KEY}` } : {}), accept: 'application/json' },
+      next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return map;
+    const rows = (await res.json()) as { category: string; slug: string; applied: number; saved: number }[];
+    for (const r of rows) map.set(`${r.category}/${r.slug}`, { applied: Number(r.applied) || 0, saved: Number(r.saved) || 0 });
+  } catch {
+    /* no activity data: lists simply stay in closing-date order */
+  }
+  return map;
+}
+
+/** True once at least one listing in the category has enough "I applied" marks to be worth ranking by. */
+export async function hasEnoughActivity(category: CategorySlug): Promise<boolean> {
+  const map = await getActivity(category);
+  for (const a of map.values()) if (a.applied >= APPLIED_MIN_PUBLIC) return true;
+  return false;
+}
+
+function byActivity(map: Map<string, Activity>) {
+  return (a: Opportunity, b: Opportunity): number => {
+    const x = map.get(`${a.category}/${a.slug}`) ?? { applied: 0, saved: 0 };
+    const y = map.get(`${b.category}/${b.slug}`) ?? { applied: 0, saved: 0 };
+    return y.applied - x.applied || y.saved - x.saved || sortByDeadline(a, b);
+  };
+}
+
 export async function getOpportunities(filters: Filters = {}): Promise<Page<Opportunity>> {
   const limit = filters.limit ?? 12;
   const offset = filters.offset ?? 0;
+
+  if (filters.sort === 'applied') {
+    // Ranking needs every matching row, so load them (capped) and sort here, then cut the page.
+    const { sort: _sort, limit: _l, offset: _o, ...rest } = filters;
+    void _sort; void _l; void _o;
+    const [{ items: all, total }, activity] = await Promise.all([
+      getOpportunities({ ...rest, limit: 1000, offset: 0 }),
+      getActivity(filters.category),
+    ]);
+    const ranked = [...all].sort(byActivity(activity)).map((o) => ({ ...o, applied_count: activity.get(`${o.category}/${o.slug}`)?.applied ?? 0 }));
+    return { items: ranked.slice(offset, offset + limit), total };
+  }
 
   if (!usingSupabase) {
     const all = SEED_OPPORTUNITIES.filter((o) => matches(o, filters)).sort(sortByDeadline);

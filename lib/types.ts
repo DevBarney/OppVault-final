@@ -20,6 +20,7 @@ export type Opportunity = {
   coupon_code?: string | null; // shown on the detail page when present
   topic?: string | null; // student offers: what it is about, used for the topic filter
   offer_type?: 'free' | 'free_trial' | 'discount' | 'credit' | null; // student offers
+  applied_count?: number; // only set when a list is sorted by most applied
   featured: boolean;
   is_sample: boolean; // sample listings are shown with a "Sample" badge
   created_at: string;

@@ -1,3 +1,4 @@
+import { APPLIED_MIN_PUBLIC } from '../../lib/data';
 import Link from 'next/link';
 import SaveButton from '../account/SaveButton';
 import DeadlineRing from '../DeadlineRing';
@@ -37,6 +38,9 @@ export default function OfferCard({ item }: { item: Opportunity }) {
             <ClockIcon className="urgency__icon" />
             {t.text}
           </span>
+          {item.applied_count !== undefined && item.applied_count >= APPLIED_MIN_PUBLIC ? (
+            <span className="card__applied">{item.applied_count} applied</span>
+          ) : null}
           <span className="card__go" aria-hidden="true">
             <DeadlineRing deadline={item.deadline} />
             <ArrowIcon className="card__go-icon" />

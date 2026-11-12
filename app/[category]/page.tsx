@@ -6,7 +6,7 @@ import CategoryHero from '../../components/CategoryHero';
 import Pagination from '../../components/Pagination';
 import Reveal from '../../components/Reveal';
 import { CATEGORIES, getCategory } from '../../lib/categories';
-import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
+import { getFacets, getOpportunities, hasEnoughActivity, usingSupabase } from '../../lib/data';
 import { listIndexing, withSocial } from '../../lib/seo';
 
 export const dynamicParams = false;
@@ -34,11 +34,13 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   if (!cat) notFound();
   const sp = await searchParams;
   const values = { q: one(sp.q)?.slice(0, 60), funding: one(sp.funding), level: one(sp.level), location: one(sp.location) };
+  const sort = one(sp.sort) === 'applied' ? ('applied' as const) : undefined;
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
-  const [{ items, total }, facets] = await Promise.all([
-    getOpportunities({ category: cat.slug, ...values, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
+  const [{ items, total }, facets, rankable] = await Promise.all([
+    getOpportunities({ category: cat.slug, ...values, sort, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
     getFacets(cat.slug),
+    hasEnoughActivity(cat.slug),
   ]);
   const pages = Math.max(1, Math.ceil(total / PER_PAGE));
   const filtered = Boolean(values.q || values.funding || values.level || values.location);
@@ -49,7 +51,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No listings found' : `${total} ${total === 1 ? 'listing' : 'listings'}`}
@@ -82,7 +84,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
           <Pagination
             basePath={`/${cat.slug}`}
-            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location }}
+            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, sort }}
             page={page}
             pages={pages}
           />

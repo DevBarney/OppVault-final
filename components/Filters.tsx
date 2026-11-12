@@ -8,12 +8,14 @@ type Props = {
   locations: string[];
   /** when given, a topic filter is shown (student offers) */
   topics?: string[];
-  values: { q?: string; funding?: string; level?: string; location?: string; topic?: string };
+    /** show the sort drop-down (only once there is enough activity to rank by) */
+  showSort?: boolean;
+  values: { q?: string; funding?: string; level?: string; location?: string; topic?: string; sort?: string };
 };
 
 /** A plain GET form, so searching and filtering work without any JavaScript. */
-export default function Filters({ category, levels, locations, topics, values }: Props) {
-  const active = Boolean(values.q || values.funding || values.level || values.location || values.topic);
+export default function Filters({ category, levels, locations, topics, showSort, values }: Props) {
+  const active = Boolean(values.q || values.funding || values.level || values.location || values.topic || values.sort);
   return (
     <form className="filters" method="get" action={`/${category.slug}`} role="search" aria-label={`Search ${category.label}`}>
       <label className="filters__search">
@@ -25,6 +27,15 @@ export default function Filters({ category, levels, locations, topics, values }:
       <Select name="funding" label={category.fundingLabel} options={category.fundingOptions} value={values.funding} />
       <Select name="level" label="Level" options={levels} value={values.level} />
       <Select name="location" label="Location" options={locations} value={values.location} />
+      {showSort ? (
+        <label className="filters__select">
+          <span className="filters__label">Sort by</span>
+          <select name="sort" defaultValue={values.sort === 'applied' ? 'applied' : ''}>
+            <option value="">Closing soon</option>
+            <option value="applied">Most applied on OppVault</option>
+          </select>
+        </label>
+      ) : null}
       <div className="filters__actions">
         <button className="btn btn--primary btn--sm" type="submit">
           <span>Apply</span>

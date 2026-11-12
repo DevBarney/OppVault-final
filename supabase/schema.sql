@@ -253,3 +253,28 @@ as $$
 $$;
 revoke all on function public.applied_count(text, text) from public;
 grant execute on function public.applied_count(text, text) to anon, authenticated;
+-- Public, aggregate-only activity per listing: how many visitors marked it applied or saved it.
+-- Used to offer a "Most applied" sort. No user ids are returned.
+create or replace function public.listing_activity(p_category text default null)
+returns table(category text, slug text, applied integer, saved integer)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select k.category, k.slug,
+         coalesce(a.n, 0)::integer as applied,
+         coalesce(s.n, 0)::integer as saved
+  from (
+    select ai.category, ai.slug from public.applied_items ai
+    union
+    select si.category, si.slug from public.saved_items si
+  ) k
+  left join (select ai.category, ai.slug, count(*) as n from public.applied_items ai group by ai.category, ai.slug) a
+    on a.category = k.category and a.slug = k.slug
+  left join (select si.category, si.slug, count(*) as n from public.saved_items si group by si.category, si.slug) s
+    on s.category = k.category and s.slug = k.slug
+  where p_category is null or k.category = p_category;
+$$;
+revoke all on function public.listing_activity(text) from public;
+grant execute on function public.listing_activity(text) to anon, authenticated;

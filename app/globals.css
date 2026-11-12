@@ -2815,3 +2815,6 @@ html [data-paused='true'] *::after { animation-play-state: paused !important; }
   html .abt-box--next,
   html .abt-box--lit { animation: none; }
 }
+
+/* "N applied" note on a card, shown when a list is sorted by most applied */
+.card__applied { margin-inline-start: auto; font-size: 0.8125rem; font-weight: 600; color: var(--royal); white-space: nowrap; }

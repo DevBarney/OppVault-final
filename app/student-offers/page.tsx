@@ -9,7 +9,7 @@ import Reveal from '../../components/Reveal';
 import TopicTiles from '../../components/TopicTiles';
 import OfferCard from '../../components/student-offers/OfferCard';
 import { getCategory } from '../../lib/categories';
-import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
+import { getFacets, getOpportunities, hasEnoughActivity, usingSupabase } from '../../lib/data';
 import './offers.css';
 
 const PER_PAGE = 9;
@@ -32,12 +32,14 @@ export default async function StudentOffersPage({ searchParams }: Props) {
   if (!cat) notFound();
   const sp = await searchParams;
   const values = { q: one(sp.q)?.slice(0, 60), funding: one(sp.funding), level: one(sp.level), location: one(sp.location), topic: one(sp.topic) };
+  const sort = one(sp.sort) === 'applied' ? ('applied' as const) : undefined;
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
   // Offers that have ended are hidden by the shared query, so the list only shows offers you can still use.
-  const [{ items, total }, facets] = await Promise.all([
-    getOpportunities({ category: 'student-offers', ...values, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
+  const [{ items, total }, facets, rankable] = await Promise.all([
+    getOpportunities({ category: 'student-offers', ...values, sort, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
     getFacets('student-offers'),
+    hasEnoughActivity('student-offers'),
   ]);
   const pages = Math.max(1, Math.ceil(total / PER_PAGE));
   const filtered = Boolean(values.q || values.funding || values.level || values.location || values.topic);
@@ -55,7 +57,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <TopicTiles basePath="/student-offers" topics={facets.topics} counts={facets.topicCounts} active={values.topic} label="Browse by topic" />
 
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} topics={facets.topics} values={values} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} topics={facets.topics} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No offers found' : `${total} ${total === 1 ? 'offer' : 'offers'}`}
@@ -88,7 +90,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <Pagination
             basePath="/student-offers"
-            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location }}
+            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, topic: values.topic, sort }}
             page={page}
             pages={pages}
           />
