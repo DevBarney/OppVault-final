@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import './account.css';
 import { NOTE_MAX, STATUSES, type StatusId } from '../../lib/account/statuses';
@@ -26,6 +26,7 @@ async function save(row: TrackRow, change: Partial<Pick<TrackRow, 'status' | 'ap
       credentials: 'same-origin',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ category: row.category, slug: row.slug, ...change }),
+      keepalive: true, // lets a note still go through if the page is closed straight after typing
     });
     if (res.ok) return '';
     const data = (await res.json().catch(() => ({}))) as { error?: string };
@@ -40,6 +41,9 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
   const [msg, setMsg] = useState('');
   const [error, setError] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typing = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draft = useRef(initial.note); // what is in the box right now
+  const kept = useRef(initial.note); // what is saved
   const key = `${row.category}-${row.slug}`;
 
   function flash(text: string) {
@@ -50,10 +54,12 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
 
   async function commit(change: Partial<Pick<TrackRow, 'status' | 'applied_on' | 'note'>>) {
     const before = row;
+    if (typeof change.note === 'string') kept.current = change.note;
     setRow({ ...row, ...change });
     setError('');
     const problem = await save(before, change);
     if (problem) {
+      if (typeof change.note === 'string') kept.current = before.note;
       setRow(before);
       setError(problem);
       return;
@@ -61,6 +67,30 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
     if (change.status) onStatus(key, change.status);
     flash('Saved');
   }
+
+  /** Save the note a moment after typing stops, when the box is left, and if the page is closed. */
+  function noteChanged(value: string) {
+    draft.current = value;
+    if (typing.current) clearTimeout(typing.current);
+    typing.current = setTimeout(() => {
+      if (draft.current !== kept.current) commit({ note: draft.current ?? '' });
+    }, 900);
+  }
+
+  useEffect(() => {
+    const flush = () => {
+      if (draft.current !== kept.current) {
+        kept.current = draft.current;
+        void save(initial, { note: draft.current ?? '' });
+      }
+    };
+    window.addEventListener('pagehide', flush);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      if (typing.current) clearTimeout(typing.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <li className="trk-row" data-status={row.status}>
@@ -105,8 +135,11 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
           maxLength={NOTE_MAX}
           placeholder="Reference number, who you spoke to, documents you sent, next step"
           defaultValue={row.note}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => noteChanged(e.target.value)}
           onBlur={(e: { target: { value: string } }) => {
-            if (e.target.value !== row.note) commit({ note: e.target.value });
+            if (typing.current) clearTimeout(typing.current);
+            draft.current = e.target.value;
+            if (e.target.value !== kept.current) commit({ note: e.target.value });
           }}
         />
       </label>

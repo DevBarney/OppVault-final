@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import AccountTabs from '../../../components/account/AccountTabs';
+import MarkApplied, { type SavedPick } from '../../../components/account/MarkApplied';
 import Tracker, { type TrackRow } from '../../../components/account/Tracker';
 import VaultDoor from '../../../components/VaultDoor';
 import { listTracked } from '../../../lib/account/applied';
+import { listSaved } from '../../../lib/account/saved';
 import { currentVisitor } from '../../../lib/account/server';
 import type { CategorySlug } from '../../../lib/categories';
 import { getOpportunity } from '../../../lib/data';
@@ -21,7 +23,14 @@ export default async function ApplicationsPage() {
   if (visitor === 'refresh') redirect('/api/account/refresh?next=%2Faccount%2Fapplications');
   if (!visitor) redirect('/account/sign-in?next=%2Faccount%2Fapplications');
 
-  const tracked = (await listTracked(visitor.accessToken)).slice(0, SHOW_MAX);
+  const [allTracked, saved] = await Promise.all([listTracked(visitor.accessToken), listSaved(visitor.accessToken)]);
+  // Live applications first, finished ones (not selected, withdrawn) after, each group keeping its newest-first order.
+  const finished = (st: string) => st === 'not_selected' || st === 'withdrawn';
+  const tracked = [...allTracked.filter((t) => !finished(t.status)), ...allTracked.filter((t) => finished(t.status))].slice(0, SHOW_MAX);
+  const have = new Set(allTracked.map((t) => `${t.category}/${t.slug}`));
+  const notYet = saved.filter((r) => !have.has(`${r.category}/${r.slug}`));
+  const pickFound = await Promise.all(notYet.slice(0, 5).map((r) => getOpportunity(r.category as CategorySlug, r.slug)));
+  const picks: SavedPick[] = pickFound.flatMap((o) => (o ? [{ category: o.category, slug: o.slug, title: o.title, provider: o.provider }] : []));
   const found = await Promise.all(tracked.map((t) => getOpportunity(t.category as CategorySlug, t.slug)));
   const rows: TrackRow[] = tracked.map((t, i) => {
     const o = found[i];
@@ -62,6 +71,8 @@ export default async function ApplicationsPage() {
       <section className="section section--list">
         <div className="container">
           <AccountTabs current="applications" />
+          <p className="acct-note acct-note--lead">The status, date and note are yours. They are not confirmed by the provider, so always check the official page for the real outcome.</p>
+          {picks.length > 0 ? <MarkApplied picks={picks} more={Math.max(0, notYet.length - picks.length)} /> : null}
           {rows.length === 0 ? (
             <div className="acct-empty">
               <h2 className="acct-empty__title">No applications yet</h2>

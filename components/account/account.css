@@ -190,3 +190,12 @@
 .trk-field select:focus-visible, .trk-field input:focus-visible, .trk-field textarea:focus-visible { outline: 3px solid var(--sky); outline-offset: 1px; }
 .trk-row[data-status='offer'] { border-color: var(--gold); }
 .trk-row[data-status='not_selected'], .trk-row[data-status='withdrawn'] { background: var(--tint); }
+.acct-note--lead { margin: 0 0 20px; }
+.trk-prompt { margin: 0 0 24px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: var(--tint); }
+.trk-prompt__title { margin: 0; font-size: 1.05rem; color: var(--navy); }
+.trk-prompt__text { margin: 4px 0 12px; color: var(--muted); font-size: 0.9rem; }
+.trk-prompt__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.trk-prompt__list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+.trk-prompt__name { display: grid; min-width: 0; }
+.trk-prompt__name a { color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+.trk-prompt__name small { color: var(--muted); }
