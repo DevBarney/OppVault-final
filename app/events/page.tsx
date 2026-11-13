@@ -55,7 +55,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} values={values} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} values={values} />
 
           <p className="results-count" aria-live="polite">
             {total === 0

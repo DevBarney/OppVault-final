@@ -51,7 +51,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No listings found' : `${total} ${total === 1 ? 'listing' : 'listings'}`}

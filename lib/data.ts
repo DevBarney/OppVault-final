@@ -242,20 +242,20 @@ export async function getOpportunity(category: CategorySlug, slug: string): Prom
 }
 
 /** Distinct values used to build the filter drop-downs for a category. */
-export async function getFacets(category: CategorySlug): Promise<{ levels: string[]; locations: string[]; topics: string[]; topicCounts: Record<string, number> }> {
+export async function getFacets(category: CategorySlug): Promise<{ levels: string[]; locations: string[]; topics: string[]; fundings: string[]; topicCounts: Record<string, number> }> {
   const uniq = (xs: string[]) => [...new Set(xs.filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const countBy = (xs: string[]) => xs.filter(Boolean).reduce<Record<string, number>>((m, x) => ({ ...m, [x]: (m[x] ?? 0) + 1 }), {});
   if (!usingSupabase) {
     const items = SEED_OPPORTUNITIES.filter((o) => o.category === category);
-    return { levels: uniq(items.map((i) => i.level)), locations: uniq(items.map((i) => i.location)), topics: uniq(items.map((i) => i.topic ?? '')), topicCounts: countBy(items.map((i) => i.topic ?? '')) };
+    return { levels: uniq(items.map((i) => i.level)), locations: uniq(items.map((i) => i.location)), topics: uniq(items.map((i) => i.topic ?? '')), fundings: uniq(items.map((i) => i.funding)), topicCounts: countBy(items.map((i) => i.topic ?? '')) };
   }
-  const rows = await rest<{ level: string; location: string; topic: string | null }>('opportunities', {
-    select: 'level,location,topic',
+  const rows = await rest<{ level: string; location: string; topic: string | null; funding: string | null }>('opportunities', {
+    select: 'level,location,topic,funding',
     published: 'eq.true',
     category: `eq.${category}`,
     limit: '1000',
   });
-  return { levels: uniq(rows.map((r) => r.level)), locations: uniq(rows.map((r) => r.location)), topics: uniq(rows.map((r) => r.topic ?? '')), topicCounts: countBy(rows.map((r) => r.topic ?? '')) };
+  return { levels: uniq(rows.map((r) => r.level)), locations: uniq(rows.map((r) => r.location)), topics: uniq(rows.map((r) => r.topic ?? '')), fundings: uniq(rows.map((r) => r.funding ?? '')), topicCounts: countBy(rows.map((r) => r.topic ?? '')) };
 }
 
 /** How many open listings each category has. One tiny count query per category instead of downloading rows. */

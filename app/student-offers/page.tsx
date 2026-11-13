@@ -57,7 +57,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <TopicTiles basePath="/student-offers" topics={facets.topics} counts={facets.topicCounts} active={values.topic} label="Browse by topic" />
 
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} topics={facets.topics} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} topics={facets.topics} showSort={rankable || sort === 'applied'} values={{ ...values, sort }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No offers found' : `${total} ${total === 1 ? 'offer' : 'offers'}`}
