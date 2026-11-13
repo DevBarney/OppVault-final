@@ -10,6 +10,19 @@ import { useEffect } from 'react';
  * Nothing runs for people who have asked their device to reduce motion.
  */
 export default function Interactions() {
+  // Safety net for sign-in. If the sign-in service sends someone back to a page other than the callback
+  // (its list of allowed return addresses can be missing one), the session arrives in the address
+  // after the "#". Pass it on to the callback page so the visitor still ends up signed in.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (window.location.pathname.startsWith('/account/callback')) return;
+    if (/(^|[#&])access_token=/.test(hash) && /[#&]refresh_token=/.test(hash)) {
+      window.location.replace(`/account/callback${hash}`);
+    } else if (/[#&]error_description=/.test(hash) && /[#&]error=/.test(hash)) {
+      window.location.replace(`/account/callback${hash}`);
+    }
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
