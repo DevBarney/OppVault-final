@@ -293,3 +293,22 @@ alter table public.opportunities
   ) stored;
 create index if not exists opportunities_search_text_trgm_idx
   on public.opportunities using gin (search_text extensions.gin_trgm_ops);
+
+-- Application tracker: each "I applied" row also records where the application stands, when it was sent and a private note.
+alter table public.applied_items
+  add column if not exists status text not null default 'applied',
+  add column if not exists applied_on date,
+  add column if not exists note text not null default '',
+  add column if not exists updated_at timestamptz not null default now();
+update public.applied_items set applied_on = created_at::date where applied_on is null;
+alter table public.applied_items alter column applied_on set default current_date;
+alter table public.applied_items alter column applied_on set not null;
+alter table public.applied_items drop constraint if exists applied_items_status_ok;
+alter table public.applied_items add constraint applied_items_status_ok
+  check (status in ('applied','shortlisted','interview','offer','not_selected','withdrawn'));
+alter table public.applied_items drop constraint if exists applied_items_note_len;
+alter table public.applied_items add constraint applied_items_note_len check (char_length(note) <= 600);
+drop policy if exists "applied_update_own" on public.applied_items;
+create policy "applied_update_own" on public.applied_items for update to authenticated
+  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
+grant update (status, applied_on, note, updated_at) on public.applied_items to authenticated;

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import AccountActions from '../../../components/account/AccountActions';
+import AccountTabs from '../../../components/account/AccountTabs';
 import EventCard from '../../../components/events/EventCard';
 import OfferCard from '../../../components/student-offers/OfferCard';
 import OpportunityCard from '../../../components/OpportunityCard';
@@ -31,6 +32,7 @@ export default async function SavedPage() {
       <SavedHero items={items} />
       <section className="section section--list">
         <div className="container">
+          <AccountTabs current="saved" />
           {items.length === 0 ? (
             <SavedEmpty />
           ) : (

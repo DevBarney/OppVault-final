@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
@@ -78,6 +79,11 @@ export default function AppliedButton({ category, slug, baseCount, minPublic }: 
         </svg>
         <span>{applied ? 'You applied' : 'I applied'}</span>
       </button>
+      {applied ? (
+        <p className="applied__count">
+          <Link href="/account/applications">Track it in My applications</Link>
+        </p>
+      ) : null}
       {shown >= minPublic ? (
         <p className="applied__count">{shown} people on OppVault have marked this as applied.</p>
       ) : (

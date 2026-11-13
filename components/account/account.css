@@ -166,3 +166,27 @@
 @media (hover: hover) { .acct-empty__kinds .chip:hover { border-color: var(--royal); background: var(--tint); } }
 @media (prefers-reduced-motion: no-preference) { .acct-empty__tile { animation: acct-bob 3.6s ease-in-out infinite; } @keyframes acct-bob { 50% { transform: translateY(-5px); } } }
 .acct-actions { margin-top: 56px; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--tint); }
+
+/* Account page switcher and the application tracker */
+.acct-tabs-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.acct-tabs-nav a { padding: 10px 18px; min-height: 44px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; font-weight: 600; color: var(--navy); background: #fff; }
+.acct-tabs-nav a[aria-current='page'] { background: var(--royal); border-color: var(--royal); color: #fff; }
+.acct-tabs-nav a:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.trk-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+.trk-filter .chip { cursor: pointer; min-height: 44px; }
+.trk-filter .chip[aria-pressed='true'] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.trk-filter .chip:disabled { opacity: 0.5; cursor: default; }
+.trk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.trk-row { padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: #fff; display: grid; gap: 14px; }
+.trk-row__head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.trk-row__title { margin: 0; font-size: 1.05rem; line-height: 1.35; }
+.trk-row__title a { color: var(--navy); }
+.trk-row__meta { margin: 4px 0 0; color: var(--muted); font-size: 0.875rem; }
+.trk-row__saved { color: var(--royal); font-size: 0.8125rem; font-weight: 600; min-width: 3.5em; text-align: right; }
+.trk-row__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.trk-field { display: grid; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--navy); }
+.trk-field select, .trk-field input, .trk-field textarea { font: inherit; font-weight: 400; color: inherit; padding: 10px 12px; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: #fff; width: 100%; }
+.trk-field textarea { resize: vertical; min-height: 64px; }
+.trk-field select:focus-visible, .trk-field input:focus-visible, .trk-field textarea:focus-visible { outline: 3px solid var(--sky); outline-offset: 1px; }
+.trk-row[data-status='offer'] { border-color: var(--gold); }
+.trk-row[data-status='not_selected'], .trk-row[data-status='withdrawn'] { background: var(--tint); }
