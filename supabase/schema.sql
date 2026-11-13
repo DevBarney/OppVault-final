@@ -278,3 +278,18 @@ as $$
 $$;
 revoke all on function public.listing_activity(text) from public;
 grant execute on function public.listing_activity(text) to anon, authenticated;
+
+-- Search text: one lower-cased column joining every searchable field, so site search reaches the full
+-- description, eligibility, benefits and how to apply, not only the title. Trigram index keeps it fast.
+create extension if not exists pg_trgm with schema extensions;
+alter table public.opportunities
+  add column if not exists search_text text generated always as (
+    lower(
+      coalesce(title, '') || ' ' || coalesce(provider, '') || ' ' || coalesce(summary, '') || ' ' ||
+      coalesce(description, '') || ' ' || coalesce(location, '') || ' ' || coalesce(level, '') || ' ' ||
+      coalesce(funding, '') || ' ' || coalesce(topic, '') || ' ' || coalesce(how_to_apply, '') || ' ' ||
+      coalesce(eligibility::text, '') || ' ' || coalesce(benefits::text, '')
+    )
+  ) stored;
+create index if not exists opportunities_search_text_trgm_idx
+  on public.opportunities using gin (search_text extensions.gin_trgm_ops);

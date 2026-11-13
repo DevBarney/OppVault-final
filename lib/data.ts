@@ -115,7 +115,7 @@ function matches(o: Opportunity, f: Filters): boolean {
   }
   const q = cleanSearch(f.q).toLowerCase();
   if (q) {
-    const hay = `${o.title} ${o.provider} ${o.summary} ${o.location} ${o.level}`.toLowerCase();
+    const hay = `${o.title} ${o.provider} ${o.summary} ${o.description} ${o.location} ${o.level} ${o.funding} ${o.topic ?? ''} ${o.how_to_apply} ${o.eligibility.join(' ')} ${o.benefits.join(' ')}`.toLowerCase();
     if (!q.split(' ').every((word) => hay.includes(word))) return false;
   }
   return true;
@@ -204,7 +204,8 @@ export async function getOpportunities(filters: Filters = {}): Promise<Page<Oppo
   if (filters.hideClosed !== false) and.push(`or(deadline.is.null,deadline.gte.${todayIso()})`);
   const words = cleanSearch(filters.q).split(' ').filter(Boolean).slice(0, 5);
   for (const w of words) {
-    and.push(`or(${['title', 'provider', 'summary', 'location', 'level'].map((col) => `${col}.ilike.*${w}*`).join(',')})`);
+    // search_text joins the title, provider, summary, full description, eligibility, benefits and how to apply.
+    and.push(`search_text.ilike.*${w}*`);
   }
   if (and.length) query.and = `(${and.join(',')})`;
 
@@ -232,7 +233,7 @@ export async function getOpportunity(category: CategorySlug, slug: string): Prom
     return SEED_OPPORTUNITIES.find((o) => o.category === category && o.slug === slug) ?? null;
   }
   const rows = await rest<Opportunity>('opportunities', {
-    select: '*',
+    select: `${LIST_COLUMNS},description,eligibility,benefits,how_to_apply`,
     published: 'eq.true',
     category: `eq.${category}`,
     slug: `eq.${slug.replace(/[^a-z0-9-]/gi, '')}`,
