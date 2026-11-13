@@ -37,6 +37,15 @@ export default function AccountActions({ email }: { email: string }) {
     } else setBusy(false);
   }
 
+  async function signOutAll() {
+    setBusy(true);
+    setError('');
+    if (await call('/api/account/signout', { all: true })) {
+      forgetAccount();
+      window.location.assign('/');
+    } else setBusy(false);
+  }
+
   async function remove() {
     setBusy(true);
     setError('');
@@ -54,6 +63,9 @@ export default function AccountActions({ email }: { email: string }) {
       <div className="acct-actions__row">
         <button type="button" className="btn btn--ghost btn--sm" onClick={signOut} disabled={busy}>
           Sign out
+        </button>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={signOutAll} disabled={busy}>
+          Sign out of all devices
         </button>
         {!confirming ? (
           <button type="button" className="acct-linkbtn acct-linkbtn--danger" onClick={() => setConfirming(true)}>

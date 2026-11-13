@@ -1,5 +1,5 @@
 import { MAX_PASSWORD_BYTES, MIN_PASSWORD } from '../../../../lib/account/config';
-import { setPassword } from '../../../../lib/account/gotrue';
+import { setPassword, signOutOtherDevices } from '../../../../lib/account/gotrue';
 import { cleanPassword, fromThisSite, readJson, reply } from '../../../../lib/account/http';
 import { whoFromRequest } from '../../../../lib/account/session';
 
@@ -15,5 +15,7 @@ export async function POST(request: Request): Promise<Response> {
   if (!password) return reply({ ok: false, error: `Choose a password of at least ${MIN_PASSWORD} characters.` }, 400, who.setCookies);
   const result = await setPassword(who.accessToken, password);
   if (!result.ok) return reply({ ok: false, error: result.message }, 400, who.setCookies);
+  // A new password ends every other session, so a stolen or forgotten sign-in dies with the old password.
+  await signOutOtherDevices(who.accessToken);
   return reply({ ok: true }, 200, who.setCookies);
 }

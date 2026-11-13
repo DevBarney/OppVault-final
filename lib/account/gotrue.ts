@@ -107,8 +107,21 @@ export async function getUser(accessToken: string): Promise<Result<AuthUser>> {
   return user ? { ok: true, value: user } : failure(raw);
 }
 
+/** Ends this one session on the server, so the token stops working even if someone kept a copy. */
 export async function signOutToken(accessToken: string): Promise<void> {
   await call('logout', { method: 'POST', token: accessToken, query: { scope: 'local' } });
+}
+
+/** Ends every session of this person on the server, on every device. */
+export async function signOutEverywhere(accessToken: string): Promise<boolean> {
+  const raw = await call('logout', { method: 'POST', token: accessToken, query: { scope: 'global' } });
+  return raw.status < 400;
+}
+
+/** Ends every other session and keeps the one that made the request. Used after a password change. */
+export async function signOutOtherDevices(accessToken: string): Promise<boolean> {
+  const raw = await call('logout', { method: 'POST', token: accessToken, query: { scope: 'others' } });
+  return raw.status < 400;
 }
 
 export async function sendRecovery(email: string, redirectTo: string): Promise<Result<true>> {
