@@ -49,6 +49,9 @@ export default function Footer() {
                   <Link href="/account/saved">My saved</Link>
                 </li>
                 <li>
+                  <Link href="/account/applications">My applications</Link>
+                </li>
+                <li>
                   <Link href="/privacy">Privacy notice</Link>
                 </li>
                 <li>
