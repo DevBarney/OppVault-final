@@ -12,6 +12,7 @@ import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
 // Desktop navigation: the six kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
 const LINKS = [
   { href: '/blog', label: 'Blog' },
+  { href: '/reviews', label: 'Reviews' },
   { href: '/about', label: 'About' },
 ];
 
@@ -24,12 +25,7 @@ const KINDS: { slug: CategorySlug; label: string; line: string }[] = [
   { slug: 'events', label: 'Events', line: 'Dates for your diary' },
   { slug: 'student-offers', label: 'Student Offers', line: 'Discounts and free tools' },
 ];
-const MORE = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
-  { href: '/reviews', label: 'Reviews' },
-  { href: '/support', label: 'Help & contact' },
-];
+const MORE = [...LINKS, { href: '/support', label: 'Help & contact' }];
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
