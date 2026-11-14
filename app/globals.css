@@ -2818,3 +2818,10 @@ html [data-paused='true'] *::after { animation-play-state: paused !important; }
 
 /* "N applied" note on a card, shown when a list is sorted by most applied */
 .card__applied { margin-inline-start: auto; font-size: 0.8125rem; font-weight: 600; color: var(--royal); white-space: nowrap; }
+
+/* Long web addresses or titles must never stretch a card past its column */
+.card, .card__link { min-width: 0; }
+.card__top { padding-inline-end: 52px; }
+.card__top .tag { max-width: 100%; min-width: 0; }
+.card__top .tag--plain { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card__title, .card__provider, .card__summary { overflow-wrap: anywhere; }
