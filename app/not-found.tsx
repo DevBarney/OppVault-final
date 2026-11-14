@@ -19,7 +19,7 @@ export default function NotFound() {
             <label className="nf__field">
               <span className="visually-hidden">Search opportunities</span>
               <SearchIcon className="nf__icon" />
-              <input type="search" name="q" placeholder="Search scholarships, grants, courses..." maxLength={60} />
+              <input type="search" name="q" placeholder="Search opportunities" maxLength={60} />
             </label>
             <button className="btn btn--primary" type="submit">
               Search
