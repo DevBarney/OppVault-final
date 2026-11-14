@@ -235,6 +235,8 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
           <div className="nav__actions">
             <button type="button" className="nav__search" data-away={heroSearchSeen ? 'true' : undefined} aria-hidden={heroSearchSeen ? true : undefined} tabIndex={heroSearchSeen ? -1 : undefined} aria-label="Search OppVault" title="Search (press /)" onClick={() => window.dispatchEvent(new Event('oppvault:open-search'))}>
               <SearchIcon className="nav__search-icon" />
+              <span className="nav__search-text" aria-hidden="true">Search</span>
+              <kbd className="nav__kbd" aria-hidden="true">/</kbd>
             </button>
             <AccountLink />
             <AccountMenu />

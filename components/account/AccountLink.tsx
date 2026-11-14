@@ -56,6 +56,7 @@ export default function AccountLink({ variant = 'icon', onNavigate }: { variant?
   return (
     <Link className={`acct-navlink${bump ? ' is-bump' : ''}`} href={href} onClick={onNavigate} title={label} data-acct-nav="">
       {signedIn ? <HeartIcon /> : <PersonIcon />}
+      {signedIn ? null : <span className="acct-navlink__text" aria-hidden="true">Sign in</span>}
       {count > 0 ? <span className="acct-badge" aria-hidden="true">{count > 99 ? '99+' : count}</span> : null}
       <span className="visually-hidden">{label}</span>
     </Link>

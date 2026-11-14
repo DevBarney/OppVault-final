@@ -247,3 +247,10 @@
 .set-help { margin: 6px 0 0; color: var(--muted); font-size: 0.8125rem; }
 .set input[readonly] { background: var(--tint); color: var(--muted); }
 .set .acct-actions { margin-top: 0; padding: clamp(20px, 4vw, 28px); border: 1px solid var(--line); border-radius: 20px; background: #fff; }
+
+/* Signed out: the person icon gets a word beside it on wide screens */
+.acct-navlink__text { display: none; }
+@media (min-width: 1280px) {
+  .acct-navlink:not(.acct-navlink--applied) .acct-navlink__text { display: inline; margin-inline-start: 6px; color: var(--navy); font-size: 0.9375rem; font-weight: 500; }
+  .acct-navlink:has(.acct-navlink__text) { display: inline-flex; align-items: center; width: auto; padding-inline: 10px 8px; }
+}
