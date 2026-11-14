@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import './account.css';
 import { enabledProviders } from '../../lib/account/providers';
@@ -12,6 +12,8 @@ import VaultDoor from '../VaultDoor';
 import { CheckIcon } from '../Icons';
 
 type Mode = 'signin' | 'signup' | 'forgot';
+type Sent = { kind: 'confirm' | 'reset'; email: string } | null;
+const COOLDOWN = 45; // seconds before the email can be sent again
 const MIN_PASSWORD = 10;
 
 async function post(url: string, body: Record<string, unknown>): Promise<{ ok: boolean; error?: string; confirm?: boolean }> {
@@ -38,13 +40,44 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
+  const [sent, setSent] = useState<Sent>(null);
+  const [wait, setWait] = useState(0);
+  const [needsConfirm, setNeedsConfirm] = useState(false);
+  const errorRef = useRef<HTMLParagraphElement | null>(null);
   const providers = enabledProviders();
   const target = safePath(next);
+
+  useEffect(() => {
+    if (wait <= 0) return;
+    const t = window.setTimeout(() => setWait((w) => w - 1), 1000);
+    return () => window.clearTimeout(t);
+  }, [wait]);
+
+  useEffect(() => {
+    if (error) errorRef.current?.focus();
+  }, [error]);
 
   function switchTo(m: Mode) {
     setMode(m);
     setError('');
     setInfo('');
+    setSent(null);
+    setNeedsConfirm(false);
+  }
+
+  async function resend(kind: 'confirm' | 'reset', to: string) {
+    if (wait > 0 || busy) return;
+    setBusy(true);
+    setError('');
+    setInfo('');
+    const r = await post(kind === 'confirm' ? '/api/account/resend' : '/api/account/reset', { email: to });
+    setBusy(false);
+    if (r.ok) {
+      setWait(COOLDOWN);
+      setSent({ kind, email: to });
+      setNeedsConfirm(false);
+      setInfo('Sent again. It can take a minute or two to arrive.');
+    } else setError(r.error ?? 'That did not work. Please try again.');
   }
 
   function social(id: string) {
@@ -62,6 +95,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
     if (busy) return;
     setError('');
     setInfo('');
+    setNeedsConfirm(false);
     if (mode === 'signup' && password.length < MIN_PASSWORD) {
       setError(`Choose a password of at least ${MIN_PASSWORD} characters.`);
       return;
@@ -70,8 +104,10 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
     if (mode === 'forgot') {
       const r = await post('/api/account/reset', { email });
       setBusy(false);
-      if (r.ok) setInfo('If there is an account for that email, a link to choose a new password is on its way.');
-      else setError(r.error ?? 'That did not work. Please try again.');
+      if (r.ok) {
+        setSent({ kind: 'reset', email });
+        setWait(COOLDOWN);
+      } else setError(r.error ?? 'That did not work. Please try again.');
       return;
     }
     if (mode === 'signup') {
@@ -83,8 +119,8 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
       }
       if (r.confirm) {
         setBusy(false);
-        setInfo('Nearly there. We have sent a link to your email. Open it to confirm your address, then come back and sign in.');
-        setMode('signin');
+        setSent({ kind: 'confirm', email });
+        setWait(COOLDOWN);
         setPassword('');
         return;
       }
@@ -95,6 +131,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
     if (!r.ok) {
       setBusy(false);
       setError(r.error ?? 'That did not work. Please try again.');
+      setNeedsConfirm(/confirm your email/i.test(r.error ?? ''));
       return;
     }
     await finishSignIn(target, save);
@@ -107,8 +144,8 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
       : save
         ? 'Sign in to save this opportunity and find it again in My saved.'
         : mode === 'signup'
-          ? 'Keep the opportunities you like in one place, and tick off the ones you have applied for.'
-          : 'Pick up where you left off. Everything you saved is waiting for you.';
+          ? 'Keep the opportunities you like in one place, and track every application from start to decision.'
+          : 'Pick up where you left off. Your saved opportunities and applications are waiting for you.';
   const strength = password.length >= 14 ? 3 : password.length >= MIN_PASSWORD ? 2 : password.length > 0 ? 1 : 0;
 
   return (
@@ -122,13 +159,44 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
           <p className="acct-aside__lead">{lead}</p>
           <ul className="acct-perks" aria-label="What an account gives you">
             <li><CheckIcon className="acct-perks__tick" /> Save any listing with one tap</li>
-            <li><CheckIcon className="acct-perks__tick" /> Mark what you have applied for</li>
+            <li><CheckIcon className="acct-perks__tick" /> Track each application, with notes</li>
             <li><CheckIcon className="acct-perks__tick" /> Free, and you can delete your account at any time</li>
           </ul>
         </div>
       </div>
 
       <div className="acct-card">
+        {sent ? (
+          <div className="acct-sent" role="status" aria-live="polite">
+            <span className="acct-sent__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="3" />
+                <path d="m4 7.5 8 6 8-6" />
+              </svg>
+            </span>
+            <h2 className="acct-sent__title">Check your email</h2>
+            <p className="acct-sent__text">
+              {sent.kind === 'confirm' ? 'We have sent a link to confirm your address to ' : 'If there is an account for '}
+              <strong>{sent.email}</strong>
+              {sent.kind === 'confirm' ? '. Open it, and you will be signed in.' : ', a link to choose a new password is on its way.'}
+            </p>
+            <p className="acct-sent__hint">Nothing there after a couple of minutes? Look in your spam or promotions folder.</p>
+            {info ? <p className="acct-msg acct-msg--ok" role="status">{info}</p> : null}
+            {error ? <p className="acct-msg acct-msg--error" role="alert">{error}</p> : null}
+            <button type="button" className="btn btn--primary acct-submit" disabled={wait > 0 || busy} onClick={() => resend(sent.kind, sent.email)}>
+              {busy ? 'One moment…' : wait > 0 ? `Send again in ${wait}s` : 'Send it again'}
+            </button>
+            <div className="acct-switch">
+              <button type="button" className="acct-linkbtn" onClick={() => { setPassword(''); switchTo(sent.kind === 'confirm' ? 'signup' : 'forgot'); }}>
+                Wrong email address?
+              </button>
+              <button type="button" className="acct-linkbtn" onClick={() => switchTo('signin')}>
+                Back to sign in
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
         {mode !== 'forgot' ? (
           <div className="acct-tabs" role="group" aria-label="Sign in or create an account">
             <button type="button" className="acct-tab" aria-pressed={mode === 'signin'} onClick={() => switchTo('signin')}>
@@ -171,6 +239,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
               value={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               autoComplete="email"
+              inputMode="email"
               required
               autoCapitalize="none"
               spellCheck={false}
@@ -211,8 +280,16 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
           </div>
 
           {error ? (
-            <p className="acct-msg acct-msg--error" role="alert">
+            <p className="acct-msg acct-msg--error" role="alert" ref={errorRef} tabIndex={-1}>
               {error}
+              {needsConfirm ? (
+                <>
+                  {' '}
+                  <button type="button" className="acct-linkbtn acct-linkbtn--inline" onClick={() => resend('confirm', email)}>
+                    Send the link again
+                  </button>
+                </>
+              ) : null}
             </p>
           ) : null}
           {info ? (
@@ -244,6 +321,8 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
             By creating an account you agree to our <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy notice</Link>.
           </p>
         ) : null}
+          </>
+        )}
       </div>
     </div>
   );

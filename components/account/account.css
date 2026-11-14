@@ -202,3 +202,13 @@
 .trk-row, .trk-row__head > div, .trk-prompt__list li, .trk-prompt__name { min-width: 0; }
 .trk-row__title, .trk-row__meta, .trk-prompt__name a { overflow-wrap: anywhere; }
 @media (max-width: 1179px) { .acct-navlink--applied { display: none; } }
+
+/* Check-your-email panel */
+.acct-sent { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.acct-sent__icon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--pale); color: var(--royal); }
+.acct-sent__title { margin: 4px 0 0; font-size: 1.4rem; line-height: 1.25; color: var(--navy); }
+.acct-sent__text { margin: 0; max-width: 30rem; color: var(--navy); line-height: 1.6; overflow-wrap: anywhere; }
+.acct-sent__hint { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+.acct-sent .acct-msg { width: 100%; text-align: left; }
+.acct-linkbtn--inline { min-height: 0; display: inline; font-size: inherit; color: inherit; }
+.acct-msg:focus { outline: none; }

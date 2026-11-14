@@ -124,6 +124,11 @@ export async function signOutOtherDevices(accessToken: string): Promise<boolean>
   return raw.status < 400;
 }
 
+export async function resendSignup(email: string, redirectTo: string): Promise<Result<true>> {
+  const raw = await call('resend', { method: 'POST', query: { redirect_to: redirectTo }, body: { type: 'signup', email } });
+  return raw.status < 400 ? { ok: true, value: true } : failure(raw);
+}
+
 export async function sendRecovery(email: string, redirectTo: string): Promise<Result<true>> {
   const raw = await call('recover', { method: 'POST', query: { redirect_to: redirectTo }, body: { email } });
   return raw.status < 400 ? { ok: true, value: true } : failure(raw);
