@@ -139,6 +139,11 @@ export async function setPassword(accessToken: string, password: string): Promis
   return raw.status < 400 ? { ok: true, value: true } : failure(raw);
 }
 
+export async function setDisplayName(accessToken: string, name: string): Promise<Result<true>> {
+  const raw = await call('user', { method: 'PUT', token: accessToken, body: { data: { full_name: name } } });
+  return raw.status < 400 ? { ok: true, value: true } : failure(raw);
+}
+
 /** Remove a user for good. Needs the server-only service key. */
 export async function deleteUser(userId: string): Promise<boolean> {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();

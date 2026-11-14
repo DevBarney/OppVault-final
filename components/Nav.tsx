@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../lib/categories';
-import AccountLink, { AppliedLink } from './account/AccountLink';
+import AccountLink, { AccountExtras, AppliedLink } from './account/AccountLink';
+import AccountMenu from './account/AccountMenu';
 import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
 
 // Desktop navigation: the six kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
@@ -235,8 +236,8 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
             <button type="button" className="nav__search" data-away={heroSearchSeen ? 'true' : undefined} aria-hidden={heroSearchSeen ? true : undefined} tabIndex={heroSearchSeen ? -1 : undefined} aria-label="Search OppVault" title="Search (press /)" onClick={() => window.dispatchEvent(new Event('oppvault:open-search'))}>
               <SearchIcon className="nav__search-icon" />
             </button>
-            <AppliedLink />
             <AccountLink />
+            <AccountMenu />
             <a className="btn btn--primary btn--sm nav__cta" href="#subscribe" onClick={goToSignup}>
               <span>Get updates</span>
               <ArrowIcon className="btn__arrow" />
@@ -339,6 +340,7 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
             </button>
             <AppliedLink variant="text" onNavigate={() => setOpen(false)} />
             <AccountLink variant="text" onNavigate={() => setOpen(false)} />
+            <AccountExtras onNavigate={() => setOpen(false)} />
             <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
               <span>Get updates</span>
               <ArrowIcon className="btn__arrow" />

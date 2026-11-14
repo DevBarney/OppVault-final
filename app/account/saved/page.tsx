@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import AccountActions from '../../../components/account/AccountActions';
 import AccountTabs from '../../../components/account/AccountTabs';
 import EventCard from '../../../components/events/EventCard';
 import OfferCard from '../../../components/student-offers/OfferCard';
@@ -61,7 +60,6 @@ export default async function SavedPage() {
             </p>
           ) : null}
           {refs.length > SHOW_MAX ? <p className="acct-note">Showing your newest {SHOW_MAX} saved opportunities.</p> : null}
-          <AccountActions email={visitor.user.email} />
         </div>
       </section>
     </>

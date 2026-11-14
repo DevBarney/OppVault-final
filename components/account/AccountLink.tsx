@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import './account.css';
 import { ArrowIcon } from '../Icons';
-import { useAccount } from './store';
+import { forgetAccount, useAccount } from './store';
 
 function PersonIcon() {
   return (
@@ -82,5 +82,31 @@ export function AppliedLink({ variant = 'icon', onNavigate }: { variant?: 'icon'
       </svg>
       <span className="visually-hidden">My applications</span>
     </Link>
+  );
+}
+
+/** Phone menu: settings and sign out. Nothing for visitors who are not signed in. */
+export function AccountExtras({ onNavigate }: { onNavigate?: () => void }) {
+  const account = useAccount();
+  if (!(account.status === 'ready' && account.signedIn)) return null;
+  async function signOut() {
+    try {
+      await fetch('/api/account/signout', { method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: '{}' });
+    } catch {
+      /* the reload below shows the true state either way */
+    }
+    forgetAccount();
+    window.location.assign('/');
+  }
+  return (
+    <>
+      <Link className="nav__mlink acct-mnavlink" href="/account/settings" onClick={onNavigate}>
+        <span>Account settings</span>
+        <ArrowIcon className="nav__marrow" />
+      </Link>
+      <button type="button" className="nav__mlink acct-mnavlink acct-mnavlink--out" onClick={signOut}>
+        <span>Sign out</span>
+      </button>
+    </>
   );
 }
