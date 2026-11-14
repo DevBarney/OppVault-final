@@ -21,4 +21,4 @@
 .nav__search:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 @media (hover: hover) { .nav__search:hover { background: var(--pale); } }
 .nav__search { transition: width 0.3s var(--ease, ease), opacity 0.25s ease, margin 0.3s var(--ease, ease); }
-.nav__search[data-away='true'] { width: 0; margin-inline: -4px; opacity: 0; overflow: hidden; pointer-events: none; }
+.nav__search[data-away='true'] { width: 0; min-width: 0; padding: 0; border-width: 0; margin-inline: -4px; opacity: 0; overflow: hidden; pointer-events: none; visibility: hidden; transition: width 0.3s var(--ease, ease), opacity 0.25s ease, margin 0.3s var(--ease, ease), visibility 0s linear 0.3s; }

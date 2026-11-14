@@ -5,18 +5,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import type { CategorySlug } from '../lib/categories';
+import { CATEGORIES, type CategorySlug } from '../lib/categories';
 import AccountLink from './account/AccountLink';
-import { ArrowIcon, SearchIcon } from './Icons';
+import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
 
-// Main navigation. Each link is a page of the platform.
+// Desktop navigation: the six kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
 const LINKS = [
-  { href: '/scholarships', label: 'Scholarships' },
-  { href: '/fellowships', label: 'Fellowships' },
-  { href: '/grants', label: 'Grants' },
-  { href: '/courses', label: 'Courses' },
-  { href: '/events', label: 'Events' },
-  { href: '/student-offers', label: 'Student Offers' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
 ];
@@ -49,6 +43,11 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
   const pathname = usePathname() ?? '/';
   // On the home page the hero already has a search box, so the nav icon waits until that box has scrolled away.
   const [heroSearchSeen, setHeroSearchSeen] = useState(false);
+  // Desktop "Opportunities" menu
+  const [menu, setMenu] = useState(false);
+  const [menuLeft, setMenuLeft] = useState(0);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -119,7 +118,48 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
 
   useEffect(() => {
     setOpen(false);
+    setMenu(false);
   }, [pathname]);
+
+  // Desktop menu: line it up under its button, close on Escape, on a click elsewhere, when focus leaves, and when the screen narrows.
+  useEffect(() => {
+    if (!menu) return;
+    const place = () => {
+      const btn = menuBtnRef.current;
+      const wrap = btn?.closest('.nav__wrap');
+      if (!btn || !wrap) return;
+      const b = btn.getBoundingClientRect();
+      const w = wrap.getBoundingClientRect();
+      const width = Math.min(560, w.width - 24);
+      setMenuLeft(Math.max(12, Math.min(b.left - w.left - 8, w.width - width - 12)));
+    };
+    place();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenu(false);
+        menuBtnRef.current?.focus();
+      }
+    };
+    const onPointer = (event: PointerEvent) => {
+      const t = event.target as Node;
+      if (!menuRef.current?.contains(t) && !menuBtnRef.current?.contains(t)) setMenu(false);
+    };
+    const onFocus = (event: FocusEvent) => {
+      const t = event.target as Node;
+      if (!menuRef.current?.contains(t) && !menuBtnRef.current?.contains(t)) setMenu(false);
+    };
+    const onResize = () => (window.innerWidth < 1180 ? setMenu(false) : place());
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('focusin', onFocus);
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('focusin', onFocus);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menu]);
 
   useEffect(() => {
     if (pathname !== '/') {
@@ -134,6 +174,8 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
   }, [pathname]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+  const onKind = KINDS.some((k) => isActive(`/${k.slug}`));
 
   const className = `nav${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`;
 
@@ -160,6 +202,29 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
 
           <nav className="nav__links" aria-label="Primary">
             <ul>
+              <li>
+                <button
+                  ref={menuBtnRef}
+                  type="button"
+                  className="nav__link nav__dd"
+                  aria-expanded={menu}
+                  aria-controls="opp-menu"
+                  aria-current={onKind ? 'page' : undefined}
+                  onClick={() => setMenu((v) => !v)}
+                  onKeyDown={(e: { key: string; preventDefault: () => void }) => {
+                    if (e.key === 'ArrowDown') {
+                      e.preventDefault();
+                      setMenu(true);
+                      window.setTimeout(() => menuRef.current?.querySelector<HTMLElement>('a')?.focus(), 0);
+                    }
+                  }}
+                >
+                  <span>Opportunities</span>
+                  <svg className="nav__dd-chev" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              </li>
               {LINKS.map((link) => (
                 <li key={link.href}>
                   <Link className="nav__link" href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
@@ -199,6 +264,38 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
             <span ref={barRef} />
           </span>
           </div>
+
+        <div id="opp-menu" ref={menuRef} className="ddm" hidden={!menu} style={{ left: menuLeft }} role="group" aria-label="Kinds of opportunity">
+          <ul className="ddm__list">
+            {KINDS.map((k) => {
+              const n = counts?.[k.slug];
+              const icon = CATEGORIES.find((c) => c.slug === k.slug)?.icon;
+              return (
+                <li key={k.slug}>
+                  <Link className="ddm__row" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setMenu(false)}>
+                    <span className="ddm__icon" aria-hidden="true">{icon ? <CategoryIcon name={icon} className="ddm__svg" /> : null}</span>
+                    <span className="ddm__text">
+                      <span className="ddm__name">{k.label}</span>
+                      <span className="ddm__line">{k.line}</span>
+                    </span>
+                    {typeof n === 'number' && n > 0 ? <span className="ddm__count">{n} {k.slug === 'events' ? 'upcoming' : 'open'}</span> : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <button
+            type="button"
+            className="ddm__search"
+            onClick={() => {
+              setMenu(false);
+              window.dispatchEvent(new Event('oppvault:open-search'));
+            }}
+          >
+            <SearchIcon className="ddm__search-icon" />
+            <span>Search every opportunity</span>
+          </button>
+        </div>
 
         <div id="mobile-menu" className="nav__menu">
           <nav className="vm" aria-label="Mobile">
