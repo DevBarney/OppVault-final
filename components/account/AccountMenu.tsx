@@ -7,6 +7,22 @@ import { createPortal } from 'react-dom';
 import './account.css';
 import { forgetAccount, useAccount } from './store';
 
+/** The round picture: the provider's photo when there is one, the initials otherwise (and if the photo fails to load). */
+function Avatar({ src, initials, large }: { src: string; initials: string; large?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [src]);
+  return (
+    <span className={`acct-avatar${large ? ' acct-avatar--lg' : ''}`} aria-hidden="true">
+      {src && !failed ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="acct-avatar__img" src={src} alt="" width={44} height={44} referrerPolicy="no-referrer" decoding="async" onError={() => setFailed(true)} />
+      ) : (
+        initials
+      )}
+    </span>
+  );
+}
+
 function initialsOf(name: string, email: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
@@ -88,7 +104,7 @@ export default function AccountMenu() {
   const panel = (
     <div id="acct-menu" ref={panelRef} className="acct-pop" role="group" aria-label="Account" style={{ top: pos.top, right: pos.right }}>
       <div className="acct-pop__who">
-        <span className="acct-avatar acct-avatar--lg" aria-hidden="true">{initials}</span>
+        <Avatar src={account.avatar} initials={initials} large />
         <span className="acct-pop__text">
           <span className="acct-pop__name">{who}</span>
           <span className="acct-pop__email">{account.email}</span>
@@ -109,7 +125,7 @@ export default function AccountMenu() {
       <button
         ref={btnRef}
         type="button"
-        className="acct-avatar acct-avatar--btn"
+        className="acct-avatar-btn"
         aria-haspopup="true"
         aria-expanded={open}
         aria-controls="acct-menu"
@@ -122,7 +138,7 @@ export default function AccountMenu() {
           }
         }}
       >
-        {initials}
+        <Avatar src={account.avatar} initials={initials} />
       </button>
       {mounted && open ? createPortal(panel, document.body) : null}
     </>

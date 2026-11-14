@@ -13,7 +13,7 @@ export async function GET(request: Request): Promise<Response> {
   const [saved, applied] = await Promise.all([listSaved(who.accessToken), listApplied(who.accessToken)]);
   const items = saved.map((r) => `${r.category}/${r.slug}`);
   const appliedItems = applied.map((r) => `${r.category}/${r.slug}`);
-  return reply({ signedIn: true, email: who.user.email, name: who.user.name, items, applied: appliedItems }, 200, who.setCookies);
+  return reply({ signedIn: true, email: who.user.email, name: who.user.name, avatar: who.user.avatar ?? '', items, applied: appliedItems }, 200, who.setCookies);
 }
 
 async function change(request: Request, action: 'add' | 'remove'): Promise<Response> {

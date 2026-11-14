@@ -3,7 +3,19 @@
 import { PUBLIC_KEY, SUPABASE_URL } from './config';
 
 export type Tokens = { access_token: string; refresh_token: string; expires_in: number };
-export type AuthUser = { id: string; email: string; name: string };
+export type AuthUser = { id: string; email: string; name: string; avatar?: string };
+
+/** Profile pictures only from the sign-in providers we offer, and only over https. Anything else is ignored. */
+const AVATAR_HOSTS = [/(^|\.)googleusercontent\.com$/, /(^|\.)githubusercontent\.com$/, /(^|\.)licdn\.com$/, /(^|\.)twimg\.com$/];
+function cleanAvatar(value: unknown): string {
+  if (typeof value !== 'string' || value.length > 500) return '';
+  try {
+    const u = new URL(value);
+    return u.protocol === 'https:' && AVATAR_HOSTS.some((re) => re.test(u.hostname)) ? u.toString() : '';
+  } catch {
+    return '';
+  }
+}
 export type Failure = { ok: false; status: number; code: string; message: string };
 export type Result<T> = { ok: true; value: T } | Failure;
 
@@ -76,7 +88,8 @@ function asUser(data: Record<string, unknown>): AuthUser | null {
   if (typeof id !== 'string') return null;
   const meta = (data.user_metadata ?? {}) as Record<string, unknown>;
   const pick = [meta.full_name, meta.name, meta.user_name].find((v) => typeof v === 'string' && v.trim()) as string | undefined;
-  return { id, email: typeof data.email === 'string' ? data.email : '', name: (pick ?? '').trim().slice(0, 80) };
+  const avatar = [meta.avatar_url, meta.picture].map(cleanAvatar).find(Boolean) ?? '';
+  return { id, email: typeof data.email === 'string' ? data.email : '', name: (pick ?? '').trim().slice(0, 80), ...(avatar ? { avatar } : {}) };
 }
 
 export async function signUp(email: string, password: string, name: string, redirectTo: string): Promise<Result<{ tokens: Tokens | null }>> {

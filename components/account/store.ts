@@ -10,11 +10,12 @@ export type AccountState = {
   signedIn: boolean;
   email: string;
   name: string;
+  avatar: string;
   saved: ReadonlySet<string>;
   applied: ReadonlySet<string>;
 };
 
-const EMPTY: AccountState = { status: 'idle', signedIn: false, email: '', name: '', saved: new Set(), applied: new Set() };
+const EMPTY: AccountState = { status: 'idle', signedIn: false, email: '', name: '', avatar: '', saved: new Set(), applied: new Set() };
 let state: AccountState = EMPTY;
 let started = false;
 const listeners = new Set<() => void>();
@@ -30,12 +31,13 @@ export function refreshAccount(): Promise<void> {
   return fetch('/api/account/saved', { credentials: 'same-origin', cache: 'no-store' })
     .then((r) => (r.ok ? r.json() : { signedIn: false, items: [] }))
     .catch(() => ({ signedIn: false, items: [] }))
-    .then((d: { signedIn?: boolean; email?: string; name?: string; items?: string[]; applied?: string[] }) => {
+    .then((d: { signedIn?: boolean; email?: string; name?: string; avatar?: string; items?: string[]; applied?: string[] }) => {
       set({
         status: 'ready',
         signedIn: Boolean(d.signedIn),
         email: d.email ?? '',
         name: d.name ?? '',
+        avatar: d.avatar ?? '',
         saved: new Set(Array.isArray(d.items) ? d.items : []),
         applied: new Set(Array.isArray(d.applied) ? d.applied : []),
       });
