@@ -254,3 +254,6 @@
   .acct-navlink:not(.acct-navlink--applied) .acct-navlink__text { display: inline; margin-inline-start: 6px; color: var(--navy); font-size: 0.9375rem; font-weight: 500; }
   .acct-navlink:has(.acct-navlink__text) { display: inline-flex; align-items: center; width: auto; padding-inline: 10px 8px; }
 }
+
+.acct-match { margin: -4px 0 0; font-size: 0.875rem; color: #b42318; }
+.acct-match[data-ok='true'] { color: #067647; }

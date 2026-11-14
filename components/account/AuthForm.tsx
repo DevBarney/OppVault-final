@@ -36,6 +36,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [again, setAgain] = useState('');
   const [company, setCompany] = useState(''); // hidden trap field for bots
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -100,6 +101,10 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
       setError(`Choose a password of at least ${MIN_PASSWORD} characters.`);
       return;
     }
+    if (mode === 'signup' && password !== again) {
+      setError('The two passwords do not match. Please type the same password in both boxes.');
+      return;
+    }
     setBusy(true);
     if (mode === 'forgot') {
       const r = await post('/api/account/reset', { email });
@@ -122,6 +127,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
         setSent({ kind: 'confirm', email });
         setWait(COOLDOWN);
         setPassword('');
+        setAgain('');
         return;
       }
       await finishSignIn(target, save);
@@ -187,7 +193,7 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
               {busy ? 'One moment…' : wait > 0 ? `Send again in ${wait}s` : 'Send it again'}
             </button>
             <div className="acct-switch">
-              <button type="button" className="acct-linkbtn" onClick={() => { setPassword(''); switchTo(sent.kind === 'confirm' ? 'signup' : 'forgot'); }}>
+              <button type="button" className="acct-linkbtn" onClick={() => { setPassword(''); setAgain(''); switchTo(sent.kind === 'confirm' ? 'signup' : 'forgot'); }}>
                 Wrong email address?
               </button>
               <button type="button" className="acct-linkbtn" onClick={() => switchTo('signin')}>
@@ -270,6 +276,15 @@ export default function AuthForm({ next, save, startOn = 'signin' }: { next: str
                       : 'Strong length'}
               </span>
             </div>
+          ) : null}
+
+          {mode === 'signup' ? (
+            <PasswordInput id="acct-password2" label="Confirm password" value={again} onChange={setAgain} autoComplete="new-password" minLength={MIN_PASSWORD}  />
+          ) : null}
+          {mode === 'signup' && again.length > 0 ? (
+            <p className="acct-match" data-ok={again === password} role="status">
+              {again === password ? 'Passwords match' : 'Passwords do not match yet'}
+            </p>
           ) : null}
 
           <div className="acct-trap" aria-hidden="true">
