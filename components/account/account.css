@@ -201,3 +201,4 @@
 .trk-prompt__name small { color: var(--muted); }
 .trk-row, .trk-row__head > div, .trk-prompt__list li, .trk-prompt__name { min-width: 0; }
 .trk-row__title, .trk-row__meta, .trk-prompt__name a { overflow-wrap: anywhere; }
+@media (max-width: 1179px) { .acct-navlink--applied { display: none; } }

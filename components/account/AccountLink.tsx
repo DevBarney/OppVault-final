@@ -61,3 +61,26 @@ export default function AccountLink({ variant = 'icon', onNavigate }: { variant?
     </Link>
   );
 }
+
+/** "My applications": a second header icon on desktop and a menu row on phones, for signed-in visitors only. */
+export function AppliedLink({ variant = 'icon', onNavigate }: { variant?: 'icon' | 'text'; onNavigate?: () => void }) {
+  const account = useAccount();
+  if (!(account.status === 'ready' && account.signedIn)) return null;
+  if (variant === 'text') {
+    return (
+      <Link className="nav__mlink acct-mnavlink" href="/account/applications" onClick={onNavigate}>
+        <span>My applications</span>
+        <ArrowIcon className="nav__marrow" />
+      </Link>
+    );
+  }
+  return (
+    <Link className="acct-navlink acct-navlink--applied" href="/account/applications" onClick={onNavigate} title="My applications">
+      <svg className="acct-navicon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="5" y="4.5" width="14" height="16" rx="2.5" />
+        <path d="M9 4.5V3.5h6v1M8.8 12.8l2.2 2.2 4.2-4.4" />
+      </svg>
+      <span className="visually-hidden">My applications</span>
+    </Link>
+  );
+}
