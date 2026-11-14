@@ -2,7 +2,7 @@ import { dbConfigured, createSubmission, pendingLinkExists } from '../../../lib/
 import { json } from '../../../lib/admin/http';
 import { sameOrigin } from '../../../lib/admin/auth';
 import { notifyAddress, originOf, sendNotification } from '../../../lib/admin/mail';
-import { clientKey, rateLimited } from '../../../lib/rateLimit';
+import { clientKey, tooMany } from '../../../lib/rateLimit';
 import { validateSubmission } from '../../../lib/submissions';
 
 export const runtime = 'nodejs';
@@ -25,7 +25,7 @@ export async function POST(request: Request): Promise<Response> {
   const checked = validateSubmission(body);
   if (!checked.ok) return json({ ok: false, error: checked.error }, 400);
 
-  if (rateLimited(`submit:${clientKey(request.headers)}`)) {
+  if (await tooMany(`submit:ip:${clientKey(request.headers)}`, 6, 3600)) {
     return json({ ok: false, error: 'Too many submissions. Please wait a few minutes and try again.' }, 429);
   }
   if (!dbConfigured()) return json({ ok: false, error: 'Submissions are not open yet. Please try again soon.' }, 503);

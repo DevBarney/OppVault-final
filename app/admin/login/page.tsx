@@ -2,12 +2,13 @@ import { redirect } from 'next/navigation';
 import LoginForm from '../../../components/admin/LoginForm';
 import { adminConfigured } from '../../../lib/admin/auth';
 import { currentSession } from '../../../lib/admin/session';
+import { activeWriter } from '../../../lib/admin/users';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLoginPage() {
   const s = await currentSession();
-  if (s) redirect(s.role === 'owner' ? '/admin' : '/admin/blog');
+  if (s && (s.role === 'owner' || (await activeWriter(s.uid)))) redirect(s.role === 'owner' ? '/admin' : '/admin/blog');
   return (
     <section className="adm__login">
       <div className="adm__panel adm__panel--narrow">

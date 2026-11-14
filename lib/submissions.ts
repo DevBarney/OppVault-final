@@ -30,7 +30,7 @@ export function validateSubmission(body: Record<string, unknown>): { ok: true; d
   let link = '';
   try {
     const u = new URL(text(body.link, 600));
-    if (u.protocol === 'https:' || u.protocol === 'http:') link = u.toString();
+    if (u.protocol === 'https:') link = u.toString();
   } catch {
     /* handled below */
   }

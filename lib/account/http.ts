@@ -28,10 +28,19 @@ export async function readJson(request: Request): Promise<Record<string, unknown
   }
 }
 
+/**
+ * The address used in links we put in emails. It never comes straight from the request: a made-up Host header
+ * could otherwise point a reset link at someone else's site. Only our own domains (and local testing) are used.
+ * Set SITE_URL to change the default.
+ */
+const CANONICAL = (process.env.SITE_URL?.trim().replace(/\/+$/, '') || 'https://www.oppvault.app');
+const KNOWN_HOSTS = new Set(['oppvault.app', 'www.oppvault.app', new URL(CANONICAL).host]);
+
 export function siteOrigin(request: Request): string {
-  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? 'localhost:3000';
-  const proto = request.headers.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  return `${proto}://${host}`;
+  const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '').toLowerCase();
+  if (KNOWN_HOSTS.has(host)) return `https://${host}`;
+  if (process.env.NODE_ENV !== 'production' && /^localhost(:\d+)?$/.test(host)) return `http://${host}`;
+  return CANONICAL;
 }
 
 export function cleanEmail(value: unknown): string | null {

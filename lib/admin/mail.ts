@@ -195,6 +195,7 @@ export async function sendNotification(input: { to: string; subject: string; lin
 
 /** The address this admin is being used from, so links in emails open the right site (live or a test deployment). */
 export function originOf(request: Request): string {
-  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
-  return host ? `https://${host}` : 'https://oppvault.app';
+  const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '').toLowerCase();
+  // Only our own domains: a made-up Host header must not decide where an admin email link points.
+  return host === 'oppvault.app' || host === 'www.oppvault.app' ? `https://${host}` : (process.env.SITE_URL?.trim().replace(/\/+$/, '') || 'https://www.oppvault.app');
 }

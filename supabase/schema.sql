@@ -312,3 +312,41 @@ drop policy if exists "applied_update_own" on public.applied_items;
 create policy "applied_update_own" on public.applied_items for update to authenticated
   using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 grant update (status, applied_on, note, updated_at) on public.applied_items to authenticated;
+
+-- Security hardening (migration security_hardening_rate_limits_and_grants)
+-- Shared rate limiter: counts attempts per key across all server instances. Server (service role) only.
+create table if not exists public.rate_limits (
+  key text primary key,
+  window_start timestamptz not null default now(),
+  n integer not null default 1
+);
+alter table public.rate_limits enable row level security;
+revoke all on public.rate_limits from public, anon, authenticated;
+
+create or replace function public.rl_hit(p_key text, p_window integer)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare v integer;
+begin
+  insert into public.rate_limits as r (key, window_start, n)
+  values (left(p_key, 200), now(), 1)
+  on conflict (key) do update set
+    n = case when r.window_start < now() - make_interval(secs => p_window) then 1 else r.n + 1 end,
+    window_start = case when r.window_start < now() - make_interval(secs => p_window) then now() else r.window_start end
+  returning n into v;
+  if random() < 0.01 then
+    delete from public.rate_limits where window_start < now() - interval '1 day';
+  end if;
+  return v;
+end;
+$$;
+revoke all on function public.rl_hit(text, integer) from public, anon, authenticated;
+grant execute on function public.rl_hit(text, integer) to service_role;
+
+-- Private tables: no direct access for the public API roles (RLS stays on as a second layer).
+revoke all on public.admin_users, public.submissions, public.mail_sends from anon, authenticated;
+-- Public content is read-only for the public API roles.
+revoke insert, update, delete, truncate, references, trigger on public.opportunities, public.posts from anon, authenticated;

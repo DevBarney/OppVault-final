@@ -2,7 +2,7 @@ import { adminConfigured, checkPassword, createToken, sameOrigin, sessionCookie 
 import { dbConfigured } from '../../../../lib/admin/db';
 import { json } from '../../../../lib/admin/http';
 import { cleanEmail, findByEmail, updateUser, verifyHash } from '../../../../lib/admin/users';
-import { clientKey, rateLimited } from '../../../../lib/rateLimit';
+import { clientKey, tooMany } from '../../../../lib/rateLimit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,8 +12,8 @@ export async function POST(request: Request): Promise<Response> {
   if (!adminConfigured()) {
     return json({ ok: false, error: 'The admin area is not switched on yet. Add ADMIN_PASSWORD (at least 12 characters) in Vercel.' }, 503);
   }
-  if (rateLimited(`admin-login:${clientKey(request.headers)}`)) {
-    return json({ ok: false, error: 'Too many attempts. Please wait ten minutes.' }, 429);
+  if (await tooMany(`admin-login:ip:${clientKey(request.headers)}`, 6, 3600)) {
+    return json({ ok: false, error: 'Too many attempts. Please wait an hour.' }, 429);
   }
   let body: { password?: unknown; email?: unknown };
   try {
@@ -38,6 +38,7 @@ export async function POST(request: Request): Promise<Response> {
     verifyHash(password, null);
     return bad;
   }
+  if (await tooMany(`admin-login:to:${email}`, 8, 3600)) return json({ ok: false, error: 'Too many attempts. Please wait an hour.' }, 429);
   const user = await findByEmail(email);
   const good = verifyHash(password, user?.password_hash);
   if (!user || !good || !user.active) return bad;

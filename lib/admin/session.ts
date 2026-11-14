@@ -2,6 +2,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { COOKIE_NAME, readSession, type Session, verifyToken } from './auth';
+import { activeWriter } from './users';
 
 export async function requireAdmin(): Promise<void> {
   const store = await cookies();
@@ -22,5 +23,7 @@ export async function currentSession(): Promise<Session | null> {
 export async function requireSession(): Promise<Session> {
   const s = await currentSession();
   if (!s) redirect('/admin/login');
+  // A writer who has been switched off loses access straight away, not when their cookie runs out.
+  if (s.role === 'writer' && !(await activeWriter(s.uid))) redirect('/admin/login');
   return s;
 }
