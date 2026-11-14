@@ -10,7 +10,11 @@ export const accountsConfigured = Boolean(SUPABASE_URL && PUBLIC_KEY);
 export const AT_COOKIE = 'ov_at'; // short-lived access token
 export const RT_COOKIE = 'ov_rt'; // longer-lived refresh token
 export const FLAG_COOKIE = 'ov_s'; // readable by page scripts; only says "a session may exist", holds no secret
+export const START_COOKIE = 'ov_t'; // when this sign-in began (seconds since 1970); renewing never changes it
 export const REFRESH_DAYS = 30;
+/** Every sign-in ends this long after it began, however active the visitor is. Change the number to change the limit. */
+export const SESSION_DAYS = 7;
+export const SESSION_SECONDS = SESSION_DAYS * 86400;
 
 export const MIN_PASSWORD = 10;
 export const MAX_PASSWORD_BYTES = 72; // the limit of the password hashing used by Supabase Auth
