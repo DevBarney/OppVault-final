@@ -2825,3 +2825,9 @@ html [data-paused='true'] *::after { animation-play-state: paused !important; }
 .card__top .tag { max-width: 100%; min-width: 0; }
 .card__top .tag--plain { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card__title, .card__provider, .card__summary { overflow-wrap: anywhere; }
+
+/* Detail pages and articles: a long web address or unbroken word wraps instead of pushing the page sideways */
+.detail__main, .detail__side, .article, .prose-body, .facts, .phead--detail .phead__title { min-width: 0; }
+.detail__main, .detail__side, .article, .prose-body, .facts dd, .phead--detail .phead__title, .detail__lead { overflow-wrap: anywhere; }
+.facts dd { min-width: 0; }
+.share { flex-wrap: wrap; }
