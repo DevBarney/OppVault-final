@@ -1,3 +1,4 @@
+import TrackedLink from '../../../components/TrackedLink';
 import type { Metadata } from 'next';
 import Callout from '../../../components/Callout';
 import AppliedButton from '../../../components/account/AppliedButton';
@@ -150,11 +151,11 @@ export default async function EventPage({ params }: Props) {
                 </div>
               </dl>
               {item.source_url ? (
-                <a className="btn btn--primary facts__cta" href={item.source_url} target="_blank" rel="noopener noreferrer nofollow">
+                <TrackedLink className="btn btn--primary facts__cta" href={item.source_url} gaRef={`${item.category}/${item.slug}`}>
                   <span>Register</span>
                   <span className="visually-hidden"> on the official website (opens in a new tab)</span>
                   <ExternalIcon className="btn__arrow" />
-                </a>
+                </TrackedLink>
               ) : (
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}

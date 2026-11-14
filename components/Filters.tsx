@@ -32,9 +32,9 @@ export default function Filters({ category, levels, locations, topics, fundings,
       {showSort ? (
         <label className="filters__select">
           <span className="filters__label">Sort by</span>
-          <select name="sort" defaultValue={values.sort === 'applied' ? 'applied' : ''}>
-            <option value="">Closing soon</option>
-            <option value="applied">Most applied on OppVault</option>
+          <select name="sort" defaultValue={values.sort === 'closing' ? 'closing' : ''}>
+            <option value="">Popular</option>
+            <option value="closing">Closing soonest</option>
           </select>
         </label>
       ) : null}

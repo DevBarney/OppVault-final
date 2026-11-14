@@ -350,3 +350,51 @@ grant execute on function public.rl_hit(text, integer) to service_role;
 revoke all on public.admin_users, public.submissions, public.mail_sends from anon, authenticated;
 -- Public content is read-only for the public API roles.
 revoke insert, update, delete, truncate, references, trigger on public.opportunities, public.posts from anon, authenticated;
+
+-- Ranking (migration listing_clicks_and_activity_ranking)
+-- Anonymous click counts: how many times the "official site" button was used, per listing per day.
+create table if not exists public.listing_clicks (
+  category text not null check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  slug text not null,
+  day date not null default current_date,
+  n integer not null default 0,
+  primary key (category, slug, day)
+);
+alter table public.listing_clicks enable row level security;
+revoke all on public.listing_clicks from public, anon, authenticated;
+
+create or replace function public.click_hit(p_category text, p_slug text)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  insert into public.listing_clicks as c (category, slug, day, n)
+  values (p_category, left(p_slug, 200), current_date, 1)
+  on conflict (category, slug, day) do update set n = c.n + 1;
+$$;
+revoke all on function public.click_hit(text, text) from public, anon, authenticated;
+grant execute on function public.click_hit(text, text) to service_role;
+
+-- Public, aggregate-only activity per listing. clicks = official-site clicks in the last 30 days.
+drop function if exists public.listing_activity(text);
+create function public.listing_activity(p_category text default null)
+returns table(category text, slug text, applied integer, saved integer, clicks integer)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with a as (select ai.category, ai.slug, count(*)::integer as n from public.applied_items ai group by 1, 2),
+       s as (select si.category, si.slug, count(*)::integer as n from public.saved_items si group by 1, 2),
+       c as (select lc.category, lc.slug, sum(lc.n)::integer as n from public.listing_clicks lc where lc.day >= current_date - 30 group by 1, 2),
+       k as (select a.category, a.slug from a union select s.category, s.slug from s union select c.category, c.slug from c)
+  select k.category, k.slug, coalesce(a.n, 0), coalesce(s.n, 0), coalesce(c.n, 0)
+  from k
+  left join a on a.category = k.category and a.slug = k.slug
+  left join s on s.category = k.category and s.slug = k.slug
+  left join c on c.category = k.category and c.slug = k.slug
+  where p_category is null or k.category = p_category;
+$$;
+revoke all on function public.listing_activity(text) from public;
+grant execute on function public.listing_activity(text) to anon, authenticated;

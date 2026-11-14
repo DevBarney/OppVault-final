@@ -1,3 +1,4 @@
+import TrackedLink from '../../../components/TrackedLink';
 import type { Metadata } from 'next';
 import Callout from '../../../components/Callout';
 import AppliedButton from '../../../components/account/AppliedButton';
@@ -163,11 +164,11 @@ export default async function StudentOfferPage({ params }: Props) {
               ) : null}
               {item.coupon_code && !t.ended ? <p className="facts__note">Codes can expire early. Try it on the provider&rsquo;s page.</p> : null}
               {item.source_url ? (
-                <a className="btn btn--primary facts__cta" href={item.source_url} target="_blank" rel="noopener noreferrer nofollow">
+                <TrackedLink className="btn btn--primary facts__cta" href={item.source_url} gaRef={`${item.category}/${item.slug}`}>
                   <span>Get the offer</span>
                   <span className="visually-hidden"> on the provider&rsquo;s website (opens in a new tab)</span>
                   <ExternalIcon className="btn__arrow" />
-                </a>
+                </TrackedLink>
               ) : (
                 <p className="facts__note">Sample listings have no official link. Real listings always do.</p>
               )}
