@@ -40,7 +40,8 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? '/';
   // On the home page the hero already has a search box, so the nav icon waits until that box has scrolled away.
-  const [heroSearchSeen, setHeroSearchSeen] = useState(false);
+  // It starts hidden on the home page, so the icon never flashes up beside the hero's own search box before scripts run.
+  const [heroSearchSeen, setHeroSearchSeen] = useState(pathname === '/');
   // Desktop "Opportunities" menu
   const [menu, setMenu] = useState(false);
   const [menuLeft, setMenuLeft] = useState(0);
@@ -165,7 +166,10 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
       return;
     }
     const target = document.querySelector('.hsearch');
-    if (!target || !('IntersectionObserver' in window)) return;
+    if (!target || !('IntersectionObserver' in window)) {
+      setHeroSearchSeen(false);
+      return;
+    }
     const io = new IntersectionObserver(([entry]) => setHeroSearchSeen(entry.isIntersecting), { rootMargin: '-80px 0px 0px 0px' });
     io.observe(target);
     return () => io.disconnect();
