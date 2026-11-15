@@ -11,6 +11,7 @@ import ReviewGrid from '../components/reviews/ReviewCard';
 import { getCounts, getOpportunities, getPosts, getReviews } from '../lib/data';
 import { daysUntil, formatDate } from '../lib/dates';
 import { withSocial } from '../lib/seo';
+import JsonLd, { ORGANIZATION, WEBSITE } from '../components/JsonLd';
 import HeroDial from '../components/HeroDial';
 import { HeroVaultStatus } from '../components/HeroVaultWall';
 
@@ -32,6 +33,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={ORGANIZATION} />
+      <JsonLd data={WEBSITE} />
       <section className="hero hero--home">
         <div className="hero__aurora" aria-hidden="true">
           <span />

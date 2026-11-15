@@ -60,7 +60,10 @@ const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v
  */
 export function listIndexing(path: string, query: Query): { alternates: { canonical: string }; robots?: { index: boolean; follow: boolean } } {
   const page = Math.max(1, Math.min(200, Number.parseInt(first(query.page) ?? '1', 10) || 1));
-  const filtered = Boolean(first(query.q) || first(query.funding) || first(query.level) || first(query.location));
+  const filtered = Boolean(
+    first(query.q) || first(query.funding) || first(query.level) || first(query.location) ||
+    first(query.topic) || first(query.sort) || first(query.per),
+  );
   return {
     alternates: { canonical: filtered || page === 1 ? path : `${path}?page=${page}` },
     ...(filtered ? { robots: { index: false, follow: true } } : {}),

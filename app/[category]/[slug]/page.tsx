@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import ShareActions from '../../../components/ShareActions';
+import JsonLd, { breadcrumbs } from '../../../components/JsonLd';
 import { SITE_URL } from '../../../lib/config';
 import OpportunityCard from '../../../components/OpportunityCard';
 import Prose from '../../../components/Prose';
@@ -43,6 +44,7 @@ export default async function OpportunityPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={breadcrumbs([{ name: 'Home', path: '/' }, { name: cat.label, path: `/${cat.slug}` }, { name: item.title, path: `/${cat.slug}/${item.slug}` }])} />
       <section className="phead phead--detail">
         <div className="hero__aurora" aria-hidden="true">
           <span />

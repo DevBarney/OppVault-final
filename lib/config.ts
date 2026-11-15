@@ -19,7 +19,11 @@ export const DEFAULT_WHATSAPP_URL = 'https://chat.whatsapp.com/EvaSDdZLs1VEK7fSP
 export const WHATSAPP_URL = cleanUrl(process.env.NEXT_PUBLIC_WHATSAPP_URL) ?? DEFAULT_WHATSAPP_URL;
 
 /** Always without a trailing slash, so `${SITE_URL}/about` never becomes a double slash. */
-export const SITE_URL = (cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://oppvault.app').replace(/\/+$/, '');
+// The apex (oppvault.app) redirects to www, so every canonical, sitemap and social address must use www.
+// Even if the env var still holds the apex, it is rewritten here so search engines never see a redirecting address.
+export const SITE_URL = (cleanUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? 'https://www.oppvault.app')
+  .replace(/\/+$/, '')
+  .replace(/^https?:\/\/oppvault\.app$/i, 'https://www.oppvault.app');
 
 export const CONTACT = {
   email: 'hello@oppvault.app',

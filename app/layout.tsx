@@ -38,6 +38,11 @@ export const metadata: Metadata = {
     images: [{ url: '/og-oppvault.png', width: 1200, height: 630, alt: `OppVault. ${TAGLINE}` }],
   },
   twitter: { card: 'summary_large_image', site: '@oppvault', images: ['/og-oppvault.png'] },
+  // Optional site-ownership tags. Search Console and Bing also accept a DNS record or a file, so these stay empty unless set.
+  verification: {
+    ...(process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.BING_SITE_VERIFICATION ? { other: { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } } : {}),
+  },
 };
 
 export const viewport: Viewport = { themeColor: '#04106B' };

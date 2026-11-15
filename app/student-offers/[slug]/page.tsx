@@ -5,6 +5,7 @@ import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
 import { daysUntil, formatDate } from '../../../lib/dates';
 import ShareActions from '../../../components/ShareActions';
+import JsonLd, { breadcrumbs } from '../../../components/JsonLd';
 import { SITE_URL } from '../../../lib/config';
 import { withSocial } from '../../../lib/seo';
 import Link from 'next/link';
@@ -49,6 +50,7 @@ export default async function StudentOfferPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={breadcrumbs([{ name: 'Home', path: '/' }, { name: cat.label, path: `/${cat.slug}` }, { name: item.title, path: `/${cat.slug}/${item.slug}` }])} />
       <section className="phead phead--detail">
         <div className="hero__aurora" aria-hidden="true">
           <span />
