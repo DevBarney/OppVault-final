@@ -33,6 +33,10 @@ const SECTIONS: LegalSection[] = [
           </li>
           <li>If you create an account: your email address, an optional name, and which sign-in method you used (email, Google, GitHub, LinkedIn or X).</li>
           <li>What you do with an account: the opportunities you save and the ones you mark as applied for.</li>
+          <li>
+            When anyone uses the &ldquo;official site&rdquo; button on a listing (Apply, Register or Get the offer), we add one to that listing&rsquo;s click
+            count for the day. The count is anonymous: it is not linked to you, your account, your device or your IP address.
+          </li>
           <li>If you leave a review: your name, your rating and review, and a photo if you add one.</li>
           <li>If you suggest an opportunity or write to us: what you send.</li>
         </ul>
@@ -53,6 +57,14 @@ const SECTIONS: LegalSection[] = [
         <li>To keep you signed in and to show your saved list and applied marks, if you have an account.</li>
         <li>To show your review on the site, only if you agreed to that when you wrote it.</li>
         <li>To keep the site safe and to understand which pages are useful.</li>
+        <li>
+          To rank listings. The Popular order uses how many people applied, saved or clicked through to a listing, and how soon it closes. It uses totals, not
+          what any one person did.
+        </li>
+        <li>
+          To stop the same person inflating a count or abusing a form, we briefly keep a scrambled (hashed) version of your IP address, for up to a day. It
+          cannot be turned back into the address and is not used for anything else.
+        </li>
       </ul>
     ),
   },
@@ -78,11 +90,14 @@ const SECTIONS: LegalSection[] = [
         <ul>
           <li>
             <strong>ov_at and ov_rt</strong>: keep you signed in if you create an account. They are set only when you sign in, are not readable by page scripts,
-            and the longer one lasts up to 30 days.
+            and a sign-in lasts at most 7 days from when you signed in, even if you keep using the site, after which you are signed out.
           </li>
           <li>
             <strong>ov_s</strong>: a small marker that says a sign-in may exist, so signed-out visitors do not make needless requests. It holds no personal
-            details and lasts up to 30 days.
+            details and lasts up to 7 days.
+          </li>
+          <li>
+            <strong>ov_t</strong>: records when your sign-in began, so it can end after 7 days. It holds only a time, and is removed when you sign out.
           </li>
           <li>
             <strong>ov_consent</strong>: remembers your cookie choice for 180 days.
@@ -163,7 +178,7 @@ export default function PrivacyPage() {
     <LegalLayout
       kind="Legal"
       title="Privacy notice"
-      updated="6 November 2026"
+      updated="15 November 2026"
       lead="What OppVault collects when you browse, subscribe, create an account or leave a review, why we collect it, and how to change your mind."
       highlights={HIGHLIGHTS}
       sections={SECTIONS}
