@@ -1,7 +1,9 @@
 name: Nightly database backup
 
-# Dumps the OppVault database every night, encrypts it, and keeps it as a private workflow artifact for 90 days.
-# Needs two repository secrets (Settings, Secrets and variables, Actions): SUPABASE_DB_URL and BACKUP_PASSPHRASE.
+# Dumps the OppVault database every night, copies it into the separate "oppvault-backup" Supabase project, and also keeps
+# an encrypted copy as a private workflow artifact for 90 days.
+# Needs three repository secrets (Settings, Secrets and variables, Actions): SUPABASE_DB_URL (the live database),
+# BACKUP_DB_URL (the backup project) and BACKUP_PASSPHRASE.
 # See docs/BACKUPS.md. Scheduled runs only happen on the default branch (main).
 
 on:
@@ -24,10 +26,15 @@ jobs:
       - name: Check the secrets are set
         env:
           DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_URL: ${{ secrets.BACKUP_DB_URL }}
           PASS: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
-          if [ -z "$DB_URL" ] || [ -z "$PASS" ]; then
-            echo "SUPABASE_DB_URL and BACKUP_PASSPHRASE must both be set as repository secrets. See docs/BACKUPS.md."
+          if [ -z "$DB_URL" ] || [ -z "$PASS" ] || [ -z "$BACKUP_URL" ]; then
+            echo "SUPABASE_DB_URL, BACKUP_DB_URL and BACKUP_PASSPHRASE must all be set as repository secrets. See docs/BACKUPS.md."
+            exit 1
+          fi
+          if [ "$DB_URL" = "$BACKUP_URL" ]; then
+            echo "BACKUP_DB_URL must be the backup project, not the live one."
             exit 1
           fi
 
@@ -40,7 +47,9 @@ jobs:
           # Postgres 17 tools, to match the Supabase server.
           pg() { docker run --rm -e DB_URL postgres:17 sh -c "$1"; }
           # Everything the site owns: tables, policies, functions and data.
-          pg 'pg_dump "$DB_URL" --schema=public --no-owner --no-privileges' > out/public.sql
+          pg 'pg_dump "$DB_URL" --schema=public --no-owner' > out/public.sql
+          # The backup project already has a public schema (recreated empty before loading), so drop the line that would create it.
+          sed -i '/^CREATE SCHEMA public;$/d' out/public.sql
           # The sign-in accounts the saved and applied lists point at (private: never share this file).
           pg 'pg_dump "$DB_URL" --data-only --no-owner --table=auth.users --table=auth.identities' > out/auth-users.sql
           # Sanity checks: a broken or empty dump must fail the job, not be saved as a "good" backup.
@@ -54,6 +63,18 @@ jobs:
             echo "public.sql bytes: $(wc -c < out/public.sql)"
             echo "auth-users.sql bytes: $(wc -c < out/auth-users.sql)"
           } > out/README.txt
+
+      - name: Copy into the backup Supabase project
+        env:
+          BACKUP_URL: ${{ secrets.BACKUP_DB_URL }}
+        run: |
+          set -euo pipefail
+          # The backup project is only ever written to by this job. Each night it is rebuilt from the live database.
+          run() { docker run --rm -i -e BACKUP_URL -v "$PWD/out:/out:ro" postgres:17 sh -c "$1"; }
+          run 'psql "$BACKUP_URL" -v ON_ERROR_STOP=1 -c "drop schema if exists public cascade; create schema public; grant usage on schema public to postgres, anon, authenticated, service_role; delete from auth.users;"'
+          run 'psql "$BACKUP_URL" -v ON_ERROR_STOP=1 -q -f /out/auth-users.sql'
+          run 'psql "$BACKUP_URL" -v ON_ERROR_STOP=1 -q -f /out/public.sql'
+          run 'psql "$BACKUP_URL" -v ON_ERROR_STOP=1 -t -c "select count(*) as listings from public.opportunities"'
 
       - name: Encrypt
         env:
