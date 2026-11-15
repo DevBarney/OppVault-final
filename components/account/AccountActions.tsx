@@ -6,7 +6,7 @@ import './account.css';
 import { forgetAccount } from './store';
 
 /** Sign out, and delete the account for good. */
-export default function AccountActions({ email }: { email: string }) {
+export default function AccountActions({ part }: { part: 'sessions' | 'delete' }) {
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [typed, setTyped] = useState('');
@@ -55,27 +55,55 @@ export default function AccountActions({ email }: { email: string }) {
     } else setBusy(false);
   }
 
+  const errorLine = error ? (
+    <p className="acct-msg acct-msg--error" role="alert">
+      {error}
+    </p>
+  ) : null;
+
+  if (part === 'sessions') {
+    return (
+      <div className="set-card">
+        <ul className="set-rows">
+          <li className="set-row">
+            <div>
+              <h3 className="set-row__title">This device</h3>
+              <p className="set-row__text">Sign out of OppVault here. Your saved list and applications stay safe.</p>
+            </div>
+            <button type="button" className="btn btn--ghost btn--sm" onClick={signOut} disabled={busy}>
+              Sign out
+            </button>
+          </li>
+          <li className="set-row">
+            <div>
+              <h3 className="set-row__title">All devices</h3>
+              <p className="set-row__text">Sign out everywhere you are signed in, including this device. Use it if you lost a phone or used a shared computer.</p>
+            </div>
+            <button type="button" className="btn btn--ghost btn--sm" onClick={signOutAll} disabled={busy}>
+              Sign out everywhere
+            </button>
+          </li>
+        </ul>
+        <p className="set-help set-help--foot">For your security, every sign-in ends 7 days after it began, even if you keep using OppVault.</p>
+        {errorLine}
+      </div>
+    );
+  }
+
   return (
-    <div className="acct-actions">
-      <p className="acct-actions__who">
-        Signed in as <strong>{email || 'your account'}</strong>
+    <div className="set-card set-card--danger">
+      <p className="set-row__text">
+        Deleting your account removes your saved opportunities and your application tracker for good. We cannot bring them back.
       </p>
-      <div className="acct-actions__row">
-        <button type="button" className="btn btn--ghost btn--sm" onClick={signOut} disabled={busy}>
-          Sign out
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={signOutAll} disabled={busy}>
-          Sign out of all devices
-        </button>
-        {!confirming ? (
-          <button type="button" className="acct-linkbtn acct-linkbtn--danger" onClick={() => setConfirming(true)}>
+      {!confirming ? (
+        <div className="set-form__row">
+          <button type="button" className="btn btn--sm acct-danger__btn" onClick={() => setConfirming(true)}>
             Delete my account
           </button>
-        ) : null}
-      </div>
-      {confirming ? (
+        </div>
+      ) : (
         <div className="acct-danger">
-          <p>This deletes your account and your saved list for good. Type <strong>DELETE</strong> to confirm.</p>
+          <p>Type <strong>DELETE</strong> to confirm.</p>
           <div className="acct-danger__row">
             <input
               aria-label="Type DELETE to confirm"
@@ -92,12 +120,8 @@ export default function AccountActions({ email }: { email: string }) {
             </button>
           </div>
         </div>
-      ) : null}
-      {error ? (
-        <p className="acct-msg acct-msg--error" role="alert">
-          {error}
-        </p>
-      ) : null}
+      )}
+      {errorLine}
     </div>
   );
 }

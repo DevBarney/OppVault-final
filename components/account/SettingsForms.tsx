@@ -74,51 +74,65 @@ export default function SettingsForms({ email, name }: { email: string; name: st
 
   return (
     <>
-      <section className="set-card" aria-labelledby="set-profile">
-        <h2 id="set-profile" className="set-card__title">Profile</h2>
-        <form onSubmit={saveName} className="set-form" noValidate>
-          <div className="acct-field">
-            <label htmlFor="set-name">Name</label>
-            <input
-              id="set-name"
-              value={displayName}
-              maxLength={60}
-              autoComplete="name"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setDisplayName(e.target.value)}
-            />
-          </div>
-          <div className="acct-field">
-            <label htmlFor="set-email">Email address</label>
-            <input id="set-email" value={email} readOnly aria-describedby="set-email-help" />
-            <p id="set-email-help" className="set-help">To change your email address, write to support and we will help.</p>
-          </div>
-          {nameNote ? (
-            <p className={`acct-msg acct-msg--${nameNote.kind}`} role={nameNote.kind === 'error' ? 'alert' : 'status'}>{nameNote.text}</p>
-          ) : null}
-          <div className="set-form__row">
-            <button type="submit" className="btn btn--primary btn--sm" disabled={nameBusy || displayName.trim() === savedName}>
-              {nameBusy ? 'Saving…' : 'Save name'}
-            </button>
-          </div>
-        </form>
+      <section className="set-sec" id="profile" aria-labelledby="set-profile">
+        <div className="set-sec__head">
+          <h2 id="set-profile">Profile</h2>
+          <p>How your name appears on OppVault. Your photo comes from the account you signed in with.</p>
+        </div>
+        <div className="set-card">
+          <form onSubmit={saveName} className="set-form" noValidate>
+            <div className="acct-field">
+              <label htmlFor="set-name">Name</label>
+              <input
+                id="set-name"
+                value={displayName}
+                maxLength={60}
+                autoComplete="name"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDisplayName(e.target.value)}
+              />
+            </div>
+            <div className="acct-field">
+              <label htmlFor="set-email">Email address</label>
+              <input id="set-email" value={email} readOnly aria-describedby="set-email-help" />
+              <p id="set-email-help" className="set-help">
+                This is the address you sign in with. To change it, <a href="/support">write to support</a> and we will help.
+              </p>
+            </div>
+            {nameNote ? (
+              <p className={`acct-msg acct-msg--${nameNote.kind}`} role={nameNote.kind === 'error' ? 'alert' : 'status'}>{nameNote.text}</p>
+            ) : null}
+            <div className="set-form__row">
+              <button type="submit" className="btn btn--primary btn--sm" disabled={nameBusy || displayName.trim() === savedName}>
+                {nameBusy ? 'Saving…' : 'Save changes'}
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
 
-      <section className="set-card" aria-labelledby="set-password">
-        <h2 id="set-password" className="set-card__title">Password</h2>
-        <p className="set-card__lead">Enter your current password, then choose a new one. Changing it signs you out of every other device. If you only ever signed in with Google, LinkedIn or X, use "Forgot your password?" on the sign-in page to set one.</p>
-        <form onSubmit={savePassword} className="set-form" noValidate>
-          <PasswordInput id="set-pw0" label="Current password" value={current} onChange={setCurrent} autoComplete="current-password" />
-          <PasswordInput id="set-pw" label="New password" value={pw} onChange={setPw} autoComplete="new-password" minLength={MIN_PASSWORD} />
-          <PasswordInput id="set-pw2" label="Repeat the new password" value={pw2} onChange={setPw2} autoComplete="new-password" minLength={MIN_PASSWORD} />
-          {pwNote ? (
-            <p className={`acct-msg acct-msg--${pwNote.kind}`} role={pwNote.kind === 'error' ? 'alert' : 'status'}>{pwNote.text}</p>
-          ) : null}
-          <div className="set-form__row">
-            <button type="submit" className="btn btn--primary btn--sm" disabled={pwBusy || !pw}>
-              {pwBusy ? 'Saving…' : 'Change password'}
-            </button>
-          </div>
-        </form>
+      <section className="set-sec" id="password" aria-labelledby="set-password">
+        <div className="set-sec__head">
+          <h2 id="set-password">Password</h2>
+          <p>Use at least {MIN_PASSWORD} characters. Changing it signs you out of every other device.</p>
+        </div>
+        <div className="set-card">
+          <form onSubmit={savePassword} className="set-form" noValidate>
+            <PasswordInput id="set-pw0" label="Current password" value={current} onChange={setCurrent} autoComplete="current-password" />
+            <PasswordInput id="set-pw" label="New password" value={pw} onChange={setPw} autoComplete="new-password" minLength={MIN_PASSWORD} />
+            <PasswordInput id="set-pw2" label="Repeat the new password" value={pw2} onChange={setPw2} autoComplete="new-password" minLength={MIN_PASSWORD} />
+            <p className="set-help">
+              Signed in with Google, LinkedIn or X and have no password yet? Choose &ldquo;Forgot your password?&rdquo; on the <a href="/account/sign-in">sign-in page</a> to set one.
+            </p>
+            {pwNote ? (
+              <p className={`acct-msg acct-msg--${pwNote.kind}`} role={pwNote.kind === 'error' ? 'alert' : 'status'}>{pwNote.text}</p>
+            ) : null}
+            <div className="set-form__row">
+              <button type="submit" className="btn btn--primary btn--sm" disabled={pwBusy || !pw}>
+                {pwBusy ? 'Saving…' : 'Update password'}
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
     </>
   );

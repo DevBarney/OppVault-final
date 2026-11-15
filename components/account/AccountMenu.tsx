@@ -5,30 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './account.css';
+import Avatar, { initialsOf } from './Avatar';
 import { forgetAccount, useAccount } from './store';
-
-/** The round picture: the provider's photo when there is one, the initials otherwise (and if the photo fails to load). */
-function Avatar({ src, initials, large }: { src: string; initials: string; large?: boolean }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [src]);
-  return (
-    <span className={`acct-avatar${large ? ' acct-avatar--lg' : ''}`} aria-hidden="true">
-      {src && !failed ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img className="acct-avatar__img" src={src} alt="" width={44} height={44} referrerPolicy="no-referrer" decoding="async" onError={() => setFailed(true)} />
-      ) : (
-        initials
-      )}
-    </span>
-  );
-}
-
-function initialsOf(name: string, email: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (email[0] ?? '?').toUpperCase();
-}
 
 /** Desktop header: a round avatar that opens the account menu. Shows nothing for visitors who are not signed in. */
 export default function AccountMenu() {
@@ -104,7 +82,7 @@ export default function AccountMenu() {
   const panel = (
     <div id="acct-menu" ref={panelRef} className="acct-pop" role="group" aria-label="Account" style={{ top: pos.top, right: pos.right }}>
       <div className="acct-pop__who">
-        <Avatar src={account.avatar} initials={initials} large />
+        <Avatar src={account.avatar} initials={initials} size="lg" />
         <span className="acct-pop__text">
           <span className="acct-pop__name">{who}</span>
           <span className="acct-pop__email">{account.email}</span>
