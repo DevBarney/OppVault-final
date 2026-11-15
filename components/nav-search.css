@@ -1,0 +1,19 @@
+/* The header search button. Kept apart from command-palette.css, which loads later with the search popup,
+   so the button is styled from the very first paint. */
+/* Search button in the header */
+.nav__search { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--navy); cursor: pointer; }
+.nav__search-icon { width: 22px; height: 22px; }
+.nav__search:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+@media (hover: hover) { .nav__search:hover { background: var(--pale); } }
+.nav__search { transition: width 0.3s var(--ease, ease), opacity 0.25s ease, margin 0.3s var(--ease, ease); }
+.nav__search[data-away='true'] { width: 0; min-width: 0; padding: 0; border-width: 0; margin-inline: -4px; opacity: 0; overflow: hidden; pointer-events: none; visibility: hidden; transition: width 0.3s var(--ease, ease), opacity 0.25s ease, margin 0.3s var(--ease, ease), visibility 0s linear 0.3s; }
+
+/* Wide screens: a labelled search button that shows the shortcut */
+.nav__search-text, .nav__kbd { display: none; }
+@media (min-width: 1280px) {
+  .nav__search { display: inline-flex; align-items: center; gap: 8px; width: auto; padding: 0 12px 0 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, 0.7); }
+  .nav__search-icon { width: 18px; height: 18px; }
+  .nav__search-text { display: inline; color: var(--navy); font-size: 0.9375rem; font-weight: 500; }
+  .nav__kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--muted); font: inherit; font-size: 0.75rem; font-weight: 600; line-height: 1; }
+  .nav__search[data-away='true'] { width: 0; padding: 0; border-width: 0; }
+}

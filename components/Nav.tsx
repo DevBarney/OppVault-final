@@ -9,6 +9,7 @@ import { CATEGORIES, type CategorySlug } from '../lib/categories';
 import AccountLink, { AccountExtras, AppliedLink } from './account/AccountLink';
 import AccountMenu from './account/AccountMenu';
 import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
+import './nav-search.css';
 
 // Desktop navigation: the six kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
 const LINKS = [
