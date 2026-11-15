@@ -39,14 +39,14 @@ export default function Reveal({ children, as = 'div', className, delay = 0 }: P
           observer.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+      { threshold: 0.05, rootMargin: '0px 0px 8% 0px' },
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   const Tag = as as 'div';
-  const style = { '--reveal-delay': `${delay}ms` } as CSSProperties;
+  const style = { '--reveal-delay': `${Math.min(delay, 150)}ms` } as CSSProperties;
   const classes = `${className ? `${className} ` : ''}reveal${phase === 'idle' ? '' : ` reveal--${phase}`}`;
 
   return (

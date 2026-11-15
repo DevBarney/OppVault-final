@@ -19,7 +19,7 @@ export default function VaultOpen({ children, delay = 0 }: { children: ReactNode
     if (!el) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (!('IntersectionObserver' in window)) return;
-    if (el.getBoundingClientRect().top < window.innerHeight * 0.85) return;
+    if (el.getBoundingClientRect().top < window.innerHeight * 1.1) return; // already on or near the screen: no door at all
     setPhase('closed');
     const observer = new IntersectionObserver(
       (entries) => {
@@ -28,7 +28,8 @@ export default function VaultOpen({ children, delay = 0 }: { children: ReactNode
           observer.disconnect();
         }
       },
-      { threshold: 0.35 },
+      // Start opening while the card is still just below the screen, so by the time it arrives the door is already swinging.
+      { threshold: 0, rootMargin: '0px 0px 25% 0px' },
     );
     observer.observe(el);
     return () => observer.disconnect();

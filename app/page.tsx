@@ -115,7 +115,7 @@ export default async function HomePage() {
             </div>
             <ul className="grid">
               {closing.items.map((item, i) => (
-                <VaultOpen key={item.id} delay={Math.min(i, 5) * 140}>
+                <VaultOpen key={item.id} delay={Math.min(i, 3) * 50}>
                   <OpportunityCard item={item} showCategory />
                 </VaultOpen>
               ))}

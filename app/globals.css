@@ -1112,7 +1112,7 @@ ol {
   transform: translate3d(0, 26px, 0);
 }
 .reveal--shown {
-  animation: reveal-in 0.85s var(--ease) var(--reveal-delay, 0ms) backwards;
+  animation: reveal-in 0.5s var(--ease) var(--reveal-delay, 0ms) backwards;
 }
 
 /* ---- Page load: the hero settles into place ---- */
@@ -2566,9 +2566,9 @@ body > main { min-height: 50vh; }
 .vo__door { display: none; }
 .vo--closed .vo__door, .vo--open .vo__door { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 20px; background: radial-gradient(120% 90% at 20% 0%, rgba(13, 180, 248, 0.35), transparent 60%), linear-gradient(160deg, #0a2aa0, #04106b); box-shadow: 0 18px 30px -18px rgba(4, 16, 107, 0.7); transform-origin: left center; backface-visibility: hidden; pointer-events: none; }
 .vo__key { width: 34px; fill: var(--gold); filter: drop-shadow(0 0 12px rgba(251, 184, 0, 0.55)); }
-.vo--open .vo__door { transform: rotateY(-112deg); opacity: 0; transition: transform 0.9s var(--ease) var(--vo-delay, 0ms), opacity 0.35s ease calc(var(--vo-delay, 0ms) + 0.6s), visibility 0s linear calc(var(--vo-delay, 0ms) + 1s); visibility: hidden; }
+.vo--open .vo__door { transform: rotateY(-112deg); opacity: 0; transition: transform 0.4s var(--ease) var(--vo-delay, 0ms), opacity 0.2s ease calc(var(--vo-delay, 0ms) + 0.25s), visibility 0s linear calc(var(--vo-delay, 0ms) + 0.45s); visibility: hidden; }
 .vo--closed > .card { opacity: 0.001; }
-.vo--open > .card { opacity: 1; transition: opacity 0.4s ease var(--vo-delay, 0ms); }
+.vo--open > .card { opacity: 1; transition: opacity 0.25s ease var(--vo-delay, 0ms); }
 
 /* How OppVault helps: the line fills as you scroll and each step lights up in turn */
 .stp__line { position: absolute; top: 18px; bottom: 18px; left: 17px; width: 2px; margin: 0; padding: 0; list-style: none; border-radius: 2px; background: var(--line); pointer-events: none; }
