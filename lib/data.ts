@@ -11,7 +11,7 @@ import type { Opportunity, Post, Review } from './types';
 import type { CategorySlug } from './categories';
 import { SEED_OPPORTUNITIES, SEED_POSTS } from './seed/index';
 import { daysUntil } from './dates';
-import { NO_ACTIVITY, rankScore, type Engagement } from './ranking';
+import { NO_ACTIVITY, rankScore, searchTier, type Engagement } from './ranking';
 
 const URL_BASE = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\/+$/, '');
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
@@ -90,6 +90,8 @@ export type Filters = {
   /** hide listings whose deadline has passed (default true) */
   hideClosed?: boolean;
   featuredOnly?: boolean;
+  /** internal: skip ranking and return the rows as the database gives them */
+  raw?: boolean;
   limit?: number;
   offset?: number;
 };
@@ -167,15 +169,19 @@ export async function getOpportunities(filters: Filters = {}): Promise<Page<Oppo
   const limit = filters.limit ?? 12;
   const offset = filters.offset ?? 0;
 
-  if (filters.sort === 'popular') {
+  const searchWords = cleanSearch(filters.q).toLowerCase().split(' ').filter(Boolean).slice(0, 5);
+  if (!filters.raw && (filters.sort === 'popular' || searchWords.length > 0)) {
     // Ranking needs every matching row, so load them (capped) and sort here, then cut the page.
     const { sort: _sort, limit: _l, offset: _o, ...rest } = filters;
     void _sort; void _l; void _o;
     const [{ items: all, total }, activity] = await Promise.all([
-      getOpportunities({ ...rest, limit: 1000, offset: 0 }),
+      getOpportunities({ ...rest, raw: true, limit: 1000, offset: 0 }),
       getActivity(filters.category),
     ]);
-    const ranked = [...all].sort(byPopularity(activity)).map((o) => ({ ...o, applied_count: activity.get(`${o.category}/${o.slug}`)?.applied ?? 0 }));
+    // With a search: title matches come first. Inside each group, the chosen order applies (closing date, or popular).
+    const within = filters.sort === 'closing' ? sortByDeadline : byPopularity(activity);
+    const byTitle = (a: Opportunity, b: Opportunity): number => searchTier(b, searchWords) - searchTier(a, searchWords) || within(a, b);
+    const ranked = [...all].sort(searchWords.length > 0 ? byTitle : byPopularity(activity)).map((o) => ({ ...o, applied_count: activity.get(`${o.category}/${o.slug}`)?.applied ?? 0 }));
     return { items: ranked.slice(offset, offset + limit), total };
   }
 

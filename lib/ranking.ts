@@ -32,3 +32,24 @@ export function urgencyBoost(days: number | null): number {
 export function rankScore(e: Engagement, days: number | null): number {
   return engagementScore(e) + urgencyBoost(days);
 }
+
+// ---- Search: where the words you typed were found ----
+// Results are grouped by how well the TITLE matches, best first, and only then by anything else:
+//   4  the title starts with what you typed
+//   3  the title contains the whole phrase
+//   2  the title contains every word
+//   1  the title contains some of the words, or the provider name does
+//   0  the words are only in the summary or the details
+// (A listing is only returned at all when every word appears somewhere in it.)
+
+export function searchTier(o: { title: string; provider: string }, words: string[]): number {
+  if (words.length === 0) return 0;
+  const title = o.title.toLowerCase();
+  const provider = o.provider.toLowerCase();
+  const phrase = words.join(' ');
+  if (title.startsWith(phrase)) return 4;
+  if (title.includes(phrase)) return 3;
+  if (words.every((w) => title.includes(w))) return 2;
+  if (words.some((w) => title.includes(w) || provider.includes(w))) return 1;
+  return 0;
+}
