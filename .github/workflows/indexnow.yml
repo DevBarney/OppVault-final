@@ -1,0 +1,28 @@
+# Tells Bing and other IndexNow search engines about every address in the sitemap.
+# Run it by hand: GitHub, Actions tab, "Ping IndexNow", Run workflow.
+# Leave "paths" empty to send the whole sitemap, or list specific paths separated by spaces, e.g. /scholarships/some-slug
+name: Ping IndexNow
+
+on:
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: 'Optional. Paths to send, separated by spaces. Empty sends the whole sitemap.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Send addresses
+        env:
+          PATHS: ${{ inputs.paths }}
+        run: node scripts/indexnow.mjs $PATHS
