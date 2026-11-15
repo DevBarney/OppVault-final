@@ -1,6 +1,7 @@
 // Where an application stands. Shared by the server and the tracker page.
 
 export const STATUSES = [
+  { id: 'pending', label: 'Pending' }, // went to the official site from OppVault, has not said they applied yet
   { id: 'applied', label: 'Applied' },
   { id: 'shortlisted', label: 'Shortlisted' },
   { id: 'interview', label: 'Interview or assessment' },

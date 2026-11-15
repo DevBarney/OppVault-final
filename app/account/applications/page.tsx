@@ -64,7 +64,7 @@ export default async function ApplicationsPage() {
           <p className="phead__eyebrow">Your account</p>
           <h1 className="phead__title">My applications</h1>
           <div className="phead__text">
-            <p>Keep track of what you have applied for and where each application stands. Only you can see this page.</p>
+            <p>Keep track of what you have applied for and where each application stands. When you go to an official site from OppVault, the listing waits here as Pending until you tell us you applied. Only you can see this page.</p>
           </div>
         </div>
       </section>

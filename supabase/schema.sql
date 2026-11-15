@@ -398,3 +398,10 @@ as $$
 $$;
 revoke all on function public.listing_activity(text) from public;
 grant execute on function public.listing_activity(text) to anon, authenticated;
+
+-- Pending applications (migration pending_applications_status)
+-- "pending": the visitor went to the official site from OppVault but has not said they applied yet.
+alter table public.applied_items drop constraint if exists applied_items_status_ok;
+alter table public.applied_items add constraint applied_items_status_ok
+  check (status in ('pending','applied','shortlisted','interview','offer','not_selected','withdrawn'));
+-- applied_count() and listing_activity() ignore pending rows (see the migration for the current bodies).

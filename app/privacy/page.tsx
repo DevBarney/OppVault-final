@@ -37,6 +37,10 @@ const SECTIONS: LegalSection[] = [
             When anyone uses the &ldquo;official site&rdquo; button on a listing (Apply, Register or Get the offer), we add one to that listing&rsquo;s click
             count for the day. The count is anonymous: it is not linked to you, your account, your device or your IP address.
           </li>
+          <li>
+            If you are signed in and use the &ldquo;official site&rdquo; button on a listing, we add that listing to your applications as Pending, so you can
+            come back to it and tell us when you have applied. Only you can see it, and you can remove it at any time.
+          </li>
           <li>If you leave a review: your name, your rating and review, and a photo if you add one.</li>
           <li>If you suggest an opportunity or write to us: what you send.</li>
         </ul>

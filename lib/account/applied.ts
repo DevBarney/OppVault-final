@@ -8,7 +8,8 @@ export { validRef };
 export type AppliedRef = SavedRef;
 
 export async function listApplied(token: string): Promise<AppliedRef[]> {
-  const res = await rest('applied_items?select=category,slug&order=created_at.desc&limit=500', token, { method: 'GET' });
+  // Pending listings are not applications yet, so they are left out here (this list drives the "Applied" marks).
+  const res = await rest('applied_items?select=category,slug&status=neq.pending&order=created_at.desc&limit=500', token, { method: 'GET' });
   if (!res || !res.ok) return [];
   const rows = (await res.json()) as unknown;
   if (!Array.isArray(rows)) return [];
@@ -20,6 +21,20 @@ export async function listApplied(token: string): Promise<AppliedRef[]> {
 
 export async function addApplied(token: string, ref: AppliedRef): Promise<boolean> {
   const res = await rest('applied_items', token, { method: 'POST', body: ref, prefer: 'resolution=ignore-duplicates,return=minimal' });
+  if (!res || !res.ok) return false;
+  // If it was waiting as Pending, saying "I applied" moves it on, dated today.
+  const today = new Date().toISOString().slice(0, 10);
+  await rest(
+    `applied_items?category=eq.${encodeURIComponent(ref.category)}&slug=eq.${encodeURIComponent(ref.slug)}&status=eq.pending`,
+    token,
+    { method: 'PATCH', body: { status: 'applied', applied_on: today, updated_at: new Date().toISOString() }, prefer: 'return=minimal' },
+  );
+  return true;
+}
+
+/** The visitor went to the official site from OppVault: keep the listing under Pending. Never changes a row that already exists. */
+export async function addPending(token: string, ref: AppliedRef): Promise<boolean> {
+  const res = await rest('applied_items', token, { method: 'POST', body: { ...ref, status: 'pending' }, prefer: 'resolution=ignore-duplicates,return=minimal' });
   return Boolean(res && res.ok);
 }
 

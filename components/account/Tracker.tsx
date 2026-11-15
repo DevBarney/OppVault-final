@@ -116,6 +116,18 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
             ))}
           </select>
         </label>
+        {row.status === 'pending' ? (
+          <div className="trk-field trk-pending">
+            <span>Not applied yet</span>
+            <button
+              type="button"
+              className="btn btn--primary btn--sm"
+              onClick={() => commit({ status: 'applied', applied_on: new Date().toISOString().slice(0, 10) })}
+            >
+              I applied
+            </button>
+          </div>
+        ) : (
         <label className="trk-field">
           <span>Date applied</span>
           <input
@@ -127,6 +139,7 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
             }}
           />
         </label>
+        )}
       </div>
       <label className="trk-field trk-field--note">
         <span>Private note</span>
