@@ -1,0 +1,75 @@
+name: Nightly database backup
+
+# Dumps the OppVault database every night, encrypts it, and keeps it as a private workflow artifact for 90 days.
+# Needs two repository secrets (Settings, Secrets and variables, Actions): SUPABASE_DB_URL and BACKUP_PASSPHRASE.
+# See docs/BACKUPS.md. Scheduled runs only happen on the default branch (main).
+
+on:
+  schedule:
+    - cron: '30 2 * * *' # 02:30 UTC every night (03:30 in Lagos)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check the secrets are set
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$DB_URL" ] || [ -z "$PASS" ]; then
+            echo "SUPABASE_DB_URL and BACKUP_PASSPHRASE must both be set as repository secrets. See docs/BACKUPS.md."
+            exit 1
+          fi
+
+      - name: Dump the database
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          mkdir out
+          # Postgres 17 tools, to match the Supabase server.
+          pg() { docker run --rm -e DB_URL postgres:17 sh -c "$1"; }
+          # Everything the site owns: tables, policies, functions and data.
+          pg 'pg_dump "$DB_URL" --schema=public --no-owner --no-privileges' > out/public.sql
+          # The sign-in accounts the saved and applied lists point at (private: never share this file).
+          pg 'pg_dump "$DB_URL" --data-only --no-owner --table=auth.users --table=auth.identities' > out/auth-users.sql
+          # Sanity checks: a broken or empty dump must fail the job, not be saved as a "good" backup.
+          grep -q 'CREATE TABLE public.opportunities' out/public.sql
+          grep -q 'CREATE TABLE public.saved_items' out/public.sql
+          test "$(wc -c < out/public.sql)" -gt 5000
+          {
+            echo "OppVault backup"
+            echo "taken: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "commit: ${GITHUB_SHA}"
+            echo "public.sql bytes: $(wc -c < out/public.sql)"
+            echo "auth-users.sql bytes: $(wc -c < out/auth-users.sql)"
+          } > out/README.txt
+
+      - name: Encrypt
+        env:
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%d)"
+          tar -czf backup.tar.gz -C out .
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$PASS" --symmetric --cipher-algo AES256 -o "oppvault-backup-${STAMP}.tar.gz.gpg" backup.tar.gz
+          rm -rf out backup.tar.gz
+          echo "STAMP=${STAMP}" >> "$GITHUB_ENV"
+
+      - name: Keep it for 90 days
+        uses: actions/upload-artifact@v4
+        with:
+          name: oppvault-backup-${{ env.STAMP }}
+          path: oppvault-backup-*.tar.gz.gpg
+          retention-days: 90
+          if-no-files-found: error
