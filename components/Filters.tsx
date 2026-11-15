@@ -12,12 +12,12 @@ type Props = {
   showSort?: boolean;
   /** the funding values that really exist in this category's listings */
   fundings?: string[];
-  values: { q?: string; funding?: string; level?: string; location?: string; topic?: string; sort?: string };
+  values: { q?: string; funding?: string; level?: string; location?: string; topic?: string; sort?: string; per?: string };
 };
 
 /** A plain GET form, so searching and filtering work without any JavaScript. */
 export default function Filters({ category, levels, locations, topics, fundings, showSort, values }: Props) {
-  const active = Boolean(values.q || values.funding || values.level || values.location || values.topic || values.sort);
+  const active = Boolean(values.q || values.funding || values.level || values.location || values.topic || values.sort || values.per);
   return (
     <form className="filters" method="get" action={`/${category.slug}`} role="search" aria-label={`Search ${category.label}`}>
       <label className="filters__search">
@@ -38,6 +38,14 @@ export default function Filters({ category, levels, locations, topics, fundings,
           </select>
         </label>
       ) : null}
+      <label className="filters__select">
+        <span className="filters__label">Show</span>
+        <select name="per" defaultValue={values.per ?? ''}>
+          <option value="">24 per page</option>
+          <option value="48">48 per page</option>
+          <option value="96">96 per page</option>
+        </select>
+      </label>
       <div className="filters__actions">
         <button className="btn btn--primary btn--sm" type="submit">
           <span>Apply</span>

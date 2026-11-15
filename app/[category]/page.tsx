@@ -1,3 +1,4 @@
+import { pageSize, pageSizeParam } from '../../lib/paging';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Filters from '../../components/Filters';
@@ -10,7 +11,6 @@ import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
 import { listIndexing, withSocial } from '../../lib/seo';
 
 export const dynamicParams = false;
-const PER_PAGE = 9;
 
 export function generateStaticParams() {
   return CATEGORIES.map((c) => ({ category: c.slug }));
@@ -37,13 +37,15 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   // Popular (what others click, save and apply to, plus how soon it closes) is the default; 'closing' is plain deadline order.
   const sort = one(sp.sort) === 'closing' ? ('closing' as const) : ('popular' as const);
   const shownSort = sort === 'closing' ? sort : undefined;
+  const perPage = pageSize(one(sp.per));
+  const per = pageSizeParam(perPage);
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
   const [{ items, total }, facets] = await Promise.all([
-    getOpportunities({ category: cat.slug, ...values, sort, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
+    getOpportunities({ category: cat.slug, ...values, sort, limit: perPage, offset: (page - 1) * perPage }),
     getFacets(cat.slug),
   ]);
-  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const pages = Math.max(1, Math.ceil(total / perPage));
   const filtered = Boolean(values.q || values.funding || values.level || values.location);
 
   return (
@@ -52,7 +54,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} showSort values={{ ...values, sort: shownSort }} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} showSort values={{ ...values, sort: shownSort, per }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No listings found' : `${total} ${total === 1 ? 'listing' : 'listings'}`}
@@ -85,7 +87,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
           <Pagination
             basePath={`/${cat.slug}`}
-            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, sort: shownSort }}
+            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, sort: shownSort, per }}
             page={page}
             pages={pages}
           />

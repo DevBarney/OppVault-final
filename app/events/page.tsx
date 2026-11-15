@@ -1,3 +1,4 @@
+import { pageSize, pageSizeParam } from '../../lib/paging';
 import type { Metadata } from 'next';
 import Callout from '../../components/Callout';
 import { listIndexing, withSocial } from '../../lib/seo';
@@ -13,7 +14,6 @@ import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
 import { daysUntil } from '../../lib/dates';
 import './events.css';
 
-const PER_PAGE = 9;
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -29,6 +29,8 @@ export default async function EventsPage({ searchParams }: Props) {
   if (!cat) notFound();
   const sp = await searchParams;
   const values = { q: one(sp.q)?.slice(0, 60), funding: one(sp.funding), level: one(sp.level), location: one(sp.location) };
+  const perPage = pageSize(one(sp.per));
+  const per = pageSizeParam(perPage);
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
   // The shared query hides past dates by default. Events keep them, labelled, after the upcoming ones.
@@ -44,9 +46,9 @@ export default async function EventsPage({ searchParams }: Props) {
   const past = all.filter((e) => isPast(e.deadline)).sort((a, b) => (b.deadline ?? '').localeCompare(a.deadline ?? '')); // most recent first
   const ordered = [...upcoming, ...past];
   const total = ordered.length;
-  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
-  const offset = (page - 1) * PER_PAGE;
-  const items = ordered.slice(offset, offset + PER_PAGE);
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  const offset = (page - 1) * perPage;
+  const items = ordered.slice(offset, offset + perPage);
   const filtered = Boolean(values.q || values.funding || values.level || values.location);
 
   return (
@@ -55,7 +57,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
       <section className="section section--list" id="listings">
         <div className="container">
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} values={values} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} values={{ ...values, per }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0
@@ -100,7 +102,7 @@ export default async function EventsPage({ searchParams }: Props) {
 
           <Pagination
             basePath="/events"
-            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location }}
+            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, per }}
             page={page}
             pages={pages}
           />

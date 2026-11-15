@@ -1,3 +1,4 @@
+import { pageSize, pageSizeParam } from '../../lib/paging';
 import type { Metadata } from 'next';
 import Callout from '../../components/Callout';
 import { listIndexing, withSocial } from '../../lib/seo';
@@ -12,7 +13,6 @@ import { getCategory } from '../../lib/categories';
 import { getFacets, getOpportunities, usingSupabase } from '../../lib/data';
 import './offers.css';
 
-const PER_PAGE = 9;
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -35,14 +35,16 @@ export default async function StudentOffersPage({ searchParams }: Props) {
   // Popular (what others click, save and apply to, plus how soon it closes) is the default; 'closing' is plain deadline order.
   const sort = one(sp.sort) === 'closing' ? ('closing' as const) : ('popular' as const);
   const shownSort = sort === 'closing' ? sort : undefined;
+  const perPage = pageSize(one(sp.per));
+  const per = pageSizeParam(perPage);
   const page = Math.max(1, Math.min(200, Number.parseInt(one(sp.page) ?? '1', 10) || 1));
 
   // Offers that have ended are hidden by the shared query, so the list only shows offers you can still use.
   const [{ items, total }, facets] = await Promise.all([
-    getOpportunities({ category: 'student-offers', ...values, sort, limit: PER_PAGE, offset: (page - 1) * PER_PAGE }),
+    getOpportunities({ category: 'student-offers', ...values, sort, limit: perPage, offset: (page - 1) * perPage }),
     getFacets('student-offers'),
   ]);
-  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const pages = Math.max(1, Math.ceil(total / perPage));
   const filtered = Boolean(values.q || values.funding || values.level || values.location || values.topic);
 
   return (
@@ -58,7 +60,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <TopicTiles basePath="/student-offers" topics={facets.topics} counts={facets.topicCounts} active={values.topic} label="Browse by topic" />
 
-          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} topics={facets.topics} showSort values={{ ...values, sort: shownSort }} />
+          <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} topics={facets.topics} showSort values={{ ...values, sort: shownSort, per }} />
 
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No offers found' : `${total} ${total === 1 ? 'offer' : 'offers'}`}
@@ -91,7 +93,7 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <Pagination
             basePath="/student-offers"
-            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, topic: values.topic, sort: shownSort }}
+            params={{ q: values.q, funding: values.funding, level: values.level, location: values.location, topic: values.topic, sort: shownSort, per }}
             page={page}
             pages={pages}
           />
