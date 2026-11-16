@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './account.css';
-import Avatar, { initialsOf } from './Avatar';
+import Avatar from './Avatar';
+import { initialsOf } from '../../lib/account/initials';
 import { forgetAccount, useAccount } from './store';
 
 /** Desktop header: a round avatar that opens the account menu. Shows nothing for visitors who are not signed in. */

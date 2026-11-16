@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import AccountActions from '../../../components/account/AccountActions';
-import Avatar, { initialsOf } from '../../../components/account/Avatar';
+import Avatar from '../../../components/account/Avatar';
+import { initialsOf } from '../../../lib/account/initials';
 import CookieSettingsLink from '../../../components/CookieSettingsLink';
 import AccountTabs from '../../../components/account/AccountTabs';
 import SettingsForms from '../../../components/account/SettingsForms';
