@@ -11,7 +11,8 @@ export default function TrackedLink({ href, gaRef, className, children }: { href
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ ref: gaRef }),
         keepalive: true,
-        credentials: 'omit',
+        // Same-origin cookies are sent so that, for a signed-in visitor, the listing is kept under Pending. Nothing is stored for others.
+        credentials: 'same-origin',
       }).catch(() => undefined);
     } catch {
       /* counting must never get in the way of the link */
