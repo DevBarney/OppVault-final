@@ -149,6 +149,8 @@ const SECTIONS: LegalSection[] = [
       <p>
         Joining the WhatsApp community is optional and happens inside WhatsApp, under WhatsApp&rsquo;s own terms and privacy policy. Depending on your WhatsApp
         settings, other members may be able to see your name or phone number.
+        Our short link, oppvault.app/join, adds one to a daily count for the place you opened it from (for example an email, the flyer or a page on this site) before sending you to
+        WhatsApp. The count is anonymous: it is not linked to you, your account, your device or your IP address.
       </p>
     ),
   },

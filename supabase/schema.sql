@@ -405,3 +405,27 @@ alter table public.applied_items drop constraint if exists applied_items_status_
 alter table public.applied_items add constraint applied_items_status_ok
   check (status in ('pending','applied','shortlisted','interview','offer','not_selected','withdrawn'));
 -- applied_count() and listing_activity() ignore pending rows (see the migration for the current bodies).
+
+-- Community join link (migration join_clicks)
+-- Anonymous count of opens of oppvault.app/join, per source (save, applied, closing, email, newsletter, flyer, video, site) per day.
+create table if not exists public.join_clicks (
+  src text not null check (src ~ '^[a-z]{2,20}$'),
+  day date not null default current_date,
+  n integer not null default 0,
+  primary key (src, day)
+);
+alter table public.join_clicks enable row level security;
+revoke all on public.join_clicks from public, anon, authenticated;
+
+create or replace function public.join_hit(p_src text)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  insert into public.join_clicks as j (src, day, n)
+  values (left(p_src, 20), current_date, 1)
+  on conflict (src, day) do update set n = j.n + 1;
+$$;
+revoke all on function public.join_hit(text) from public, anon, authenticated;
+grant execute on function public.join_hit(text) to service_role;

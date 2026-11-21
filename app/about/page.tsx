@@ -5,7 +5,7 @@ import Reveal from '../../components/Reveal';
 import FinePrint from '../../components/FinePrint';
 import { ArrowIcon, CategoryIcon, ChatIcon, CheckIcon, ExternalIcon, StarIcon } from '../../components/Icons';
 import { CATEGORIES } from '../../lib/categories';
-import { CONTACT, WHATSAPP_URL } from '../../lib/config';
+import { CONTACT } from '../../lib/config';
 import VaultDoor from '../../components/VaultDoor';
 import './about.css';
 import { fraunces } from './fraunces';
@@ -311,7 +311,7 @@ export default function AboutPage() {
               </a>
             </Reveal>
             <Reveal as="li" className="abt-way" delay={160}>
-              <a className="abt-way__link" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <a className="abt-way__link" href="/join?src=about" target="_blank" rel="noopener noreferrer">
                 <ChatIcon className="abt-way__icon" />
                 <span className="abt-way__title">Join the community</span>
                 <span className="abt-way__text">Chat with others who are looking, and hear about new listings.</span>

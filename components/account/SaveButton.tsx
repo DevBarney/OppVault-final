@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import './account.css';
+import { askToJoin } from '../JoinToast';
 import { setSaved, useAccount } from './store';
 
 /** A small heart that flies from the button to the heart in the header, so the save feels like it landed somewhere. */
@@ -87,6 +88,7 @@ export default function SaveButton({
       setPop(true);
       window.setTimeout(() => setPop(false), 500);
       flyToNav(button);
+      askToJoin('save');
     }
   }
 

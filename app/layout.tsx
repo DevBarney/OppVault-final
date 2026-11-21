@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import JoinToast from '../components/JoinToast';
 import NewsletterBand from '../components/NewsletterBand';
 import Interactions from '../components/Interactions';
 import { SITE_URL, TAGLINE } from '../lib/config';
@@ -58,6 +59,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <NewsletterBand />
         <Footer />
         <LazyChrome />
+        <JoinToast />
       </body>
     </html>
   );

@@ -94,6 +94,8 @@ export function renderEmail(body: string, previewText: string): { html: string; 
 <tr><td bgcolor="${NAVY}" style="background-color:${NAVY};padding-top:12px;padding-bottom:12px;padding-left:28px;padding-right:28px;">
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#9fdcfb;">${esc(TAGLINE)}</div></td></tr>
 <tr><td style="padding-top:28px;padding-bottom:12px;padding-left:28px;padding-right:28px;">${out.join('\n')}</td></tr>
+<tr><td style="padding-top:4px;padding-bottom:24px;padding-left:28px;padding-right:28px;">
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#1e2350;margin-top:0;margin-bottom:0;">Applying to something from this email? Others are too. <a href="${esc(SITE_URL)}/join?src=newsletter" style="color:${ROYAL};font-weight:bold;">Join the WhatsApp group</a>.</p></td></tr>
 <tr><td style="padding-top:8px;padding-bottom:28px;padding-left:28px;padding-right:28px;border-top:1px solid #dce6f7;">
 <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:${MUTED};margin-top:16px;margin-bottom:0;">You are receiving this because you signed up at <a href="${esc(SITE_URL)}" style="color:${MUTED};">oppvault.app</a>. Always check the official source before you apply. Questions? Reply to this email or write to hello@oppvault.app.<br><a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:${MUTED};text-decoration:underline;">Unsubscribe</a></p>
 </td></tr></table></td></tr></table></body></html>`;
@@ -105,6 +107,8 @@ export function renderEmail(body: string, previewText: string): { html: string; 
       .replace(/\*\*([^*]+)\*\*/g, '$1')
       .replace(/^## /gm, '')
       .trim(),
+    '',
+    'Applying to something from this email? Others are too. Join the WhatsApp group: ' + SITE_URL + '/join?src=newsletter',
     '',
     '--',
     'You are receiving this because you signed up at oppvault.app. Questions? Write to hello@oppvault.app.',

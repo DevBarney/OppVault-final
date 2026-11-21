@@ -1,7 +1,6 @@
 import Reveal from './Reveal';
 import SubscribeForm from './SubscribeForm';
 import WhatsAppButton from './WhatsAppButton';
-import { WHATSAPP_URL } from '../lib/config';
 
 /** The sign-up band above the footer on every page. The "Get updates" button in the nav scrolls here. */
 export default function NewsletterBand() {
@@ -18,9 +17,9 @@ export default function NewsletterBand() {
           </p>
         </Reveal>
         <Reveal className="band__card" delay={140}>
-          <SubscribeForm variant="dark" whatsappUrl={WHATSAPP_URL} />
+          <SubscribeForm variant="dark" whatsappUrl="/join?src=site" />
           <div className="band__or">
-            <WhatsAppButton url={WHATSAPP_URL} variant="dark" />
+            <WhatsAppButton url="/join?src=site" variant="dark" />
           </div>
         </Reveal>
       </div>

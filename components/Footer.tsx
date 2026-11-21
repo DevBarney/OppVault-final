@@ -88,7 +88,7 @@ export default function Footer() {
                 </li>
                 {WHATSAPP_URL ? (
                   <li>
-                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                    <a href="/join?src=footer" target="_blank" rel="noopener noreferrer">
                       WhatsApp community<span className="visually-hidden"> (opens in a new tab)</span>
                     </a>
                   </li>

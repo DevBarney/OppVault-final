@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import './account.css';
+import { askToJoin } from '../JoinToast';
 import { NOTE_MAX, STATUSES, type StatusId } from '../../lib/account/statuses';
 
 export type TrackRow = {
@@ -65,6 +66,7 @@ function Row({ initial, onStatus }: { initial: TrackRow; onStatus: (id: string, 
       return;
     }
     if (change.status) onStatus(key, change.status);
+    if (change.status === 'applied') askToJoin('applied');
     flash('Saved');
   }
 

@@ -62,6 +62,13 @@ export default async function StudentOffersPage({ searchParams }: Props) {
 
           <Filters category={cat} levels={facets.levels} locations={facets.locations} fundings={facets.fundings} topics={facets.topics} showSort values={{ ...values, sort: shownSort, per }} />
 
+          {sort === 'closing' ? (
+            <p className="join-note">
+              Applying to these? Others are too.
+              <a href="/join?src=closing" target="_blank" rel="noopener noreferrer">Join the group<span className="visually-hidden"> (opens in a new tab)</span></a>
+            </p>
+          ) : null}
+
           <p className="results-count" aria-live="polite">
             {total === 0 ? 'No offers found' : `${total} ${total === 1 ? 'offer' : 'offers'}`}
             {filtered ? ' match your search' : ''}

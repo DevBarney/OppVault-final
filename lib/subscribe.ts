@@ -86,7 +86,7 @@ function welcomeEmail(email: string): { subject: string; html: string; text: str
     'OppVault is being built to bring scholarships, internships, fellowships, grants and more into one organised place. We will email you as it takes shape, and you will hear first when it opens.',
     'OppVault helps you discover opportunities. It cannot guarantee that you will be selected for any of them, so always confirm the details with the official source.',
     '',
-    'Join our WhatsApp community: https://chat.whatsapp.com/EvaSDdZLs1VEK7fSP7zzr1',
+    'Join our WhatsApp community: https://www.oppvault.app/join?src=email',
     '',
     'Unlocking Opportunities, Empowering Potential.',
     'OppVault | hello@oppvault.app | oppvault.app',
@@ -102,7 +102,7 @@ function welcomeEmail(email: string): { subject: string; html: string; text: str
 <p style="margin:0 0 16px 0;font-size:20px;line-height:28px;font-weight:700;color:#04106b;">You are on the list.</p>
 <p style="margin:0 0 16px 0;">Thank you for joining. OppVault is being built to bring scholarships, internships, fellowships, grants and more into one organised place. We will email you as it takes shape, and you will hear first when it opens.</p>
 <p style="margin:0 0 24px 0;">OppVault helps you discover opportunities. It cannot guarantee that you will be selected for any of them, so always confirm the details with the official source.</p>
-<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#0332b3" style="background-color:#0332b3;border-radius:12px;"><a href="https://chat.whatsapp.com/EvaSDdZLs1VEK7fSP7zzr1" style="display:inline-block;padding:14px 24px;font-family:Poppins,Arial,Helvetica,sans-serif;font-size:15px;line-height:20px;font-weight:600;color:#ffffff;text-decoration:none;">Join the WhatsApp community</a></td></tr></table>
+<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#0332b3" style="background-color:#0332b3;border-radius:12px;"><a href="https://www.oppvault.app/join?src=email" style="display:inline-block;padding:14px 24px;font-family:Poppins,Arial,Helvetica,sans-serif;font-size:15px;line-height:20px;font-weight:600;color:#ffffff;text-decoration:none;">Join the WhatsApp community</a></td></tr></table>
 </td></tr>
 <tr><td style="padding:0 32px 28px 32px;font-family:Poppins,Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#4f577f;border-top:1px solid #dce6f7;">
 <p style="margin:20px 0 6px 0;color:#04106b;font-weight:600;">Unlocking Opportunities, Empowering Potential.</p>
