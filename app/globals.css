@@ -2895,6 +2895,8 @@ html [data-paused='true'] *::after { animation-play-state: paused !important; }
 .nav__dd:focus-visible { outline: 2px solid var(--royal); outline-offset: 2px; }
 .ddm { position: absolute; top: calc(100% + 10px); z-index: 60; width: min(560px, calc(100vw - 48px)); padding: 10px; border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 30px 60px -24px rgba(4, 16, 107, 0.45); }
 .ddm[hidden] { display: none; }
+/* The header's outer wrapper ignores the pointer so the page shows through beside the pill; the menu hangs off that wrapper, so it must take the pointer itself or clicks fall through to the page below. */
+.ddm { pointer-events: auto; }
 @media (max-width: 1179px) { .ddm { display: none !important; } }
 .ddm__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
 .ddm__row { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 12px; border-radius: 14px; color: var(--navy); text-decoration: none; }
