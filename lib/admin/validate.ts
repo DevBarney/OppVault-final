@@ -119,6 +119,18 @@ function httpsUrl(value: string): string | null {
   }
 }
 
+/** Coupon-listing sites that sit between a visitor and the real course page. Links must go to the original provider. */
+const BLOCKED_LINK_HOSTS = ['courson.xyz'];
+
+function blockedLinkHost(value: string): string | null {
+  try {
+    const host = new URL(value).hostname.toLowerCase();
+    return BLOCKED_LINK_HOSTS.find((h) => host === h || host.endsWith(`.${h}`)) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function parseBool(value: string, fallback: boolean): boolean | null {
   const v = value.trim().toLowerCase();
   if (v === '') return fallback;
@@ -224,6 +236,10 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
 
     const link = httpsUrl(get('link', 600));
     if (!link) problems.push('link must be a full https:// web address');
+    else {
+      const blocked = blockedLinkHost(link);
+      if (blocked) problems.push(`link goes to ${blocked}. Use the original provider's page (for example the Udemy course address)`);
+    }
 
     const imageRaw = get('image_url', 600);
     const image = imageRaw ? httpsUrl(imageRaw) : null;
