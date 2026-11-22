@@ -1,4 +1,4 @@
-import { SITE_URL } from '../lib/config';
+import { CONTACT, SITE_URL } from '../lib/config';
 
 /** Renders one schema.org block. The `<` escape stops a title from closing the script tag early. */
 export default function JsonLd({ data }: { data: Record<string, unknown> }) {
@@ -20,6 +20,8 @@ export const ORGANIZATION = {
   name: 'OppVault',
   url: SITE_URL,
   logo: `${SITE_URL}/icon.png`,
+  // The official profiles, so search engines tie them to this one brand.
+  sameAs: [CONTACT.instagramUrl, CONTACT.xUrl],
 };
 
 export const WEBSITE = {
