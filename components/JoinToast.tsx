@@ -8,7 +8,7 @@ const SEEN_KEY = 'ov_join_seen';
 const QUIET_DAYS = 30;
 
 /** Other components ask for the prompt with this event: window.dispatchEvent(new CustomEvent('ov:join', { detail: { src: 'save' } })). */
-export function askToJoin(src: 'save' | 'applied') {
+export function askToJoin(src: 'save' | 'apply' | 'applied') {
   try {
     window.dispatchEvent(new CustomEvent('ov:join', { detail: { src } }));
   } catch {
@@ -31,12 +31,13 @@ function quiet(): boolean {
  * 30 days once it is closed or used.
  */
 export default function JoinToast() {
-  const [src, setSrc] = useState<'save' | 'applied' | null>(null);
+  const [src, setSrc] = useState<'save' | 'apply' | 'applied' | null>(null);
 
   useEffect(() => {
     let timer = 0;
     function onAsk(e: Event) {
-      const s = (e as CustomEvent<{ src?: string }>).detail?.src === 'applied' ? 'applied' : 'save';
+      const raw = (e as CustomEvent<{ src?: string }>).detail?.src;
+      const s = raw === 'applied' ? 'applied' : raw === 'apply' ? 'apply' : 'save';
       if (quiet()) return;
       try {
         sessionStorage.setItem(SEEN_KEY, '1');

@@ -96,6 +96,11 @@ const SECTIONS: LegalSection[] = [
             type, without storing your IP address. If we add analytics that uses cookies, it will stay off unless you turn it on in the cookie settings.
           </p>
         )}
+        <p>
+          When you press the button that takes you to an official application page, we add one to a count of clicks, and one to a count of different people that
+          day. The person count uses a code made from your address and browser type that changes every day, so it cannot be traced back to you or used to follow
+          you across days. We do not store your address.
+        </p>
         <ul>
           <li>
             <strong>ov_at and ov_rt</strong>: keep you signed in if you create an account. They are set only when you sign in, are not readable by page scripts,

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, createHmac } from 'node:crypto';
 import { sameOrigin } from '../../../lib/admin/auth';
 import { call, dbConfigured, headers } from '../../../lib/admin/db';
 import { addPending } from '../../../lib/account/applied';
@@ -10,10 +10,21 @@ import { clientKey, tooMany } from '../../../lib/rateLimit';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+/**
+ * An anonymous key for "this person, today". It mixes a server secret, today's date, the address and the browser type,
+ * so it is different every day and cannot be turned back into an address. It is stored only to count people once.
+ */
+function visitorKey(request: Request): string {
+  const secret = createHash('sha256').update(`visitor-v1|${process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''}`).digest();
+  const day = new Date().toISOString().slice(0, 10);
+  return createHmac('sha256', secret).update(`${day}|${clientKey(request.headers)}|${request.headers.get('user-agent') ?? ''}`).digest('hex').slice(0, 32);
+}
+
 const REF = /^([a-z-]{3,20})\/([a-z0-9][a-z0-9-]{0,199})$/i;
 
 /**
  * Counts one click on a listing's "official site" button, anonymously. No account, cookie or address is stored.
+ * It also counts how many different people clicked, using a key that changes every day.
  * To keep the numbers honest: the same visitor counts once per listing per day, and one visitor is capped per hour.
  * (The visitor's address is only used, hashed, as a short-lived key for those two limits.)
  */
@@ -46,5 +57,7 @@ export async function POST(request: Request): Promise<Response> {
   if (!(await tooMany(`click:${who}:${category}/${slug}`, 1, 86400))) {
     await call('rpc/click_hit', { method: 'POST', headers: headers(), body: JSON.stringify({ p_category: category, p_slug: slug }) });
   }
+  // How many different people were sent on: one anonymous, daily-changing key each (see visitorKey).
+  await call('rpc/click_visitor', { method: 'POST', headers: headers(), body: JSON.stringify({ p_h: visitorKey(request) }) });
   return reply({ ok: true }, 200, me.setCookies);
 }

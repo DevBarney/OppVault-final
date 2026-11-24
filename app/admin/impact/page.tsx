@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import PrintButton from '../../../components/admin/PrintButton';
 import { dbConfigured } from '../../../lib/admin/db';
-import { change, getImpact, getSubscribers, RANGES, rangeDays, type Counted, type Top, type Week } from '../../../lib/admin/impact';
+import { change, getExtra, getImpact, getSubscribers, RANGES, rangeDays, type Counted, type Top, type Week } from '../../../lib/admin/impact';
 import { requireSession } from '../../../lib/admin/session';
 
 export const dynamic = 'force-dynamic';
@@ -84,7 +84,7 @@ export default async function ImpactPage({ searchParams }: { searchParams: Promi
   const session = await requireSession();
   if (session.role !== 'owner') redirect('/admin/blog');
   const days = rangeDays((await searchParams).days);
-  const [d, subs] = await Promise.all([getImpact(days), getSubscribers()]);
+  const [d, subs, extra] = await Promise.all([getImpact(days), getSubscribers(), getExtra(days)]);
 
   return (
     <section className="adm__wrap imp">
@@ -122,6 +122,14 @@ export default async function ImpactPage({ searchParams }: { searchParams: Promi
             <Tile name="Listings saved" {...d.saves} days={days} note={`By ${fmt(d.saves.people)} ${d.saves.people === 1 ? 'person' : 'people'}.`} />
             <Tile name="Applications tracked" {...d.applied} days={days} note={`By ${fmt(d.applied.people)} ${d.applied.people === 1 ? 'person' : 'people'} marking "I applied".`} />
             <Tile name="Official site clicks" {...d.clicks} days={days} note="People sent on to the official application page." />
+            {extra ? (
+              <Tile
+                name="People sent to an official page"
+                {...extra.people}
+                days={days}
+                note={extra.people.first_day ? `Different people, counted once a day. Recorded since ${new Date(`${extra.people.first_day}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}. Account not needed.` : 'Different people, counted once a day. Account not needed. Counting has just started.'}
+              />
+            ) : null}
             <div className="imp__tile">
               <p className="imp__tile-name">WhatsApp group opens</p>
               <p className="imp__tile-num">{fmt(d.joins.total)}</p>
@@ -145,6 +153,39 @@ export default async function ImpactPage({ searchParams }: { searchParams: Promi
             </div>
           </div>
 
+          {extra ? (
+            <div className="imp__card">
+              <h2 className="adm__h2">Month by month</h2>
+              <p className="adm__muted">The last 12 months. "People" adds up the different people each day, so someone who returns on another day counts again.</p>
+              <table className="imp__table">
+                <thead>
+                  <tr>
+                    <th scope="col">Month</th>
+                    <th scope="col" className="imp__num">Apply clicks</th>
+                    <th scope="col" className="imp__num">People</th>
+                    <th scope="col" className="imp__num">WhatsApp opens</th>
+                    <th scope="col" className="imp__num">Accounts</th>
+                    <th scope="col" className="imp__num">Saves</th>
+                    <th scope="col" className="imp__num">Applied</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {extra.monthly.map((m) => (
+                    <tr key={m.month}>
+                      <th scope="row">{new Date(`${m.month}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' })}</th>
+                      <td className="imp__num">{fmt(m.clicks)}</td>
+                      <td className="imp__num">{fmt(m.people)}</td>
+                      <td className="imp__num">{fmt(m.joins)}</td>
+                      <td className="imp__num">{fmt(m.accounts)}</td>
+                      <td className="imp__num">{fmt(m.saves)}</td>
+                      <td className="imp__num">{fmt(m.applied)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+
           <div className="imp__grid">
             <Table title="Official site clicks by category" head={['Category', 'Clicks']} rows={byCategory(d.clicks_by_category)} />
             <Table title="Applications tracked by category" head={['Category', 'Applications']} rows={byCategory(d.applied_by_category)} />
@@ -163,6 +204,9 @@ export default async function ImpactPage({ searchParams }: { searchParams: Promi
               </li>
               <li>Applications tracked are self-reported: a signed-in person tapped "I applied". The real number of applications is likely higher, because not everyone tracks.</li>
               <li>Accounts, saves and applications count people who created an account. Visitors without an account are counted only in official site clicks and WhatsApp opens.</li>
+              <li>
+                People sent to an official page are counted without an account, cookie or stored address. Each person gets a code that is made fresh every day and cannot be traced back, so the same person on two days counts twice. Read it as "person-days" of people helped.
+              </li>
               <li>Visitors to the site (page views) are in the Vercel Analytics tab. Google Search Console shows how people find the site.</li>
             </ul>
           </div>

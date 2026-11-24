@@ -1,10 +1,12 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { askToJoin } from './JoinToast';
 
 /** The "official site" button. It opens the link as normal and quietly tells us it was used, to help rank listings. */
 export default function TrackedLink({ href, gaRef, className, children }: { href: string; gaRef: string; className?: string; children: ReactNode }) {
   function count() {
+    askToJoin('apply');
     try {
       void fetch('/api/click', {
         method: 'POST',

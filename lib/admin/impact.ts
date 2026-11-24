@@ -25,6 +25,9 @@ export type Impact = {
   weekly: Week[];
 };
 
+export type Month = { month: string; clicks: number; people: number; joins: number; accounts: number; saves: number; applied: number };
+export type Extra = { people: Trio & { first_day: string | null }; monthly: Month[] };
+
 export const RANGES = [
   { days: 30, label: 'Last 30 days' },
   { days: 90, label: 'Last 90 days' },
@@ -41,6 +44,13 @@ export async function getImpact(days: number): Promise<Impact | null> {
   const r = await call('rpc/impact_stats', { method: 'POST', headers: headers(), body: JSON.stringify({ p_days: days }) });
   if (!r.ok || !r.body || typeof r.body !== 'object') return null;
   return r.body as Impact;
+}
+
+export async function getExtra(days: number): Promise<Extra | null> {
+  if (!dbConfigured()) return null;
+  const r = await call('rpc/impact_extra', { method: 'POST', headers: headers(), body: JSON.stringify({ p_days: days }) });
+  if (!r.ok || !r.body || typeof r.body !== 'object') return null;
+  return r.body as Extra;
 }
 
 /** Email subscribers live in Resend, not the database. Returns null when email is not connected. */

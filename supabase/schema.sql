@@ -505,3 +505,27 @@ end;
 $$;
 revoke all on function public.impact_stats(integer) from public, anon, authenticated;
 grant execute on function public.impact_stats(integer) to service_role;
+
+-- Anonymous people who clicked an official site button (migration click_visitors_and_impact_extra)
+-- One row per person per day, keyed by a hash that changes every day, so nobody can be followed from one day to the next.
+create table if not exists public.click_visitors (
+  day date not null default current_date,
+  h text not null check (char_length(h) between 16 and 64),
+  primary key (day, h)
+);
+alter table public.click_visitors enable row level security;
+revoke all on public.click_visitors from public, anon, authenticated;
+
+create or replace function public.click_visitor(p_h text)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  with gone as (delete from public.click_visitors where day < current_date - 400)
+  insert into public.click_visitors (day, h) values (current_date, left(p_h, 64)) on conflict do nothing;
+$$;
+revoke all on function public.click_visitor(text) from public, anon, authenticated;
+grant execute on function public.click_visitor(text) to service_role;
+
+-- impact_extra(p_days): people reached and the month-by-month table for /admin/impact. See the migration for the body.
