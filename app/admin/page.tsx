@@ -27,7 +27,10 @@ export default async function AdminPage() {
           <p className="adm__eyebrow">OppVault admin</p>
           <h1 className="adm__h1">Upload and manage content</h1>
         </div>
-        <SignOutButton />
+        <div className="adm__actions">
+          <Link className="adm__ghost imp__back" href="/admin/impact">Impact report</Link>
+          <SignOutButton />
+        </div>
       </header>
 
       {connected ? null : (

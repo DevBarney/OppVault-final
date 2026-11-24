@@ -429,3 +429,79 @@ as $$
 $$;
 revoke all on function public.join_hit(text) from public, anon, authenticated;
 grant execute on function public.join_hit(text) to service_role;
+
+-- Impact report for /admin/impact (migration impact_stats)
+-- Aggregate counts only: nothing here identifies a person. Callable by the server (service role) only.
+create or replace function public.impact_stats(p_days integer default 30)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, auth, pg_temp
+as $$
+declare
+  d integer := greatest(1, least(coalesce(p_days, 30), 730));
+  since date := current_date - greatest(1, least(coalesce(p_days, 30), 730));
+  prev date := current_date - 2 * greatest(1, least(coalesce(p_days, 30), 730));
+  weeks date[];
+  res jsonb;
+begin
+  select array_agg(w::date order by w) into weeks
+  from generate_series(date_trunc('week', current_date) - interval '11 weeks', date_trunc('week', current_date), interval '1 week') w;
+
+  select jsonb_build_object(
+    'days', d,
+    'generated_at', now(),
+    'accounts', jsonb_build_object(
+      'total', (select count(*) from auth.users),
+      'period', (select count(*) from auth.users where created_at::date >= since),
+      'previous', (select count(*) from auth.users where created_at::date >= prev and created_at::date < since)),
+    'saves', jsonb_build_object(
+      'total', (select count(*) from saved_items),
+      'period', (select count(*) from saved_items where created_at::date >= since),
+      'previous', (select count(*) from saved_items where created_at::date >= prev and created_at::date < since),
+      'people', (select count(distinct user_id) from saved_items)),
+    'applied', jsonb_build_object(
+      'total', (select count(*) from applied_items),
+      'period', (select count(*) from applied_items where created_at::date >= since),
+      'previous', (select count(*) from applied_items where created_at::date >= prev and created_at::date < since),
+      'people', (select count(distinct user_id) from applied_items)),
+    'clicks', jsonb_build_object(
+      'total', (select coalesce(sum(n), 0) from listing_clicks),
+      'period', (select coalesce(sum(n), 0) from listing_clicks where day >= since),
+      'previous', (select coalesce(sum(n), 0) from listing_clicks where day >= prev and day < since),
+      'first_day', (select min(day) from listing_clicks)),
+    'joins', jsonb_build_object(
+      'total', (select coalesce(sum(n), 0) from join_clicks),
+      'period', (select coalesce(sum(n), 0) from join_clicks where day >= since),
+      'by_source', coalesce((select jsonb_agg(jsonb_build_object('src', src, 'n', n) order by n desc) from (select src, sum(n)::int n from join_clicks where day >= since group by src) j), '[]'::jsonb)),
+    'listings', jsonb_build_object(
+      'published', (select count(*) from opportunities where published),
+      'by_category', coalesce((select jsonb_agg(jsonb_build_object('category', category, 'n', n) order by n desc) from (select category, count(*)::int n from opportunities where published group by category) c), '[]'::jsonb)),
+    'visitor_suggestions', jsonb_build_object(
+      'total', (select count(*) from submissions),
+      'approved', (select count(*) from submissions where status = 'approved')),
+    'reviews', jsonb_build_object('approved', (select count(*) from reviews where status = 'approved')),
+    'clicks_by_category', coalesce((select jsonb_agg(jsonb_build_object('category', category, 'n', n) order by n desc) from (select category, sum(n)::int n from listing_clicks where day >= since group by category) c), '[]'::jsonb),
+    'applied_by_category', coalesce((select jsonb_agg(jsonb_build_object('category', category, 'n', n) order by n desc) from (select category, count(*)::int n from applied_items where created_at::date >= since group by category) c), '[]'::jsonb),
+    'top_clicked', coalesce((select jsonb_agg(t order by (t->>'n')::int desc) from (
+        select jsonb_build_object('category', c.category, 'slug', c.slug, 'title', coalesce(o.title, c.slug), 'n', c.n) t
+        from (select category, slug, sum(n)::int n from listing_clicks where day >= since group by category, slug order by 3 desc limit 10) c
+        left join opportunities o on o.category = c.category and o.slug = c.slug) x), '[]'::jsonb),
+    'top_applied', coalesce((select jsonb_agg(t order by (t->>'n')::int desc) from (
+        select jsonb_build_object('category', c.category, 'slug', c.slug, 'title', coalesce(o.title, c.slug), 'n', c.n) t
+        from (select category, slug, count(*)::int n from applied_items where created_at::date >= since group by category, slug order by 3 desc limit 10) c
+        left join opportunities o on o.category = c.category and o.slug = c.slug) x), '[]'::jsonb),
+    'weekly', (select jsonb_agg(jsonb_build_object(
+        'week', w,
+        'accounts', (select count(*) from auth.users where created_at::date >= w and created_at::date < w + 7),
+        'saves', (select count(*) from saved_items where created_at::date >= w and created_at::date < w + 7),
+        'applied', (select count(*) from applied_items where created_at::date >= w and created_at::date < w + 7),
+        'clicks', (select coalesce(sum(n), 0) from listing_clicks where day >= w and day < w + 7),
+        'joins', (select coalesce(sum(n), 0) from join_clicks where day >= w and day < w + 7)) order by w)
+      from unnest(weeks) w)
+  ) into res;
+  return res;
+end;
+$$;
+revoke all on function public.impact_stats(integer) from public, anon, authenticated;
+grant execute on function public.impact_stats(integer) to service_role;
