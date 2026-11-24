@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import LazyChrome from '../components/LazyChrome';
 import type { ReactNode } from 'react';
 import { Poppins } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
@@ -59,6 +60,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <NewsletterBand />
         <Footer />
         <LazyChrome />
+        {/* Vercel Web Analytics: counts page views with no cookies and no personal data. Production only, and it needs Web Analytics switched on in the Vercel project. */}
+        {process.env.VERCEL_ENV === 'production' ? <Script src="/_vercel/insights/script.js" strategy="afterInteractive" /> : null}
         <JoinToast />
       </body>
     </html>

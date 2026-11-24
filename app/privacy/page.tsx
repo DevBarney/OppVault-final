@@ -85,10 +85,15 @@ const SECTIONS: LegalSection[] = [
             page views and technical details such as your approximate location and device, so we can see which pages are useful. We turn off advertising
             features and Google signals, and your IP address is not stored in full. You can switch it off again at any time.
           </p>
+          <p>
+            Separately, we count page views with Vercel Web Analytics, which sets no cookies and does not follow you from site to site. It records the page
+            visited, the referring site, your country, and your browser and device type, without storing your IP address.
+          </p>
         ) : (
           <p>
-            OppVault uses only the cookies it needs. We do not use advertising cookies, and we do not use analytics cookies at the moment. If we add analytics
-            later, it will stay off unless you turn it on in the cookie settings.
+            OppVault uses only the cookies it needs. We do not use advertising cookies or analytics cookies. We count page views with Vercel Web Analytics, which
+            sets no cookies and does not follow you from site to site. It records the page visited, the referring site, your country, and your browser and device
+            type, without storing your IP address. If we add analytics that uses cookies, it will stay off unless you turn it on in the cookie settings.
           </p>
         )}
         <ul>
