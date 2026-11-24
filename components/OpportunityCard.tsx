@@ -1,6 +1,7 @@
 import { APPLIED_MIN_PUBLIC } from '../lib/data';
 import Link from 'next/link';
 import SaveButton from './account/SaveButton';
+import CardApplied from './account/CardApplied';
 import DeadlineRing from './DeadlineRing';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from './Icons';
 import { getCategory } from '../lib/categories';
@@ -76,6 +77,7 @@ export default function OpportunityCard({
           </span>
         </div>
       </Link>
+      {item.is_sample ? null : <CardApplied category={item.category} slug={item.slug} title={item.title} />}
     </article>
   );
 }

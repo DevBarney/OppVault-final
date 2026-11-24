@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SaveButton from '../account/SaveButton';
+import CardApplied from '../account/CardApplied';
 import DeadlineRing from '../DeadlineRing';
 import { ArrowIcon, CategoryIcon, ClockIcon, PinIcon } from '../Icons';
 import { formatDate } from '../../lib/dates';
@@ -48,6 +49,7 @@ export default function EventCard({ item }: { item: Opportunity }) {
           </span>
         </div>
       </Link>
+      {item.is_sample ? null : <CardApplied category={item.category} slug={item.slug} title={item.title} />}
     </article>
   );
 }
