@@ -163,7 +163,7 @@ export default async function EventPage({ params }: Props) {
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
               {!item.is_sample ? <AppliedButton category={item.category} slug={item.slug} baseCount={appliedCount} minPublic={APPLIED_MIN_PUBLIC} /> : null}
-              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
+              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} summary={item.summary} deadline={item.deadline} />
               <p className="facts__note">Registration may close before the event. The official page has the programme and the registration deadline.</p>
             </div>
           </aside>

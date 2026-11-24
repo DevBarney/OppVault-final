@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Callout from '../../../components/Callout';
 import AppliedButton from '../../../components/account/AppliedButton';
 import SaveButton from '../../../components/account/SaveButton';
-import { daysUntil, formatDate } from '../../../lib/dates';
+import { daysUntil } from '../../../lib/dates';
 import ShareActions from '../../../components/ShareActions';
 import JsonLd, { breadcrumbs } from '../../../components/JsonLd';
 import { SITE_URL } from '../../../lib/config';
@@ -176,7 +176,7 @@ export default async function StudentOfferPage({ params }: Props) {
               )}
               {!item.is_sample ? <SaveButton category={item.category} slug={item.slug} title={item.title} variant="full" /> : null}
               {!item.is_sample ? <AppliedButton category={item.category} slug={item.slug} baseCount={appliedCount} minPublic={APPLIED_MIN_PUBLIC} /> : null}
-              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} dateLabel={item.deadline ? formatDate(item.deadline) : 'rolling'} />
+              <ShareActions category={item.category} slug={item.slug} title={item.title} url={`${SITE_URL}/${item.category}/${item.slug}`} hasDate={(daysUntil(item.deadline) ?? -1) >= 0} summary={item.summary} deadline={item.deadline} />
             </div>
           </aside>
         </div>

@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { whatsappMessage } from '../lib/share';
 
 /** "Add to calendar" (only when there is an upcoming date), "Share on WhatsApp" and "Copy link". */
-export default function ShareActions({ category, slug, title, url: officialUrl, hasDate, dateLabel }: { category: string; slug: string; title: string; url: string; hasDate: boolean; dateLabel: string }) {
+export default function ShareActions({ category, slug, title, summary, deadline, url: officialUrl, hasDate }: { category: string; slug: string; title: string; summary: string; deadline: string | null; url: string; hasDate: boolean }) {
   const [copied, setCopied] = useState(false);
   // Share the address the page is open on, so a link copied from a preview opens that same preview.
   // On the live site this is the official address, so nothing changes there.
@@ -15,7 +16,7 @@ export default function ShareActions({ category, slug, title, url: officialUrl, 
       setUrl(officialUrl);
     }
   }, [category, slug, officialUrl]);
-  const text = `${title} (${dateLabel}). Details on OppVault: ${url}`;
+  const text = whatsappMessage({ category, title, summary, deadline, upcoming: hasDate, url });
 
   async function copy() {
     try {

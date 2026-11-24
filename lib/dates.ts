@@ -33,3 +33,10 @@ export function urgency(iso: string | null): Urgency {
 export function addDays(n: number): string {
   return new Date(startOfToday() + n * DAY).toISOString().slice(0, 10);
 }
+
+/** "November 30, 2026", for the WhatsApp share message. */
+export function formatLongDate(iso: string): string {
+  const t = Date.parse(`${iso}T00:00:00Z`);
+  if (Number.isNaN(t)) return '';
+  return new Date(t).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
