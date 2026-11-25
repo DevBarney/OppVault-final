@@ -1,7 +1,7 @@
-// The six kinds of opportunity OppVault lists. Everything about a category lives here,
+// The seven kinds of opportunity OppVault lists. Everything about a category lives here,
 // so adding or renaming one is a one-file change.
 
-export type CategorySlug = 'scholarships' | 'fellowships' | 'grants' | 'courses' | 'events' | 'student-offers';
+export type CategorySlug = 'scholarships' | 'fellowships' | 'internships' | 'grants' | 'courses' | 'events' | 'student-offers';
 
 export type Category = {
   slug: CategorySlug;
@@ -14,7 +14,7 @@ export type Category = {
   fundingOptions: string[];
   /** Label for the date shown on cards (deadline for most, event date for events). */
   dateLabel: string;
-  icon: 'cap' | 'compass' | 'coins' | 'book' | 'calendar' | 'tag';
+  icon: 'cap' | 'compass' | 'briefcase' | 'coins' | 'book' | 'calendar' | 'tag';
 };
 
 export const CATEGORIES: Category[] = [
@@ -39,6 +39,17 @@ export const CATEGORIES: Category[] = [
     fundingOptions: ['Stipend', 'Fully funded', 'Mentorship only'],
     dateLabel: 'Deadline',
     icon: 'compass',
+  },
+  {
+    slug: 'internships',
+    label: 'Internships',
+    singular: 'internship',
+    tagline: 'Work experience and research placements',
+    intro: 'Internships and placements for students and recent graduates, with the pay, location and deadline up front.',
+    fundingLabel: 'Pay',
+    fundingOptions: ['Paid', 'Stipend', 'Unpaid'],
+    dateLabel: 'Deadline',
+    icon: 'briefcase',
   },
   {
     slug: 'grants',

@@ -10,7 +10,7 @@ export const MAX_BYTES = 1_000_000;
 
 const ALIASES: Record<string, string[]> = {
   opportunity_id: ['opportunity_id', 'id', 'course_id', 'external_id', 'ref', 'reference', 'post_id'],
-  title: ['title', 'name', 'course_name', 'scholarship_name', 'fellowship_name', 'grant_name', 'event_name', 'offer_name', 'opportunity_name', 'post_title'],
+  title: ['title', 'name', 'course_name', 'scholarship_name', 'fellowship_name', 'internship_name', 'grant_name', 'event_name', 'offer_name', 'opportunity_name', 'post_title'],
   provider: ['provider', 'organisation', 'organization', 'institution', 'platform', 'host', 'company', 'offered_by'],
   summary: ['summary', 'short_description', 'tagline'],
   description: ['description', 'details', 'about'],
@@ -211,7 +211,7 @@ export function checkOpportunities(text: string, kind: Kind): Checked<Opportunit
     return out;
   }
   if (kind === 'opportunities' && !table.headers.includes('category')) {
-    out.fileError = 'This upload needs a category column (scholarships, fellowships, grants, courses, events or student-offers).';
+    out.fileError = 'This upload needs a category column (scholarships, fellowships, internships, grants, courses, events or student-offers).';
     return out;
   }
 

@@ -9,7 +9,7 @@ import { formatDate } from '../../lib/dates';
 
 export const metadata: Metadata = withSocial({
   title: 'Blog',
-  description: 'Practical guides on finding and applying for scholarships, fellowships, grants and other opportunities.',
+  description: 'Practical guides on finding and applying for scholarships, fellowships, internships, grants and other opportunities.',
   alternates: { canonical: '/blog' },
 });
 

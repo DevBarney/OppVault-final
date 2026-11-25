@@ -1,0 +1,2 @@
+opportunity_id,title,provider,summary,description,link,image_url,location,level,funding,deadline,eligibility,benefits,how_to_apply,featured,published
+INT-001,Example Summer Internship,Example Institute,A 3-month paid placement for students and recent graduates.,,https://example.org/internship,,Online,Undergraduate,Paid (monthly stipend),2027-02-15,Enrolled student or recent graduate,Monthly stipend|Mentorship|Work experience,Complete the online form|Upload your CV,no,no

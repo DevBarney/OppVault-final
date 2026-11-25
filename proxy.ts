@@ -34,5 +34,5 @@ export function proxy(request: NextRequest) {
 export const config = {
   // Only the pages worth collecting: listing detail pages and search. The home page, list pages,
   // static files and API routes are untouched, so they stay as fast as before.
-  matcher: ['/(scholarships|fellowships|grants|courses|events|student-offers)/:slug', '/search'],
+  matcher: ['/(scholarships|fellowships|internships|grants|courses|events|student-offers)/:slug', '/search'],
 };

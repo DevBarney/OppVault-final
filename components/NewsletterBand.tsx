@@ -12,7 +12,7 @@ export default function NewsletterBand() {
             Hear about new opportunities first.
           </h2>
           <p className="band__text">
-            Join the list for new scholarships, fellowships, grants, courses, events and student offers, sent to your
+            Join the list for new scholarships, fellowships, internships, grants, courses, events and student offers, sent to your
             inbox. No spam, and you can unsubscribe at any time.
           </p>
         </Reveal>

@@ -73,10 +73,11 @@ export function ArrowUpIcon({ className }: { className?: string }) {
 type IconProps = { className?: string };
 const stroke = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
 
-export function CategoryIcon({ name, className }: { name: 'cap' | 'compass' | 'coins' | 'book' | 'calendar' | 'tag' | 'pen'; className?: string }) {
+export function CategoryIcon({ name, className }: { name: 'cap' | 'compass' | 'briefcase' | 'coins' | 'book' | 'calendar' | 'tag' | 'pen'; className?: string }) {
   const paths: Record<string, ReactNode> = {
     cap: (<><path d="M2.5 9.5 12 5l9.5 4.5L12 14 2.5 9.5Z" /><path d="M6.5 11.8V16c0 1.2 2.5 2.5 5.5 2.5s5.5-1.3 5.5-2.5v-4.2" /><path d="M21.5 9.5V15" /></>),
     compass: (<><circle cx="12" cy="12" r="9" /><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" /></>),
+    briefcase: (<><rect x="3" y="7.5" width="18" height="12.5" rx="2.5" /><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5M3 12.5h18M10.5 12.5v2h3v-2" /></>),
     coins: (<><ellipse cx="9" cy="7" rx="6" ry="3" /><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7" /><path d="M15 10.3c3 .1 6 1.3 6 2.9v4c0 1.7-2.7 3-6 3-2.2 0-4.1-.6-5.2-1.5" /></>),
     book: (<><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z" /><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" /></>),
     calendar: (<><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>),

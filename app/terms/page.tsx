@@ -24,7 +24,7 @@ const SECTIONS: LegalSection[] = [
     icon: 'doc',
     body: (
       <p>
-        OppVault is an information service. We gather scholarships, fellowships, grants, courses, events and student offers in one place, so they are
+        OppVault is an information service. We gather scholarships, fellowships, internships, grants, courses, events and student offers in one place, so they are
         easier to find. We are not the provider of any opportunity, we do not take applications, and we do not decide who is selected.
       </p>
     ),

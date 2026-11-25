@@ -92,7 +92,7 @@ export default function AboutPage() {
             <h1 className="phead__title">The door was always there. Now you can find it.</h1>
             <div className="phead__text">
               <p>
-                Scholarships, fellowships, grants, courses, events and student offers, gathered into one organised
+                Scholarships, fellowships, internships, grants, courses, events and student offers, gathered into one organised
                 place, so finding what is open to you takes minutes, not weeks.
               </p>
             </div>

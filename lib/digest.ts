@@ -3,8 +3,8 @@ import { SITE_URL } from './config';
 import { daysUntil, formatDate } from './dates';
 import type { Opportunity } from './types';
 
-// The weekly "closing soon" email: scholarships, fellowships and grants that close in the next two weeks.
-const APPLY_KINDS = ['scholarships', 'fellowships', 'grants'];
+// The weekly "closing soon" email: scholarships, fellowships, internships and grants that close in the next two weeks.
+const APPLY_KINDS = ['scholarships', 'fellowships', 'internships', 'grants'];
 const MIN_ITEMS = 3;
 const MAX_WEEK = 8;
 const MAX_NEXT = 6;
@@ -19,7 +19,7 @@ function short(title: string): string {
   return cut >= 18 ? t.slice(0, cut).trim() : t;
 }
 
-const KIND: Record<string, string> = { scholarships: 'Scholarship', fellowships: 'Fellowship', grants: 'Grant' };
+const KIND: Record<string, string> = { scholarships: 'Scholarship', fellowships: 'Fellowship', internships: 'Internship', grants: 'Grant' };
 
 const link = (o: Opportunity) => `${SITE_URL}/${o.category}/${o.slug}`;
 

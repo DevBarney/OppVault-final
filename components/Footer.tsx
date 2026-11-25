@@ -31,7 +31,7 @@ export default function Footer() {
             <Image className="footer__logo" src="/logo-horizontal.png" alt="OppVault" width={1459} height={427} sizes="220px" />
             <p className="footer__tagline">{TAGLINE}</p>
             <p className="footer__about">
-              Scholarships, fellowships, grants, courses, events and student offers in one place, each with a link to the official page. Free to use.
+              Scholarships, fellowships, internships, grants, courses, events and student offers in one place, each with a link to the official page. Free to use.
             </p>
             <a className="footer__join" href="#subscribe">
               <span>Get updates by email</span>

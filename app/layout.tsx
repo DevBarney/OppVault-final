@@ -25,7 +25,7 @@ const poppins = Poppins({
 });
 
 const DESCRIPTION =
-  'OppVault brings scholarships, fellowships, grants, free courses, events and student offers into one organised place, each linked to its official source.';
+  'OppVault brings scholarships, fellowships, internships, grants, free courses, events and student offers into one organised place, each linked to its official source.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -2,7 +2,7 @@
 
 One file per category lives in `content/csv/templates/`. Each has the header row and one example row marked `published = no`, so a forgotten example never goes live. Delete the example row before you upload.
 
-Files: `scholarships.csv`, `fellowships.csv`, `grants.csv`, `courses.csv`, `events.csv`, `student-offers.csv`, `opportunities-mixed.csv` (one file with a `category` column) and `blog.csv`.
+Files: `scholarships.csv`, `fellowships.csv`, `internships.csv`, `grants.csv`, `courses.csv`, `events.csv`, `student-offers.csv`, `opportunities-mixed.csv` (one file with a `category` column) and `blog.csv`.
 
 ## Columns
 
@@ -25,7 +25,7 @@ Files: `scholarships.csv`, `fellowships.csv`, `grants.csv`, `courses.csv`, `even
 | how_to_apply | Optional | Same pipe format, one step per item. |
 | featured | Optional | yes or no. Empty means no. |
 | published | Optional | yes or no. Empty means yes. Use no to save a draft. |
-| category | Mixed file only | scholarships, fellowships, grants, courses, events or student-offers. |
+| category | Mixed file only | scholarships, fellowships, internships, grants, courses, events or student-offers. |
 
 ## Rules
 

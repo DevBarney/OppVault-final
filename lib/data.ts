@@ -266,7 +266,7 @@ export async function getFacets(category: CategorySlug): Promise<{ levels: strin
 
 /** How many open listings each category has. One tiny count query per category instead of downloading rows. */
 export async function getCounts(): Promise<Record<CategorySlug, number>> {
-  const counts = { scholarships: 0, fellowships: 0, grants: 0, courses: 0, events: 0, 'student-offers': 0 } as Record<
+  const counts = { scholarships: 0, fellowships: 0, internships: 0, grants: 0, courses: 0, events: 0, 'student-offers': 0 } as Record<
     CategorySlug,
     number
   >;

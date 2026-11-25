@@ -8,7 +8,7 @@ import { requireSession } from '../../../lib/admin/session';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Impact report', robots: { index: false, follow: false } };
 
-const CATEGORY: Record<string, string> = { scholarships: 'Scholarships', fellowships: 'Fellowships', grants: 'Grants', courses: 'Courses', events: 'Events', 'student-offers': 'Student offers' };
+const CATEGORY: Record<string, string> = { scholarships: 'Scholarships', fellowships: 'Fellowships', internships: 'Internships', grants: 'Grants', courses: 'Courses', events: 'Events', 'student-offers': 'Student offers' };
 const SOURCE: Record<string, string> = { site: 'Sign-up band and site buttons', footer: 'Footer', about: 'About page', save: 'After saving a listing', applied: 'After "I applied"', closing: 'Closing soonest view', email: 'Welcome email', newsletter: 'Newsletters', flyer: 'Flyer QR code', video: 'Videos' };
 const fmt = (n: number) => n.toLocaleString('en-GB');
 const label = (c: string) => CATEGORY[c] ?? c;

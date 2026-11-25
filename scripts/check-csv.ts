@@ -2,7 +2,7 @@
 //
 //   npm run check:csv -- content/csv/scholarships.csv scholarships
 //
-// The second argument is one of: scholarships, fellowships, grants, courses, events, student-offers,
+// The second argument is one of: scholarships, fellowships, internships, grants, courses, events, student-offers,
 // opportunities (mixed, needs a category column), blog.
 // Exit code 0 = every row is ready to import, 1 = there are problems, 2 = wrong usage.
 
@@ -13,7 +13,7 @@ import { checkOpportunities, checkPosts, templateFor } from '../lib/admin/valida
 const [file, kind] = process.argv.slice(2);
 
 if (!file || !kind || !isKind(kind)) {
-  console.error('Usage: npm run check:csv -- <file.csv> <scholarships|fellowships|grants|courses|events|student-offers|opportunities|blog>');
+  console.error('Usage: npm run check:csv -- <file.csv> <scholarships|fellowships|internships|grants|courses|events|student-offers|opportunities|blog>');
   process.exit(2);
 }
 

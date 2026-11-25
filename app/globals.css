@@ -2529,6 +2529,7 @@ body > main { min-height: 50vh; }
 
 .hero--home:has(.chip[data-cat='scholarships']:is(:hover, :focus-visible)) .vw__cell[data-cat='scholarships'],
 .hero--home:has(.chip[data-cat='fellowships']:is(:hover, :focus-visible)) .vw__cell[data-cat='fellowships'],
+.hero--home:has(.chip[data-cat='internships']:is(:hover, :focus-visible)) .vw__cell[data-cat='internships'],
 .hero--home:has(.chip[data-cat='grants']:is(:hover, :focus-visible)) .vw__cell[data-cat='grants'],
 .hero--home:has(.chip[data-cat='courses']:is(:hover, :focus-visible)) .vw__cell[data-cat='courses'],
 .hero--home:has(.chip[data-cat='events']:is(:hover, :focus-visible)) .vw__cell[data-cat='events'],
@@ -2542,6 +2543,7 @@ body > main { min-height: 50vh; }
 .hero--home:has(.chip[data-cat]:is(:hover, :focus-visible)) .vw__line--all { opacity: 0; }
 .hero--home:has(.chip[data-cat='scholarships']:is(:hover, :focus-visible)) .vw__line[data-cat='scholarships'],
 .hero--home:has(.chip[data-cat='fellowships']:is(:hover, :focus-visible)) .vw__line[data-cat='fellowships'],
+.hero--home:has(.chip[data-cat='internships']:is(:hover, :focus-visible)) .vw__line[data-cat='internships'],
 .hero--home:has(.chip[data-cat='grants']:is(:hover, :focus-visible)) .vw__line[data-cat='grants'],
 .hero--home:has(.chip[data-cat='courses']:is(:hover, :focus-visible)) .vw__line[data-cat='courses'],
 .hero--home:has(.chip[data-cat='events']:is(:hover, :focus-visible)) .vw__line[data-cat='events'],
@@ -2599,6 +2601,7 @@ body > main { min-height: 50vh; }
 /* Category page hero */
 .chero { --a: #1bdbe3; --b: #0db4f8; }
 .chero:has([data-cat='fellowships']) { --a: #0db4f8; --b: #0332b3; }
+.chero:has([data-cat='internships']) { --a: #1bdbe3; --b: #0a5fe0; }
 .chero:has([data-cat='grants']) { --a: #1bdbe3; --b: #0332b3; }
 .chero:has([data-cat='courses']) { --a: #0db4f8; --b: #1bdbe3; }
 .chero:has([data-cat='events']) { --a: #1bdbe3; --b: #0db4f8; }

@@ -7,7 +7,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.opportunities (
   id            uuid primary key default gen_random_uuid(),
   slug          text not null,
-  category      text not null check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  category      text not null check (category in ('scholarships','fellowships','internships','grants','courses','events','student-offers')),
   title         text not null,
   provider      text not null,
   summary       text not null,
@@ -101,7 +101,7 @@ create trigger opportunities_default_external_id before insert on public.opportu
 -- ---------------------------------------------------------------------------------------------
 create table if not exists public.submissions (
   id uuid primary key default gen_random_uuid(),
-  category text not null check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  category text not null check (category in ('scholarships','fellowships','internships','grants','courses','events','student-offers')),
   title text not null,
   provider text not null default '',
   link text not null,
@@ -178,7 +178,7 @@ create table if not exists public.saved_items (
   slug text not null,
   created_at timestamptz not null default now(),
   primary key (user_id, category, slug),
-  constraint saved_items_category_ok check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  constraint saved_items_category_ok check (category in ('scholarships','fellowships','internships','grants','courses','events','student-offers')),
   constraint saved_items_slug_len check (char_length(slug) between 1 and 200)
 );
 create index if not exists saved_items_user_created on public.saved_items (user_id, created_at desc);
@@ -228,7 +228,7 @@ create table if not exists public.applied_items (
   slug text not null,
   created_at timestamptz not null default now(),
   primary key (user_id, category, slug),
-  constraint applied_items_category_ok check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  constraint applied_items_category_ok check (category in ('scholarships','fellowships','internships','grants','courses','events','student-offers')),
   constraint applied_items_slug_len check (char_length(slug) between 1 and 200)
 );
 create index if not exists applied_items_listing on public.applied_items (category, slug);
@@ -354,7 +354,7 @@ revoke insert, update, delete, truncate, references, trigger on public.opportuni
 -- Ranking (migration listing_clicks_and_activity_ranking)
 -- Anonymous click counts: how many times the "official site" button was used, per listing per day.
 create table if not exists public.listing_clicks (
-  category text not null check (category in ('scholarships','fellowships','grants','courses','events','student-offers')),
+  category text not null check (category in ('scholarships','fellowships','internships','grants','courses','events','student-offers')),
   slug text not null,
   day date not null default current_date,
   n integer not null default 0,

@@ -7,6 +7,7 @@ export const KINDS: { kind: Kind; label: string; note: string }[] = [
   { kind: 'courses', label: 'Courses', note: 'Course name, link, thumbnail, coupon code and more.' },
   { kind: 'scholarships', label: 'Scholarships', note: 'Funding, level, deadline, eligibility.' },
   { kind: 'fellowships', label: 'Fellowships', note: 'Programmes with a stipend, mentorship or placement.' },
+  { kind: 'internships', label: 'Internships', note: 'Placements with pay, location, level and deadline.' },
   { kind: 'grants', label: 'Grants', note: 'Project and research funding.' },
   { kind: 'events', label: 'Events and conferences', note: 'Date, place, cost.' },
   { kind: 'student-offers', label: 'Student offers', note: 'Discounts and free plans, with coupon codes.' },

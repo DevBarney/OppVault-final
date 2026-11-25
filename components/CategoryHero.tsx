@@ -1,8 +1,8 @@
 import { ArrowIcon, CategoryIcon } from './Icons';
 import type { Category } from '../lib/categories';
 
-/** Ticks around each emblem differ a little, so the six pages feel related but not identical. */
-const TICKS: Record<Category['slug'], number> = { scholarships: 36, fellowships: 30, grants: 24, courses: 40, events: 28, 'student-offers': 32 };
+/** Ticks around each emblem differ a little, so the seven pages feel related but not identical. */
+const TICKS: Record<Category['slug'], number> = { scholarships: 36, fellowships: 30, internships: 34, grants: 24, courses: 40, events: 28, 'student-offers': 32 };
 
 function Emblem({ cat }: { cat: Category }) {
   const n = TICKS[cat.slug];

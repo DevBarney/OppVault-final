@@ -21,7 +21,7 @@ type Result = {
 };
 
 
-const KIND_WORDS: [string, string][] = [['scholarship', 'scholarships'], ['fellowship', 'fellowships'], ['grant', 'grants'], ['course', 'courses'], ['event', 'events'], ['offer', 'student-offers']];
+const KIND_WORDS: [string, string][] = [['scholarship', 'scholarships'], ['fellowship', 'fellowships'], ['internship', 'internships'], ['grant', 'grants'], ['course', 'courses'], ['event', 'events'], ['offer', 'student-offers']];
 const MAX_FILE = 10 * 1024 * 1024;
 const MAX_ROWS = 20000;
 const CHUNK_CHARS = 600 * 1024;

@@ -11,17 +11,18 @@ import AccountMenu from './account/AccountMenu';
 import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
 import './nav-search.css';
 
-// Desktop navigation: the six kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
+// Desktop navigation: the seven kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
 const LINKS = [
   { href: '/blog', label: 'Blog' },
   { href: '/reviews', label: 'Reviews' },
   { href: '/about', label: 'About' },
 ];
 
-// The phone menu: the six kinds of opportunity, each with a plain line and (when known) how many are open now.
+// The phone menu: the seven kinds of opportunity, each with a plain line and (when known) how many are open now.
 const KINDS: { slug: CategorySlug; label: string; line: string }[] = [
   { slug: 'scholarships', label: 'Scholarships', line: 'Funding for study' },
   { slug: 'fellowships', label: 'Fellowships', line: 'Programmes and placements' },
+  { slug: 'internships', label: 'Internships', line: 'Work experience and placements' },
   { slug: 'grants', label: 'Grants', line: 'Money for projects and ideas' },
   { slug: 'courses', label: 'Courses', line: 'Learn something new' },
   { slug: 'events', label: 'Events', line: 'Dates for your diary' },
