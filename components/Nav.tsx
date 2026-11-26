@@ -315,29 +315,18 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
 
         <div id="mobile-menu" className="nav__menu">
           <div className="vm">
-            <button
-              type="button"
-              className="vm__search"
-              onClick={() => {
-                setOpen(false);
-                window.dispatchEvent(new Event('oppvault:open-search'));
-              }}
-            >
-              <SearchIcon className="vm__search-icon" />
-              <span>Search every opportunity</span>
-            </button>
-
             <nav aria-label="Kinds of opportunity">
-              <ul className="vm__tiles">
+              <ul className="vm__list">
                 {KINDS.map((k) => {
                   const n = counts?.[k.slug];
-                  const icon = CATEGORIES.find((c) => c.slug === k.slug)?.icon;
                   return (
-                    <li key={k.slug} className="vm__tilewrap">
-                      <Link className="vm__tile" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
-                        <span className="vm__ticon" aria-hidden="true">{icon ? <CategoryIcon name={icon} className="vm__tsvg" /> : null}</span>
-                        <span className="vm__tname">{k.label}</span>
-                        {typeof n === 'number' && n > 0 ? <span className="vm__tcount">{n} {k.slug === 'events' ? 'upcoming' : 'open'}</span> : null}
+                    <li key={k.slug}>
+                      <Link className="vm__row" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                        <span className="vm__rname">
+                          {k.label}
+                          {k.slug === 'internships' ? <span className="vm__new">New</span> : null}
+                        </span>
+                        {typeof n === 'number' && n > 0 ? <span className="vm__rcount">{n} {k.slug === 'events' ? 'upcoming' : 'open'}</span> : null}
                       </Link>
                     </li>
                   );
@@ -345,22 +334,20 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
               </ul>
             </nav>
 
-            <div className="vm__you">
-              <p className="vm__head">Your space</p>
-              <div className="vm__chips">
+            <div className="vm__foot">
+              <div className="vm__acct">
                 <AccountLink variant="text" onNavigate={() => setOpen(false)} />
                 <AppliedLink variant="text" onNavigate={() => setOpen(false)} />
                 <AccountExtras onNavigate={() => setOpen(false)} />
               </div>
+              <nav className="vm__more" aria-label="More">
+                {MORE.map((m) => (
+                  <Link key={m.href} className="vm__minor" href={m.href} aria-current={isActive(m.href) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                    {m.label}
+                  </Link>
+                ))}
+              </nav>
             </div>
-
-            <nav className="vm__more" aria-label="More">
-              {MORE.map((m) => (
-                <Link key={m.href} className="vm__minor" href={m.href} aria-current={isActive(m.href) ? 'page' : undefined} onClick={() => setOpen(false)}>
-                  {m.label}
-                </Link>
-              ))}
-            </nav>
           </div>
 
           <div className="vm__dock">
