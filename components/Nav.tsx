@@ -8,6 +8,7 @@ import type { MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../lib/categories';
 import AccountLink, { AccountExtras, AppliedLink } from './account/AccountLink';
 import AccountMenu from './account/AccountMenu';
+import { joinPath } from '../lib/join';
 import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
 import './nav-search.css';
 
@@ -103,6 +104,14 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
     };
   }, [open]);
 
+  // While the phone menu is open the page behind it stays still, so a swipe scrolls the menu and not the page.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    root.classList.add('nav-lock');
+    return () => root.classList.remove('nav-lock');
+  }, [open]);
+
   // "Join the list": glide to the sign-up form and put the cursor in it.
   // Every page has the sign-up band above the footer, so this works everywhere.
   function goToSignup(event: MouseEvent<HTMLAnchorElement>) {
@@ -189,6 +198,7 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
       </a>
 
       <header ref={headerRef} className={className}>
+        <div className="nav__scrim" aria-hidden="true" onClick={() => setOpen(false)} />
         <div className="container nav__wrap">
           <div className="nav__inner">
           <Link className="nav__brand" href="/" aria-label="OppVault home">
@@ -304,37 +314,7 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
         </div>
 
         <div id="mobile-menu" className="nav__menu">
-          <nav className="vm" aria-label="Mobile">
-            <div className="vm__rows">
-              {KINDS.map((k) => {
-                const n = counts?.[k.slug];
-                return (
-                  <Link key={k.slug} className="vm__row" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
-                    <span className="vm__text">
-                      <span className="vm__name">{k.label}</span>
-                      <span className="vm__line">{k.line}</span>
-                    </span>
-                    {typeof n === 'number' && n > 0 ? (
-                      <span className="vm__count">
-                        <svg className="vm__spark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M12 1.5c.8 5.3 2.7 8.2 6 9.3 2.2.7 3.6.9 4.5 1.2-1 .3-2.3.5-4.5 1.2-3.3 1.1-5.2 4-6 9.3-.8-5.3-2.7-8.2-6-9.3-2.2-.7-3.6-.9-4.5-1.2 1-.3 2.3-.5 4.5-1.2 3.3-1.1 5.2-4 6-9.3Z" />
-                        </svg>
-                        {n} {k.slug === 'events' ? 'upcoming' : 'open'}
-                      </span>
-                    ) : null}
-                  </Link>
-                );
-              })}
-            </div>
-            <div className="vm__more">
-              {MORE.map((m) => (
-                <Link key={m.href} className="vm__minor" href={m.href} aria-current={isActive(m.href) ? 'page' : undefined} onClick={() => setOpen(false)}>
-                  {m.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
-          <div className="vm__actions">
+          <div className="vm">
             <button
               type="button"
               className="vm__search"
@@ -346,12 +326,54 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
               <SearchIcon className="vm__search-icon" />
               <span>Search every opportunity</span>
             </button>
-            <AppliedLink variant="text" onNavigate={() => setOpen(false)} />
-            <AccountLink variant="text" onNavigate={() => setOpen(false)} />
-            <AccountExtras onNavigate={() => setOpen(false)} />
+
+            <nav aria-label="Kinds of opportunity">
+              <ul className="vm__tiles">
+                {KINDS.map((k) => {
+                  const n = counts?.[k.slug];
+                  const icon = CATEGORIES.find((c) => c.slug === k.slug)?.icon;
+                  return (
+                    <li key={k.slug} className="vm__tilewrap">
+                      <Link className="vm__tile" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                        <span className="vm__ticon" aria-hidden="true">{icon ? <CategoryIcon name={icon} className="vm__tsvg" /> : null}</span>
+                        <span className="vm__tname">{k.label}</span>
+                        {typeof n === 'number' && n > 0 ? <span className="vm__tcount">{n} {k.slug === 'events' ? 'upcoming' : 'open'}</span> : null}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            <div className="vm__you">
+              <p className="vm__head">Your space</p>
+              <div className="vm__chips">
+                <AccountLink variant="text" onNavigate={() => setOpen(false)} />
+                <AppliedLink variant="text" onNavigate={() => setOpen(false)} />
+                <AccountExtras onNavigate={() => setOpen(false)} />
+              </div>
+            </div>
+
+            <nav className="vm__more" aria-label="More">
+              {MORE.map((m) => (
+                <Link key={m.href} className="vm__minor" href={m.href} aria-current={isActive(m.href) ? 'page' : undefined} onClick={() => setOpen(false)}>
+                  {m.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="vm__dock">
             <a className="btn btn--primary nav__mcta" href="#subscribe" onClick={goToSignup}>
               <span>Get updates</span>
               <ArrowIcon className="btn__arrow" />
+            </a>
+            <a className="vm__join" href={joinPath('menu')} onClick={() => setOpen(false)}>
+              <svg className="vm__join-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19L4 20Z" />
+                <path d="M9 9.2c.2 2.6 2.2 4.6 5 5.5l1.3-1.3-1.9-1-.8.7c-.8-.4-1.5-1.1-1.9-1.9l.7-.8-1-1.9L9 9.2Z" />
+              </svg>
+              <span>Join the group</span>
             </a>
           </div>
         </div>
