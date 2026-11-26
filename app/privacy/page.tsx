@@ -79,6 +79,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         {ANALYTICS_AVAILABLE ? (
+          <>
           <p>
             OppVault uses the cookies it needs to work, and Google Analytics only if you allow it. We do not use advertising cookies. Analytics is off until you
             choose &ldquo;Accept all&rdquo; or switch it on in the cookie settings, and nothing is sent to Google before then. When it is on, Google receives
@@ -89,6 +90,7 @@ const SECTIONS: LegalSection[] = [
             Separately, we count page views with Vercel Web Analytics, which sets no cookies and does not follow you from site to site. It records the page
             visited, the referring site, your country, and your browser and device type, without storing your IP address.
           </p>
+          </>
         ) : (
           <p>
             OppVault uses only the cookies it needs. We do not use advertising cookies or analytics cookies. We count page views with Vercel Web Analytics, which
