@@ -21,6 +21,9 @@ const plain = (s: string) => s.replace(/\*/g, '').replace(/\s+/g, ' ').trim();
  * *Details on OppVault:*
  * https://www.oppvault.app/...
  *
+ * *Join our WhatsApp group:*
+ * https://www.oppvault.app/join?src=share
+ *
  * The date line is left out for rolling listings and for dates that have passed.
  */
 export function whatsappMessage(o: { category: string; title: string; summary: string; deadline: string | null; upcoming: boolean; url: string }): string {
@@ -34,5 +37,11 @@ export function whatsappMessage(o: { category: string; title: string; summary: s
     if (long) parts.push(`${word} ${long} (${formatDate(o.deadline)}).`);
   }
   parts.push(`*Details on OppVault:*\n${o.url}`);
+  // Every shared message carries the group link, so people who receive it can join. The open is counted as "share".
+  try {
+    parts.push(`*Join our WhatsApp group:*\n${new URL(o.url).origin}/join?src=share`);
+  } catch {
+    /* an odd address: send the message without the group line */
+  }
   return parts.join('\n\n');
 }
