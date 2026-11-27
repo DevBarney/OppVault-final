@@ -9,7 +9,7 @@ import { CATEGORIES, type CategorySlug } from '../lib/categories';
 import AccountLink, { AccountExtras, AppliedLink } from './account/AccountLink';
 import AccountMenu from './account/AccountMenu';
 import { joinPath } from '../lib/join';
-import { ArrowIcon, CategoryIcon, SearchIcon } from './Icons';
+import { ArrowIcon, CategoryIcon, ClockIcon, SearchIcon } from './Icons';
 import './nav-search.css';
 
 // Desktop navigation: the seven kinds of opportunity live in the "Opportunities" menu, the rest are plain links.
@@ -315,14 +315,25 @@ export default function Nav({ counts }: { counts?: Partial<Record<CategorySlug, 
 
         <div id="mobile-menu" className="nav__menu">
           <div className="vm">
+            <Link className="vm__hot" href="/scholarships?sort=closing" onClick={() => setOpen(false)}>
+              <span className="vm__hoticon" aria-hidden="true"><ClockIcon className="vm__hotsvg" /></span>
+              <span className="vm__hottext">
+                <span className="vm__hotname">Closing soonest</span>
+                <span className="vm__hotline">Nearest scholarship deadlines first</span>
+              </span>
+              <ArrowIcon className="vm__hotarrow" />
+            </Link>
+
             <nav aria-label="Kinds of opportunity">
               <ul className="vm__list">
                 {KINDS.map((k) => {
                   const n = counts?.[k.slug];
+                  const icon = CATEGORIES.find((c) => c.slug === k.slug)?.icon;
                   return (
                     <li key={k.slug}>
                       <Link className="vm__row" href={`/${k.slug}`} aria-current={isActive(`/${k.slug}`) ? 'page' : undefined} onClick={() => setOpen(false)}>
                         <span className="vm__rname">
+                          {icon ? <CategoryIcon name={icon} className="vm__ricon" /> : null}
                           {k.label}
                           {k.slug === 'internships' ? <span className="vm__new">New</span> : null}
                         </span>
