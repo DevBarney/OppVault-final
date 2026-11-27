@@ -1,5 +1,5 @@
 /** Where a visitor came from when they opened /join. Only these are counted, so a made-up link cannot fill the table. */
-export const JOIN_SOURCES = ['site', 'save', 'apply', 'applied', 'closing', 'email', 'newsletter', 'flyer', 'video', 'footer', 'about', 'share', 'menu'] as const;
+export const JOIN_SOURCES = ['site', 'save', 'apply', 'applied', 'closing', 'email', 'newsletter', 'flyer', 'video', 'footer', 'about', 'share'] as const;
 export type JoinSource = (typeof JOIN_SOURCES)[number];
 
 export function joinSource(value: string | null): JoinSource {
