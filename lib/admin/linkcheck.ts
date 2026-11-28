@@ -119,8 +119,8 @@ export async function checkUrl(raw: string): Promise<CheckResult> {
 type QueueRow = { id: string; source_url: string };
 
 /** Checks the listings that were checked longest ago (or never), until the count or the time budget runs out. */
-export async function runBatch(limit: number, budgetMs: number): Promise<{ checked: number; ok: number; broken: number; unsure: number; remaining: boolean }> {
-  const out = { checked: 0, ok: 0, broken: 0, unsure: 0, remaining: false };
+export async function runBatch(limit: number, budgetMs: number): Promise<{ checked: number; fine: number; broken: number; unsure: number; remaining: boolean }> {
+  const out = { checked: 0, fine: 0, broken: 0, unsure: 0, remaining: false };
   if (!dbConfigured()) return out;
   const q = await call('rpc/link_check_queue', { method: 'POST', headers: headers(), body: JSON.stringify({ p_limit: limit }) });
   if (!q.ok || !Array.isArray(q.body)) return out;
@@ -151,7 +151,7 @@ export async function runBatch(limit: number, budgetMs: number): Promise<{ check
         const res = await checkUrl(item.source_url);
         rows.push({ opportunity_id: item.id, url: item.source_url, status: res.status, verdict: res.verdict, detail: res.detail, checked_at: new Date().toISOString() });
         out.checked++;
-        out[res.verdict]++;
+        out[res.verdict === 'ok' ? 'fine' : res.verdict]++;
       } finally {
         perHost.set(host, Math.max(0, (perHost.get(host) ?? 1) - 1));
       }
