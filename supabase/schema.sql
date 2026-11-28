@@ -529,3 +529,97 @@ revoke all on function public.click_visitor(text) from public, anon, authenticat
 grant execute on function public.click_visitor(text) to service_role;
 
 -- impact_extra(p_days): people reached and the month-by-month table for /admin/impact. See the migration for the body.
+
+-- ---------------------------------------------------------------------------
+-- Admin board: overview numbers, link health and the duplicate finder.
+-- Everything here is for the service role (the admin pages) only.
+-- ---------------------------------------------------------------------------
+create table if not exists public.link_checks (
+  opportunity_id uuid primary key references public.opportunities(id) on delete cascade,
+  url            text not null,
+  status         int,
+  verdict        text not null check (verdict in ('ok','broken','unsure')),
+  detail         text not null default '',
+  checked_at     timestamptz not null default now()
+);
+create index if not exists link_checks_verdict_idx on public.link_checks (verdict, checked_at desc);
+alter table public.link_checks enable row level security;
+revoke all on public.link_checks from public, anon, authenticated;
+
+-- Listings whose link was never checked (or changed, or was checked longest ago) come first.
+create or replace function public.link_check_queue(p_limit int default 100)
+returns table (id uuid, source_url text)
+language sql stable security definer set search_path = '' as $$
+  select o.id, o.source_url
+  from public.opportunities o
+  left join public.link_checks c on c.opportunity_id = o.id
+  where o.published and o.source_url like 'https://%'
+  order by coalesce(case when c.url = o.source_url then c.checked_at end, '-infinity'::timestamptz) asc, o.created_at asc
+  limit greatest(1, least(p_limit, 500));
+$$;
+
+create or replace function public.admin_overview() returns jsonb
+language sql stable security definer set search_path = '' as $$
+  select jsonb_build_object(
+    'published',   (select count(*) from public.opportunities where published),
+    'open',        (select count(*) from public.opportunities where published and (deadline is null or deadline >= current_date)),
+    'closing7',    (select count(*) from public.opportunities where published and deadline between current_date and current_date + 7),
+    'expired_live',(select count(*) from public.opportunities where published and deadline < current_date),
+    'drafts',      (select count(*) from public.opportunities where not published),
+    'pending_submissions', (select count(*) from public.submissions where status = 'pending'),
+    'pending_reviews',     (select count(*) from public.reviews where status = 'pending'),
+    'links', jsonb_build_object(
+      'ok',      (select count(*) from public.link_checks c join public.opportunities o on o.id = c.opportunity_id and o.published and o.source_url = c.url where c.verdict = 'ok'),
+      'broken',  (select count(*) from public.link_checks c join public.opportunities o on o.id = c.opportunity_id and o.published and o.source_url = c.url where c.verdict = 'broken'),
+      'unsure',  (select count(*) from public.link_checks c join public.opportunities o on o.id = c.opportunity_id and o.published and o.source_url = c.url where c.verdict = 'unsure'),
+      'waiting', (select count(*) from public.opportunities o left join public.link_checks c on c.opportunity_id = o.id and c.url = o.source_url where o.published and o.source_url like 'https://%' and c.opportunity_id is null),
+      'last_checked', (select max(checked_at) from public.link_checks)
+    ),
+    'by_category', (select coalesce(jsonb_agg(jsonb_build_object('category', category, 'n', n) order by n desc), '[]'::jsonb)
+                    from (select category, count(*) n from public.opportunities where published group by category) t)
+  );
+$$;
+
+-- Two lists for the Overview: closing within a week, and still live after the deadline passed.
+create or replace function public.admin_queue() returns jsonb
+language sql stable security definer set search_path = '' as $$
+  select jsonb_build_object(
+    'closing', (select coalesce(jsonb_agg(to_jsonb(x)), '[]'::jsonb) from (
+        select id, category, slug, title, provider, deadline from public.opportunities
+        where published and deadline between current_date and current_date + 7
+        order by deadline asc, title asc limit 40) x),
+    'expired', (select coalesce(jsonb_agg(to_jsonb(x)), '[]'::jsonb) from (
+        select id, category, slug, title, provider, deadline from public.opportunities
+        where published and deadline < current_date
+        order by deadline desc, title asc limit 60) x)
+  );
+$$;
+
+-- Groups of live listings that look like the same thing: same official link, or same title in one category.
+create or replace function public.admin_duplicates(p_limit int default 40) returns jsonb
+language sql stable security definer set search_path = '' as $$
+  with by_link as (
+    select 'Same official link' as reason, source_url as key, array_agg(id order by created_at) ids
+    from public.opportunities where published and source_url is not null
+    group by source_url having count(*) > 1
+  ), by_title as (
+    select 'Same title' as reason, category || ': ' || trim(regexp_replace(lower(title), '[^a-z0-9]+', ' ', 'g')) as key, array_agg(id order by created_at) ids
+    from public.opportunities where published
+    group by category, trim(regexp_replace(lower(title), '[^a-z0-9]+', ' ', 'g')) having count(*) > 1
+  ), grp as (
+    select * from by_link union all select * from by_title
+  ), lim as (
+    select * from grp order by array_length(ids, 1) desc, key limit greatest(1, least(p_limit, 100))
+  )
+  select jsonb_build_object(
+    'total', (select count(*) from grp),
+    'groups', (select coalesce(jsonb_agg(jsonb_build_object(
+        'reason', l.reason, 'key', l.key,
+        'items', (select jsonb_agg(jsonb_build_object('id', o.id, 'category', o.category, 'slug', o.slug, 'title', o.title, 'provider', o.provider, 'deadline', o.deadline, 'created_at', o.created_at) order by o.created_at)
+                  from public.opportunities o where o.id = any(l.ids))
+      )), '[]'::jsonb) from lim l)
+  );
+$$;
+
+revoke all on function public.link_check_queue(int), public.admin_overview(), public.admin_queue(), public.admin_duplicates(int) from public, anon, authenticated;
+grant execute on function public.link_check_queue(int), public.admin_overview(), public.admin_queue(), public.admin_duplicates(int) to service_role;
